@@ -1,25 +1,18 @@
 package com.pezventure;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.maps.Map;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader.Parameters;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -27,7 +20,6 @@ import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.Area;
 import com.pezventure.map.Level1;
-import com.pezventure.objects.GameObject;
 import com.pezventure.objects.GameObjectSystem;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.RenderLayer;
@@ -40,6 +32,7 @@ public class Game implements ApplicationListener
 	
 	//constants
 	public static final boolean DEBUG = true;
+	public static final boolean keyControls = true;
 	
 	public static final int DEFAULT_SCREEN_WIDTH = 1280;
 	public static final int DEFAULT_SCREEN_HEIGHT = 720;
@@ -76,14 +69,20 @@ public class Game implements ApplicationListener
 	OrthogonalTiledMapRenderer mapRenderer;
 	
 	//control state
-	boolean up = false;
-	boolean down = false;
-	boolean left = false;
-	boolean right = false;
+	Controls controls;
 	
 	//GUI elements
-	Rectangle dpadHorizontal;
-	Rectangle dpadVertical;
+	Rectangle dpadUp;
+	Rectangle dpadDown;
+	Rectangle dpadLeft;
+	Rectangle dpadRight;
+	
+	Circle buttonA;
+	Circle buttonB;
+	Circle buttonX;
+	Circle buttonY;
+	
+	
 	
 	//logic
 	float updateTimeAccumulated = 0;
@@ -121,145 +120,36 @@ public class Game implements ApplicationListener
 		shapeRenderer.rect(GUI_EDGE_MARGIN, screenHeight-HEALTH_BAR_THICKNESS-GUI_EDGE_MARGIN, length, HEALTH_BAR_THICKNESS);
 		shapeRenderer.end();		
 		
-		if(touchControls)
-		{
-			drawDpad();
-			drawButtons();
-		}
-	}
-	
-	void drawButtons()
-	{
-		shapeRenderer.begin(ShapeType.Filled);
-		
-		//center button
-		shapeRenderer.setColor(Color.DARK_GRAY);
-		shapeRenderer.circle(screenWidth-GUI_EDGE_MARGIN-3*BUTTON_RADIUS, GUI_EDGE_MARGIN+3*BUTTON_RADIUS, BUTTON_RADIUS);
-		
-		//left button
-		shapeRenderer.setColor(Color.BLUE);
-		shapeRenderer.circle(screenWidth-GUI_EDGE_MARGIN-5*BUTTON_RADIUS, GUI_EDGE_MARGIN+3*BUTTON_RADIUS, BUTTON_RADIUS);
-		
-		//top button
-		shapeRenderer.setColor(Color.YELLOW);
-		shapeRenderer.circle(screenWidth-GUI_EDGE_MARGIN-3*BUTTON_RADIUS, GUI_EDGE_MARGIN+5*BUTTON_RADIUS, BUTTON_RADIUS);
-		
-		//right button
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.circle(screenWidth-GUI_EDGE_MARGIN-BUTTON_RADIUS, GUI_EDGE_MARGIN + 3*BUTTON_RADIUS, BUTTON_RADIUS);
-		
-		//lower button
-		shapeRenderer.setColor(Color.GREEN);
-		shapeRenderer.circle(screenWidth-GUI_EDGE_MARGIN-3*BUTTON_RADIUS, GUI_EDGE_MARGIN+BUTTON_RADIUS, BUTTON_RADIUS);
-
-		shapeRenderer.end();
-	}
-	
-	void drawDpad()
-	{
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.DARK_GRAY);
-		
-		//horizontal bar
-		shapeRenderer.rect(GUI_EDGE_MARGIN, DPAD_LENGTH/2-DPAD_THICKNESS/2+GUI_EDGE_MARGIN, DPAD_LENGTH, DPAD_THICKNESS);
-		//vertical  bar
-		shapeRenderer.rect(DPAD_LENGTH/2-DPAD_THICKNESS/2+GUI_EDGE_MARGIN, GUI_EDGE_MARGIN, DPAD_THICKNESS, DPAD_LENGTH);
-		shapeRenderer.end();
+		controls.render(shapeRenderer);
 	}
 	
 	void handleInput()
 	{
-		//blank control state from previous frame
-		up = false;
-		down = false;
-		right = false;
-		left = false;
-		
-		//if has keyboard/using keyboard
-		//keyboard
-		
-		if(touchControls)
-		{
-			handleTouchInputs();
-		}
-		else
-		{
-			handleKeyboard();
-		}
+		controls.update();
 		
 		//set player movement
 		PrimaryDirection dir = null;
 		
-		if(up)
+		if(controls.up)
 			dir = PrimaryDirection.up;
-		else if(down)
+		else if(controls.down)
 			dir = PrimaryDirection.down;
-		else if(left)
+		else if(controls.left)
 			dir = PrimaryDirection.left;
-		else if(right)
+		else if(controls.right)
 			dir = PrimaryDirection.right;
 		
 		player.setDesiredDir(dir);	
 	}
-	
-	void handleTouchInputs()
-	{
-		for(int id=0; id < MAX_TOUCH_EVENTS; ++id)
-		{
-			if(Gdx.input.isTouched(id))
-			{
-				//Gdx.app.log(TAG, String.format("touch event: %d,%d", Gdx.input.getX(id), screenHeight - Gdx.input.getY(id)));
-				
-				handleTouchEvent(Gdx.input.getX(id), screenHeight - Gdx.input.getY(id));
-			}
-		}
-	}
-	
-	void handleTouchEvent(int x, int y)
-	{
-		if(y-GUI_EDGE_MARGIN>= DPAD_LENGTH/2-DPAD_THICKNESS/2 && y-GUI_EDGE_MARGIN <= DPAD_LENGTH/2+DPAD_THICKNESS/2)
-		{
-			//may be on the horizontal bar of the d-pad.
-			
-			if(x-GUI_EDGE_MARGIN < DPAD_LENGTH/2 - DPAD_THICKNESS/2)
-			{
-				left = true;
-			}
-			else if(x-GUI_EDGE_MARGIN > DPAD_LENGTH/2 + DPAD_THICKNESS/2 && x-GUI_EDGE_MARGIN <= DPAD_LENGTH)
-			{
-				right = true;
-			}
-		}
 		
-		if(x-GUI_EDGE_MARGIN>= DPAD_LENGTH/2 - DPAD_THICKNESS/2 && x-GUI_EDGE_MARGIN <= DPAD_LENGTH/2 + DPAD_THICKNESS/2)
-		{
-			//may be on the vertical bar of the d-pad
-			
-			if(y-GUI_EDGE_MARGIN < DPAD_LENGTH/2 - DPAD_THICKNESS/2)
-			{
-				down = true;
-			}
-			else if(y-GUI_EDGE_MARGIN > DPAD_LENGTH/2 + DPAD_THICKNESS/2 && y-GUI_EDGE_MARGIN <= DPAD_LENGTH)
-			{
-				up = true;
-			}
-		}
-	}
-	
-	void handleKeyboard()
-	{
-		up = Gdx.input.isKeyPressed(Keys.W);
-		down = Gdx.input.isKeyPressed(Keys.S);
-		left = Gdx.input.isKeyPressed(Keys.A);
-		right = Gdx.input.isKeyPressed(Keys.D);
-	}
 	
 	@Override
 	public void create() {
 		inst = this;
 		
 		//load box2d library
-		GdxNativesLoader.load();
+		if(Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.Desktop )
+			GdxNativesLoader.load();
 		
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
@@ -267,6 +157,7 @@ public class Game implements ApplicationListener
 		//TODO check camera scaling based on tilespace area
 	//	camera = new OrthographicCamera(1, screenHeight/screenWidth);
 		camera = new OrthographicCamera(screenWidth, screenHeight);
+		controls = new Controls(screenWidth, screenHeight, touchControls, keyControls);
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		font = new BitmapFont();
@@ -279,15 +170,7 @@ public class Game implements ApplicationListener
 		loadMap();
 		loadPlayer();
 		
-		initGuiElements();
-
 		initCamera();
-	}
-	
-	void initGuiElements()
-	{		
-		dpadHorizontal = new Rectangle(GUI_EDGE_MARGIN, DPAD_LENGTH/2-DPAD_THICKNESS/2+GUI_EDGE_MARGIN, DPAD_LENGTH, DPAD_THICKNESS);
-		dpadVertical = new Rectangle(DPAD_LENGTH/2-DPAD_THICKNESS/2+GUI_EDGE_MARGIN, GUI_EDGE_MARGIN, DPAD_THICKNESS, DPAD_LENGTH);
 	}
 	
 	void loadMap()
@@ -389,7 +272,7 @@ public class Game implements ApplicationListener
 		screenWidth = width;
 		screenHeight = height;
 		
-		initGuiElements();
+		controls.setResolution(width, height);
 		
 //		camera.setToOrtho(false, width, height);
 	}
