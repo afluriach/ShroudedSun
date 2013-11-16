@@ -67,8 +67,38 @@ public class MapUtil
 		return new Vector2(x*Game.TILES_PER_PIXEL, y*Game.TILES_PER_PIXEL);
 	}
 	
+	public static Area instantiate(Class<?> type)
+	{
+		Constructor<?> cons = null;
+		
+		try
+		{
+			cons = type.getConstructor();
+		}
+		catch(Exception ex)
+		{
+			Gdx.app.log(Game.TAG, "Error instantiating type: " + type + " no suitable constructor found");
+			throw new RuntimeException("Error instantiating type: " + type + " no suitable constructor found");
+		}
+		
+		try
+		{
+			return (Area) cons.newInstance();
+		}
+		catch (Exception e)
+		{
+			Gdx.app.log(Game.TAG,  "Error instantiating type: " + type + " constructor exception");
+			e.printStackTrace();
+			throw new RuntimeException("Error instantiating type: " + type + " constructor exception");
+		}
+
+	}
+	
 	public static GameObject instantiate(TilespaceRectMapObject to)
 	{
+		if(to.type == null)
+			throw new RuntimeException(String.format("Object %s has null type", to.name));
+		
 		Class<?> type = GameObject.getObjectClass(to.type);
 		
 		Constructor<?> cons = null;
@@ -88,7 +118,7 @@ public class MapUtil
 		}
 		catch (Exception e)
 		{
-			Gdx.app.log(Game.TAG,  "Error instantiating type: " + type + " constructor exception");
+			Gdx.app.log(Game.TAG,  String.format("Error instantiating GameObject, class: %s, name: %s", type, to.name));
 			e.printStackTrace();
 			throw new RuntimeException("constructor exception");
 		}

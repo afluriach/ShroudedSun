@@ -5,5 +5,5 @@ import com.badlogic.gdx.math.Rectangle;
 public class Room
 {
 	String name;
-	Rectangle location;
+	public Rectangle location;
 }

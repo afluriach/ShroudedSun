@@ -37,12 +37,19 @@ public abstract class GameObject
 		addClass("wall", Wall.class);
 		addClass("door", Door.class);
 		addClass("block", Block.class);
+		addClass("switch", FloorSwitch.class);
 		addClass("floor_switch", FloorSwitch.class);
+		addClass("invisible_switch", InvisibleFloorSwitch.class);
+		addClass("invisible_floor_switch", InvisibleFloorSwitch.class);
 		addClass("blue_enemy", BlueEnemy.class);
+		addClass("jar", Jar.class);
 	}
 	
 	public static Class<?> getObjectClass(String name)
 	{
+		if(name == null) throw new NullPointerException("null name given");
+		if(name.equals("")) throw new IllegalArgumentException("blank name given");
+		
 		if(!objectTypesInitialized)
 		{
 			addTypes();
@@ -58,11 +65,7 @@ public abstract class GameObject
 	
 	//physics
 	Body physicsBody;
-	float hitboxHeight;
-	float hitboxWidth;
-	boolean collisionThisFrame = false;
-	Vector2 lastSafePos;
-	
+	boolean collisionThisFrame = false;	
 	
 	String name;
 	boolean expired = false;
@@ -73,19 +76,15 @@ public abstract class GameObject
 //		physicsBody = Physics.inst().addRectBody(mo.rect, this);
 		
 		name = mo.name;
-		hitboxHeight = mo.rect.height;
-		hitboxWidth =  mo.rect.width;
 		
 //		Gdx.app.log(Game.TAG, String.format("GO name: %s, type: %s pos: %f,%f size: %f,%f", name, getClass().toString(), pos.x, pos.y, width, height));
 
 	}
 	
-	public GameObject(Vector2 pos, float height, float width, String name)
+	public GameObject(String name)
 	{
 //		physicsBody = Physics.inst().addRectBody(pos, height, width, this);
 		this.name = name;
-		hitboxHeight = height;
-		hitboxWidth = width;
 	}
 	
 	public void expire()
@@ -200,8 +199,14 @@ public abstract class GameObject
 		physicsBody.applyLinearImpulse(impulse, getCenterPos(), true);
 	}
 	
+	public String toString()
+	{
+		return String.format("gameobject class: %s, name: %s", this.getClass().getSimpleName(), name);
+	}
+	
 	public abstract void update();
 	public abstract void render(SpriteBatch sb);	
-	public abstract void handleCollision(GameObject other);
+	public abstract void handleContact(GameObject other);
+	public abstract void handleEndContact(GameObject other);
 	abstract void onExpire();
 }

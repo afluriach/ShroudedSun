@@ -5,10 +5,11 @@ import com.pezventure.physics.PrimaryDirection;
 
 public class MapLink
 {
-	String destMap;
-	String destLink;
-	PrimaryDirection entranceDir;
-	Rectangle location;
+	public String name;
+	public String destMap;
+	public String destLink;
+	public PrimaryDirection entranceDir;
+	public Rectangle location;
 	
 	public boolean isExit()
 	{

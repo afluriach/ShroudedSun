@@ -15,7 +15,8 @@ import com.pezventure.physics.PrimaryDirection;
 public class SpriteLoader
 {
 	private Map<String, Texture> textures = new TreeMap<String, Texture>();
-	private Map<String, EntitySpriteSet> entitySprites = new TreeMap<String, EntitySpriteSet>();
+	private Map<String, EntitySpriteSet> entitySpriteSets = new TreeMap<String, EntitySpriteSet>();
+	private Map<String, ProjectileSpriteSet> projectileSpriteSet = new TreeMap<String, ProjectileSpriteSet>();
 	private ArrayList<Texture> spriteSheetsLoaded = new ArrayList<Texture>();
 	
 	public SpriteLoader()
@@ -45,21 +46,23 @@ public class SpriteLoader
 //		entitySprites.put("meiling", new EntitySpriteSet(sprites, 6, 4));
 //		entitySprites.put("melancholy", new EntitySpriteSet(sprites, 9, 4));
 		
-		int spriteSize = 32;
-		Texture spriteSheet = new Texture(Util.getInternalFile("sprites/link_sprites.png"));
-        TextureRegion [][] sprites = TextureRegion.split(spriteSheet, spriteSize, spriteSize);
-        spriteSheetsLoaded.add(spriteSheet);
+		int linkSpriteSize = 32;
+		Texture linkSpriteSheet = new Texture(Util.getInternalFile("sprites/link_sprites.png"));
+        TextureRegion [][] linkSprites = TextureRegion.split(linkSpriteSheet, linkSpriteSize, linkSpriteSize);
+        spriteSheetsLoaded.add(linkSpriteSheet);
 		
-        entitySprites.put("link_green", new EntitySpriteSet(sprites, 0,0,spriteSize, 3));
-        entitySprites.put("link_green_hat", new EntitySpriteSet(sprites, 3,0,spriteSize, 3));
-        entitySprites.put("link_red", new EntitySpriteSet(sprites, 6,0,spriteSize, 3));
-        entitySprites.put("link_red_hat", new EntitySpriteSet(sprites, 9,0,spriteSize, 3));
+        entitySpriteSets.put("link_green", new EntitySpriteSet(linkSprites, 0,0,linkSpriteSize, 3));
+        entitySpriteSets.put("link_green_hat", new EntitySpriteSet(linkSprites, 3,0,linkSpriteSize, 3));
+        entitySpriteSets.put("link_red", new EntitySpriteSet(linkSprites, 6,0,linkSpriteSize, 3));
+        entitySpriteSets.put("link_red_hat", new EntitySpriteSet(linkSprites, 9,0,linkSpriteSize, 3));
         
-        entitySprites.put("link_blue", new EntitySpriteSet(sprites, 0,4,spriteSize, 3));
-        entitySprites.put("link_blue_hat", new EntitySpriteSet(sprites, 3,4,spriteSize, 3));
-        entitySprites.put("link_dark", new EntitySpriteSet(sprites, 6,4,spriteSize, 3));
-        entitySprites.put("link_dark_hat", new EntitySpriteSet(sprites, 9,4,spriteSize, 3));
+        entitySpriteSets.put("link_blue", new EntitySpriteSet(linkSprites, 0,4,linkSpriteSize, 3));
+        entitySpriteSets.put("link_blue_hat", new EntitySpriteSet(linkSprites, 3,4,linkSpriteSize, 3));
+        entitySpriteSets.put("link_dark", new EntitySpriteSet(linkSprites, 6,4,linkSpriteSize, 3));
+        entitySpriteSets.put("link_dark_hat", new EntitySpriteSet(linkSprites, 9,4,linkSpriteSize, 3));
 
+        
+        
 	}
 	
 	
@@ -75,6 +78,14 @@ public class SpriteLoader
         textures.put("switch_inactive", loadTexture("sprites/switch_inactive.png"));
         textures.put("switch_active", loadTexture("sprites/switch_active.png"));
         
+        textures.put("bullet_aa", loadTexture("sprites/bullet_aa.png"));
+        textures.put("bullet_ec", loadTexture("sprites/bullet_ec.png"));
+        
+        textures.put("jar", loadTexture("sprites/jar.png"));
+        textures.put("red_jar", loadTexture("sprites/red_jar.png"));
+        textures.put("yellow_jar", loadTexture("sprites/yellow_jar.png"));
+        textures.put("green_jar", loadTexture("sprites/green_jar.png"));
+        textures.put("blue_jar", loadTexture("sprites/blue_jar.png"));
 	}
 	
 	public void unloadTextures()
@@ -91,15 +102,17 @@ public class SpriteLoader
 	
 	public EntityAnimation getSpriteAnimation(String name, PrimaryDirection startingDir)
 	{
-		if(!entitySprites.containsKey(name))
+		if(!entitySpriteSets.containsKey(name))
 		{
 			throw new NoSuchElementException("unknow sprite animation: " + name);
 		}
-		return new EntityAnimation(entitySprites.get(name), startingDir);
+		return new EntityAnimation(entitySpriteSets.get(name), startingDir);
 	}
 	
 	public Texture getTexture(String name)
 	{
+		if(!textures.containsKey(name))
+			throw new NoSuchElementException(String.format("Texture %s not found", name));
 		return textures.get(name);
 	}
 }

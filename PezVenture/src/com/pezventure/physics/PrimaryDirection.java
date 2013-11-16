@@ -40,4 +40,21 @@ public enum PrimaryDirection
 			throw new IllegalArgumentException("invalid direction");
 		}
 	}
+	
+	public float getAngle()
+	{
+		switch(this)
+		{
+			case right:
+				return 0f;
+			case up:
+				return 90f;
+			case left:
+				return 180f;
+			case down:
+				return 270f;
+			default:
+				throw new Error();
+		}
+	}
 }

@@ -2,6 +2,7 @@ package com.pezventure.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
@@ -16,6 +17,13 @@ public class Wall extends GameObject
 		super(to);
 		
 		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody, 1, false);
+	}
+	
+	public Wall(Rectangle r)
+	{
+		super("wall");
+		physicsBody = Game.inst.physics.addRectBody(r, this, BodyType.StaticBody, 1, false);
+
 	}
 
 	@Override
@@ -32,7 +40,7 @@ public class Wall extends GameObject
 	}
 
 	@Override
-	public void handleCollision(GameObject other)
+	public void handleContact(GameObject other)
 	{
 //		if(other instanceof Wall || other instanceof Door)
 //			return;
@@ -46,5 +54,11 @@ public class Wall extends GameObject
 	{
 		//no-op, should not happen
 	}
+	
+	@Override
+	public void handleEndContact(GameObject other) {
+		//no-op
+	}
+
 
 }

@@ -15,6 +15,17 @@ public class GameObjectSystem
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	Map<RenderLayer, ArrayList<GameObject>> renderLayers = new TreeMap<RenderLayer, ArrayList<GameObject>>();
 	Map<String, GameObject> nameMap = new TreeMap<String, GameObject>();
+	ArrayList<GameObject> objectsToAdd = new ArrayList<GameObject>();
+	
+	public void clear()
+	{
+		gameObjects.clear();
+		for(ArrayList<GameObject> renderLayer : renderLayers.values())
+		{
+			renderLayer.clear();
+		}
+		nameMap.clear();
+	}
 	
 	public GameObjectSystem()
 	{
@@ -22,12 +33,36 @@ public class GameObjectSystem
 		renderLayers.put(RenderLayer.ground, new ArrayList<GameObject>());
 	}
 		
+	/**
+	 * Adds GameObject before the next update cycle. Additions are not handled within the update cycle,
+	 * as this creates concurrent modification problems.
+	 * @param go
+	 */
 	public void addObject(GameObject go)
 	{
-		gameObjects.add(go);
-		renderLayers.get(go.renderLayer).add(go);
-		nameMap.put(go.name, go);
+		objectsToAdd.add(go);
 	}
+	
+	public void handleAdditions()
+	{
+		for(GameObject go : objectsToAdd)
+		{
+			gameObjects.add(go);
+			renderLayers.get(go.renderLayer).add(go);
+			nameMap.put(go.name, go);
+		}
+		objectsToAdd.clear();
+	}
+	
+	private void remove(GameObject go)
+	{
+		gameObjects.remove(go);
+		renderLayers.get(go.renderLayer).remove(go);
+		nameMap.remove(go.name);
+		
+		Game.inst.physics.removeBody(go.physicsBody);
+	}
+
 	
 	public void updateAll()
 	{
@@ -37,6 +72,25 @@ public class GameObjectSystem
 		}
 	}
 	
+	public void removeExpired()
+	{
+		ArrayList<GameObject> expired = new ArrayList<GameObject>();
+		
+		for(GameObject go : gameObjects)
+		{
+			if(go.expired)
+			{
+				expired.add(go);
+			}
+		}
+		
+		for(GameObject go : expired)
+		{
+			Game.inst.physics.handleEndContact(go);
+			remove(go);
+		}
+	}
+		
 	public void render(RenderLayer layer, SpriteBatch sb)
 	{
 		for(GameObject go : renderLayers.get(layer))
@@ -47,6 +101,9 @@ public class GameObjectSystem
 	
 	public GameObject getObjectByName(String name)
 	{
+		if(!nameMap.containsKey(name))
+			throw new RuntimeException(String.format("object %s not found", name));
+		
 		return nameMap.get(name);
 	}
 	

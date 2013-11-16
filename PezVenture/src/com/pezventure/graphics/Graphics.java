@@ -3,6 +3,7 @@ package com.pezventure.graphics;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
@@ -96,5 +97,18 @@ public class Graphics
 		}
 		
 		return new Color(r1+m, g1+m, b1+m, a);
+	}
+	
+	TextureRegion[] textureRegionFramesFromSheet(Texture spriteSheet, int length, int startingX, int startingY, int spriteHeight, int spriteWidth, int spacing)
+	{
+		TextureRegion[] frames = new TextureRegion[length];
+		
+		for(int i=0; i < length; ++i)
+		{
+			frames[i] = new TextureRegion(spriteSheet, startingX+spriteWidth*i+spacing*i, startingY, spriteWidth, spriteHeight);
+		}
+		
+		return frames;
+		
 	}
 }

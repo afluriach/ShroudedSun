@@ -66,7 +66,7 @@ public class Block extends GameObject
 	}
 
 	@Override
-	public void handleCollision(GameObject other)
+	public void handleContact(GameObject other)
 	{
 		if(other instanceof FloorSwitch)
 			return;
@@ -100,6 +100,11 @@ public class Block extends GameObject
 	@Override
 	void onExpire() {
 		//no-op		
+	}
+
+	@Override
+	public void handleEndContact(GameObject other) {
+		//no-op
 	}
 
 }

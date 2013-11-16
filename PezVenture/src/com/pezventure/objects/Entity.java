@@ -15,6 +15,7 @@ public abstract class Entity extends GameObject
 	static final float stepLength = 0.25f;
 	static final float MASS = 50.0f;
 	static final float HIT_CIRCLE_RADIUS = 0.35f;
+	static final PrimaryDirection defaultFacing = PrimaryDirection.up;
 	
 	//entities may flicker to show temporary invulnerbility after being attacked or when about to expire. 
 	boolean isFlickering = false;
@@ -27,8 +28,12 @@ public abstract class Entity extends GameObject
 	
 	EntityAnimation animation;
 	
+	/**
+	 * may be null to indicate no movement
+	 */
 	PrimaryDirection crntDir;
 	PrimaryDirection desiredDir;
+	PrimaryDirection facing = defaultFacing;
 	float speed;
 		
 	public Entity(TilespaceRectMapObject to, float speed, EntityAnimation animation)
@@ -42,7 +47,7 @@ public abstract class Entity extends GameObject
 	
 	public Entity(Vector2 pos, float height, float width, float speed, EntityAnimation animation, String name)
 	{
-		super(pos, height, width, name);
+		super(name);
 		this.speed = speed;
 		this.animation = animation;
 		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
@@ -65,6 +70,13 @@ public abstract class Entity extends GameObject
 		{
 			animation.setDirection(dir);
 			animation.resetAnimation();
+			facing = dir;
+		}
+		
+		//velocity can be changed by physics engine due to collision with 
+		//objects
+		if(dir != null)
+		{
 			setVel(dir.getUnitVector().scl(speed));
 		}
 		crntDir = dir;
@@ -125,4 +137,16 @@ public abstract class Entity extends GameObject
 //		Gdx.app.log(Game.TAG, String.format("step dist acc: %f, vel mag: %f", stepDistAccumulated, vel.len()));
 	}
 
+	//shoot a bullet. position the bullet such that its edge is some distance away from the edge of the entity's 
+	//physics body, in the direction of its movement.
+	public void shoot(Bullet b, float distance)
+	{
+		Vector2 dispDir = b.getDir().getUnitVector();
+		float dispMag = HIT_CIRCLE_RADIUS + b.getRadius() + distance;
+		Vector2 disp = dispDir.scl(dispMag);
+
+		b.setPos(getCenterPos().add(disp));
+		
+		Game.inst.gameObjectSystem.addObject(b);
+	}
 }

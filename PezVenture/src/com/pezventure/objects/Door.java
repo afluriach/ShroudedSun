@@ -40,7 +40,7 @@ public class Door extends GameObject
 	}
 
 	@Override
-	public void handleCollision(GameObject other)
+	public void handleContact(GameObject other)
 	{
 		if(isLocked)
 		{
@@ -67,4 +67,10 @@ public class Door extends GameObject
 
 	}
 
+	@Override
+	public void handleEndContact(GameObject other) {
+		//no-op
+	}
+
+	
 }

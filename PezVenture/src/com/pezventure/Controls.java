@@ -4,10 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.pezventure.graphics.Graphics;
 
 /**
@@ -29,10 +34,10 @@ public class Controls
 	public static final int dpadSectionLength = dpadLength/2 - dpadThickness/2;
 	public static final int dpadSectionOffset = dpadLength/2 + dpadThickness/2;
 	
-	public static final Color buttonAdark = Graphics.hsva(135f, .8f, .5f, 1f);
-	public static final Color buttonBdark = Graphics.hsva(350f, .8f, .5f, 1f);
-	public static final Color buttonXdark = Graphics.hsva(251f, .8f, .5f, 1f);
-	public static final Color buttonYdark = Graphics.hsva(49f, .8f, .5f, 1f);
+	public static final Color buttonAdark = Graphics.hsva(135f, .8f, .3f, 1f);
+	public static final Color buttonBdark = Graphics.hsva(350f, .8f, .3f, 1f);
+	public static final Color buttonXdark = Graphics.hsva(251f, .8f, .3f, 1f);
+	public static final Color buttonYdark = Graphics.hsva(49f, .8f, .3f, 1f);
 	
 	public static final Color buttonAlight = Graphics.hsva(135f, 1f, .9f, 1f);
 	public static final Color buttonBlight = Graphics.hsva(350f, 1f, .9f, 1f);
@@ -73,6 +78,8 @@ public class Controls
 	Circle buttonX;
 	Circle buttonY;
 	
+	Texture playerAttackIcon;
+	
 	public Controls(int width, int height, boolean touch, boolean keys)
 	{
 		this.width = width;
@@ -80,6 +87,8 @@ public class Controls
 		touchControls = touch;
 		keyControls = keys;
 		createShapes();
+		
+		playerAttackIcon = Game.inst.spriteLoader.getTexture("bullet_ec");
 	}
 	
 	/**
@@ -128,7 +137,7 @@ public class Controls
 		shapeRenderer.rect(segment.x, segment.y, segment.width, segment.height);
 	}
 	
-	public void render(ShapeRenderer shapeRenderer)
+	public void render(ShapeRenderer shapeRenderer, SpriteBatch batch, BitmapFont font)
 	{
 		shapeRenderer.begin(ShapeType.Filled);
 		
@@ -151,6 +160,48 @@ public class Controls
 		shapeRenderer.rect(dpadCenter.x, dpadCenter.y, dpadCenter.width, dpadCenter.height);
 		
 		shapeRenderer.end();
+		
+		batch.begin();
+		
+		if(Game.inst.player.holdingItem != null)
+			batch.setColor(1f, 1f, 1f, 0.3f);
+		
+		Graphics.drawTexture(playerAttackIcon, new Vector2(buttonX.x*Game.TILES_PER_PIXEL,  buttonX.y*Game.TILES_PER_PIXEL), batch);
+		
+		batch.setColor(1f, 1f, 1f, 1f);
+		
+		batch.end();
+		
+		String interactMsg;
+		
+		if(Game.inst.player.holdingItem != null)
+		{
+			interactMsg = "drop";
+		//	System.out.println("msg set to drop");
+		}
+		else if(Game.inst.player.canGrab)
+		{
+			interactMsg = "grab";
+	//		System.out.println("msg set to grab");
+		}
+		else
+		{
+			interactMsg = "";
+//			System.out.println("msg set to blank");
+		}
+		
+		drawTextCentered(interactMsg, batch, font, buttonA.x-buttonA.radius+10, buttonA.y, 1.5f);
+	}
+	
+	void drawTextCentered(String msg, SpriteBatch batch, BitmapFont font, float x, float y, float scale)
+	{
+		font.setScale(scale);
+		
+		batch.begin();
+		font.draw(batch, msg, x, y+font.getLineHeight()/2);
+		batch.end();
+		
+		font.setScale(1f);
 	}
 	
 	private void handleTouchEvents()
@@ -180,17 +231,15 @@ public class Controls
 	
 	private void checkKeyPress()
 	{
-		if(Gdx.input.isButtonPressed(Keys.DOWN)) a = true;
-		if(Gdx.input.isButtonPressed(Keys.RIGHT)) b = true;
-		if(Gdx.input.isButtonPressed(Keys.UP)) y = true;
-		if(Gdx.input.isButtonPressed(Keys.LEFT)) x = true;
+		if(Gdx.input.isKeyPressed(Keys.DOWN)) a = true;
+		if(Gdx.input.isKeyPressed(Keys.RIGHT)) b = true;
+		if(Gdx.input.isKeyPressed(Keys.UP)) y = true;
+		if(Gdx.input.isKeyPressed(Keys.LEFT)) x = true;
 		
-		if(Gdx.input.isButtonPressed(Keys.W)) up = true;
-		if(Gdx.input.isButtonPressed(Keys.A)) left = true;
-		if(Gdx.input.isButtonPressed(Keys.S)) down = true;
-		if(Gdx.input.isButtonPressed(Keys.D)) right = true;
-		
-		Gdx.app.log(Game.TAG, String.format("%b %b %b %b %b %b %b %b", a,b,x,y, up,left,down,right));
+		if(Gdx.input.isKeyPressed(Keys.W)) up = true;
+		if(Gdx.input.isKeyPressed(Keys.A)) left = true;
+		if(Gdx.input.isKeyPressed(Keys.S)) down = true;
+		if(Gdx.input.isKeyPressed(Keys.D)) right = true;
 	}
 	
 	private void resetControlState()

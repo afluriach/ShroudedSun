@@ -1,7 +1,12 @@
 package com.pezventure.objects;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
@@ -14,19 +19,38 @@ public class FloorSwitch extends GameObject
 //	private static final float SWITCH_SIZE = 1.0f;
 //	private static final float BORDER_THICKNESS_PIXELS = 4;
 	
-	private  Texture inactiveTexture;
+	private Texture inactiveTexture;
 	private Texture activeTexture;
 	
-	//this kind of switch is activated when a particular kind of GameObject is placed above it
-	//if not a sticky switch, track the activating object in case it moves off the switch
 	private boolean activated = false;
+	/**
+	 * Does the switch stay activated unconditionally after it has been activated? If not, requires an appropriately
+	 * placed activating object on top of it.
+	 */
 	private boolean sticky;
-	private GameObject activatingObject;
 	
-	//by default, switches activate if the player steps on them
+	/**
+	 * The class of GameObject that can activate this switch. The activating class is the Player
+	 * class by default.
+	 */
 	private Class<?> activatingClass  = Player.class;
-	//distance from the center of the switch required to activate it
-	private float activationMargin = 0.25f;
+	
+	/**
+	 * if set, then only a GameObject with this specific name can activate the switch
+	 */
+	private String activatingObjectName;
+	
+	/**
+	 * maximum distance from center of switch to center of object in order to activate.
+	 */
+	private float activationRadius = 0.25f;
+	
+	/**
+	 * Objects of the activating class that have collided with the switch. objects are added during handleContact
+	 * and removed during handleEndContact. note: activation is based on activation radius and the relative position
+	 * of the object and the switch.
+	 */
+	private List<GameObject> activatingObjectsOnSwitch = new LinkedList<GameObject>();
 	
 	public FloorSwitch(TilespaceRectMapObject to)
 	{
@@ -39,15 +63,19 @@ public class FloorSwitch extends GameObject
 
 		if(to.prop.containsKey("activating_class"))
 		{
-			activatingClass = GameObject.getObjectClass(to.prop.get("actitvating_class", String.class));
+			activatingClass = GameObject.getObjectClass(to.prop.get("activating_class", String.class));
 		}
 		if(to.prop.containsKey("activation_margin"))
 		{
-			activationMargin = Float.parseFloat(to.prop.get("activation_margin", String.class));
+			activationRadius = Float.parseFloat(to.prop.get("activation_margin", String.class));
+		}
+		if(to.prop.containsKey("activating_name"))
+		{
+			activatingObjectName = to.prop.get("activating_name", String.class);
 		}
 		
 		renderLayer = RenderLayer.floor;
-		
+				
 		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.DynamicBody, 1, true);
 	}
 
@@ -61,23 +89,39 @@ public class FloorSwitch extends GameObject
 	@Override
 	public void update()
 	{
-		if(!sticky && activated)
+		if(!activated || (activated && !sticky))
 		{
-			if(activatingObject.getCenterPos().sub(getCenterPos()).len2() >= activationMargin*activationMargin)
-			{
-				activated = false;
-			}
+			activated = activatedByObject();
 		}
+		
+//		if(!sticky && activated)
+//		{
+//			if(activatingObject.getCenterPos().sub(getCenterPos()).len2() >= activationMargin*activationMargin)
+//			{
+//				activated = false;
+//			}
+//		}
 	}
 
 	@Override
-	public void handleCollision(GameObject other)
+	public void handleContact(GameObject other)
 	{
-		if(activatingClass.isInstance(other) &&
-		   other.getCenterPos().sub(getCenterPos()).len2() <= activationMargin*activationMargin)
+		Gdx.app.log(Game.TAG, other.toString());
+		
+		//if an activating name is set, only check for objects with that
+		//name, otherwise filter based on class
+		
+		if(activatingObjectName != null)
 		{
-			activated = true;
-			activatingObject = other;
+			if(other.name.equals(activatingObjectName))
+			{
+				activatingObjectsOnSwitch.add(other);
+			}
+		}
+		else if(activatingClass.isInstance(other))
+		{
+			Gdx.app.log(Game.TAG, other.getClass() + " on switch");
+			activatingObjectsOnSwitch.add(other);
 		}
 
 	}
@@ -92,4 +136,25 @@ public class FloorSwitch extends GameObject
 		return activated;
 	}
 
+	@Override
+	public void handleEndContact(GameObject other)
+	{
+		if(activatingObjectName != null && activatingObjectName.equals(other.name))
+			activatingObjectsOnSwitch.remove(other);
+		if(activatingClass.isInstance(other))
+			activatingObjectsOnSwitch.remove(other);		
+	}
+
+	/**
+	 * 
+	 * @return whether any currently touching GameObject of the activating classs (in the list) activates the 
+	 * switch by position.
+	 */
+	private boolean activatedByObject()
+	{
+		for(GameObject go : activatingObjectsOnSwitch)
+			if(go.getCenterPos().sub(getCenterPos()).len2() < activationRadius*activationRadius)
+				return true;
+		return false;
+	}
 }

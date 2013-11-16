@@ -8,13 +8,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.pezventure.Game;
+import com.pezventure.Util;
 import com.pezventure.objects.GameObject;
 
 public class Physics
@@ -28,19 +35,40 @@ public class Physics
 	World world;
 	
 	Box2DDebugRenderer box2dRenderer = new Box2DDebugRenderer();
+	ContactHandler contactHandler;
 		
 	public Physics()
 	{
 		//no gravity, allow sleeping objects
 		world = new World(new Vector2(0,0), true);
+		
+		contactHandler = new ContactHandler();
+		
 		box2dRenderer.setDrawAABBs(true);
 		box2dRenderer.setDrawBodies(true);
 		box2dRenderer.setDrawInactiveBodies(true);
+		
+		world.setContactListener(contactHandler);
+	}
+	
+	public void removeBody(Body b)
+	{
+		world.destroyBody(b);
+	}
+	
+	public void clear()
+	{
+		Gdx.app.log(Game.TAG, "clearing physics");
+		world.dispose();
+		world = new World(new Vector2(0,0), true);
+		world.setContactListener(contactHandler);
+		Gdx.app.log(Game.TAG,  "new world");
 	}
 	
 	public void update()
 	{
-		handleCollisions();
+		//should be handled by contact handler instead
+//		handleCollisions();
 		world.step(Game.SECONDS_PER_FRAME,VELOCITY_ITERATIONS, POSITION_ITERATIONS);		
 	}
 	
@@ -58,11 +86,58 @@ public class Physics
 			GameObject objA = (GameObject) bodyA.getUserData();
 			GameObject objB = (GameObject) bodyB.getUserData();
 			
-			objA.handleCollision(objB);
-			objB.handleCollision(objA);
+			objA.handleContact(objB);
+			objB.handleContact(objA);
 			
 //			Gdx.app.log(Game.TAG, "collision: " + objA.toString() + objB.toString());
 		}
+	}
+	
+	private boolean contactInvolvesObject(Contact c, GameObject go)
+	{
+		return c.getFixtureA().getBody().getUserData() == go ||
+			   c.getFixtureB().getBody().getUserData() == go;
+	}
+	
+	//if a gameobject expires, endContact needs to be processed 
+	public void handleEndContact(GameObject go)
+	{
+		for(Contact contact : world.getContactList())
+		{
+			if(contact.isTouching() && contactInvolvesObject(contact, go))
+			{
+				GameObject a = (GameObject) contact.getFixtureA().getBody().getUserData();
+				GameObject b = (GameObject) contact.getFixtureB().getBody().getUserData();
+				
+				a.handleEndContact(b);
+				b.handleEndContact(a);
+			}
+		}
+	}
+	
+	public GameObject feeler(Vector2 startingPos, float angleDeg, float distance, Class<?> targetCls)
+	{
+		Vector2 feeler = Util.ray(angleDeg, distance);
+		Vector2 endPos = startingPos.cpy().add(feeler);
+		
+		FeelerRaycastCallback cb = new FeelerRaycastCallback(targetCls);
+		world.rayCast(cb, startingPos, endPos);
+		
+		return cb.getResult();
+	}
+	
+	/**
+	 * 
+	 * @param startingPos position where the raycast starts
+	 * @param target target object
+	 * @return whether there exists a line-of-sight from starting point to center of target object
+	 */
+	public boolean lineOfSight(Vector2 startingPos, GameObject target)
+	{
+		LineOfSightRaycastCallback cb = new LineOfSightRaycastCallback(target);
+		world.rayCast(cb, startingPos, target.getCenterPos());
+		
+		return cb.hitTarget();
 	}
 	
 	public Body addRectBody(Rectangle rect, GameObject ref, BodyType type)
@@ -134,5 +209,27 @@ public class Physics
 	public void debugRender(Matrix4 combined)
 	{
 		box2dRenderer.render(world, combined.cpy().scale(32, 32, 1));
+	}
+	
+	public Joint joinBodies(Body a, Body b)
+	{
+		DistanceJointDef def = new DistanceJointDef();
+		def.initialize(a, b, a.getPosition(), b.getPosition());
+//		
+//		WeldJointDef def = new WeldJointDef();
+//		def.initialize(a, b, a.getPosition());
+//		def.bodyA = a;
+//		def.bodyB = b;
+//		def.type = JointType.WeldJoint;
+		
+		//anchor the objects at their centers
+		
+		return world.createJoint(def);
+	}
+	
+	
+	public void removeJoint(Joint j)
+	{
+		world.destroyJoint(j);
 	}
 }

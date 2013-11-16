@@ -9,15 +9,26 @@ public class BlueEnemy extends Entity
 {
 	private static final float SPEED = 1.5f;
 	private static final int TOUCH_DAMAGE = 1;
+	public static final int maxHP = 3;
+	public static final float invulerabilityLength = 0.5f;
+	private static final float invulerabilityFlickerInterval = 0.1f;
+	private static final float radarSensorRadius = 5f;
+	
+	int hp = maxHP;
+	float invulnerableTimeRemaining = 0;
+	
+	RadarSensor radar;
 	
 	public BlueEnemy(TilespaceRectMapObject to) {
 		
 		super(to, SPEED, Game.inst.spriteLoader.getSpriteAnimation("link_blue_hat",
 				         PrimaryDirection.valueOf(to.prop.get("dir", String.class))));
+		facing = PrimaryDirection.valueOf(to.prop.get("dir", String.class));
+		radar = new RadarSensor(getCenterPos(), radarSensorRadius, Player.class);
 	}
 
 	@Override
-	public void handleCollision(GameObject other)
+	public void handleContact(GameObject other)
 	{
 		if(other instanceof Player)
 		{
@@ -28,8 +39,38 @@ public class BlueEnemy extends Entity
 
 	@Override
 	void onExpire() {
-		// TODO Auto-generated method stub
-
+		Game.inst.physics.removeBody(radar.physicsBody);
 	}
+	
+	public void hit(int damage)
+	{
+		if(invulnerableTimeRemaining == 0)
+		{
+			hp -= damage;
+			invulnerableTimeRemaining = invulerabilityLength;
+			enableFlicker(invulerabilityLength, invulerabilityFlickerInterval);
+		}
+	}
+	
+	@Override
+	public void update()
+	{
+		super.update();
+		
+		invulnerableTimeRemaining -= Game.SECONDS_PER_FRAME;
+		if(invulnerableTimeRemaining < 0)
+		{
+			invulnerableTimeRemaining = 0;
+		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+		if(hp <= 0) expire();
+	}
+
+	@Override
+	public void handleEndContact(GameObject other)
+	{
+		//no-op
+	}
+
 
 }
