@@ -44,18 +44,25 @@
  </layer>
  <layer name="walls" width="20" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+NgYGBgwYMZCMgjY04gZmWgHmAdNW/UvEFgHrHpn1A+Gir+HTVv1DxSzBvNH6PmDRfz2Biok55BmB2IAc3b1hBgCQAA
+   H4sIAAAAAAAAC+NgYGBgoRLmBGJWBuoB1lHzRs0bBOZRI2/Q0n2j5o2aN5DmjeaPUfOGi3lsDNRrD7EDMQDLNq0kYAkAAA==
   </data>
  </layer>
- <objectgroup name="walls" width="20" height="30" visible="0">
+ <objectgroup name="walls" width="20" height="30">
   <properties>
    <property name="name" value="walls"/>
   </properties>
+  <object name="wall" type="wall" x="0" y="0" width="32" height="960"/>
+  <object name="wall" type="wall" x="32" y="0" width="608" height="32"/>
+  <object name="wall" type="wall" x="608" y="32" width="32" height="928"/>
+  <object name="wall" type="wall" x="0" y="928" width="640" height="32"/>
+  <object name="wall" type="wall" x="0" y="640" width="576" height="32"/>
+  <object name="wall" type="wall" x="0" y="320" width="576" height="32"/>
  </objectgroup>
  <objectgroup name="player_start" width="20" height="30" visible="0">
   <properties>
    <property name="name" value="player"/>
   </properties>
+  <object name="main_start" type="player_start" x="131" y="812" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="enemy" width="20" height="30" visible="0">
   <object name="enemy1" type="blue_enemy" x="179" y="515" width="32" height="32">
@@ -74,10 +81,9 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="environment" width="20" height="30">
+ <objectgroup name="environment" width="20" height="30" visible="0">
   <object name="door1" type="door" x="576" y="640" width="32" height="32"/>
   <object name="door2" type="door" x="576" y="320" width="32" height="32"/>
-  <object name="jar" type="jar" x="214" y="848"/>
  </objectgroup>
  <objectgroup name="rooms" width="20" height="30" visible="0">
   <object name="room" type="room" x="0" y="0" width="640" height="352">
@@ -108,25 +114,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="map_links" width="20" height="30">
-  <object name="to_puzzle_room" type="map_link" x="256" y="0" width="32" height="32">
-   <properties>
-    <property name="dest_link" value="entrance"/>
-    <property name="dest_map" value="puzzle_room"/>
-    <property name="entrance_dir" value="down"/>
-   </properties>
-  </object>
-  <object name="player_start_cleared" type="map_link" x="235" y="201" width="32" height="32">
-   <properties>
-    <property name="entrance_dir" value="up"/>
-   </properties>
-  </object>
-  <object name="player_start" type="map_link" x="101" y="863" width="32" height="32">
-   <properties>
-    <property name="entrance_dir" value="up"/>
-   </properties>
-  </object>
- </objectgroup>
+ <objectgroup name="map_links" width="20" height="30" visible="0"/>
  <objectgroup name="blocks" width="20" height="30" visible="0">
   <properties>
    <property name="push_dist" value="1"/>
