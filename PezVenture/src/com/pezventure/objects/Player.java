@@ -14,7 +14,7 @@ import com.pezventure.physics.PrimaryDirection;
 
 public class Player extends Entity
 {
-	private static final float SPEED = 2.0f;
+	public static final float SPEED = 2.0f;
 	private static final float PLAYER_SIZE = 0.75f;
 	private static final int MAX_HP = 10;
 	private static final float invulerabilityLength = 1.0f;
@@ -187,10 +187,7 @@ public class Player extends Entity
 	{
 		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), facing.getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		canGrab = (target != null && target.canGrab());
-		
-		if(canGrab)
-			System.out.println("can grab");
-		
+				
 		return canGrab;
 			
 	}

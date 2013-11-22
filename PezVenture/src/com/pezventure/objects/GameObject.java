@@ -43,6 +43,8 @@ public abstract class GameObject
 		addClass("invisible_floor_switch", InvisibleFloorSwitch.class);
 		addClass("blue_enemy", BlueEnemy.class);
 		addClass("jar", Jar.class);
+		addClass("sign", Sign.class);
+		addClass("facer", Facer.class);
 	}
 	
 	public static Class<?> getObjectClass(String name)
@@ -69,7 +71,7 @@ public abstract class GameObject
 	
 	String name;
 	boolean expired = false;
-	RenderLayer renderLayer = RenderLayer.ground;
+	RenderLayer renderLayer = RenderLayer.above_floor;
 	
 	public GameObject(TilespaceRectMapObject mo)
 	{

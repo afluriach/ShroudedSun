@@ -2,5 +2,5 @@ package com.pezventure.objects;
 
 public enum RenderLayer
 {
-	floor, ground;
+	floor, above_floor;
 }

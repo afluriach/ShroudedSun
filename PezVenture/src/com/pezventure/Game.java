@@ -49,6 +49,7 @@ public class Game implements ApplicationListener
 	
 	public static final int HEALTH_BAR_THICKNESS = 30;
 	public static final int HEALTH_BAR_LENGTH = 200;
+	public static final int HEALTH_BAR_OUTLINE = 4;
 	
 	public static final int DPAD_LENGTH = 210;
 	public static final int DPAD_THICKNESS = 60;
@@ -65,8 +66,8 @@ public class Game implements ApplicationListener
 	
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
-	public static final String startingLevel = "level1";
-	public static final String startingLink = "player_start";
+	public static final String startingLevel = "facer_floor";
+	public static final String startingLink = "entrance";
 	
 	//graphics
 	private OrthographicCamera camera;
@@ -79,8 +80,7 @@ public class Game implements ApplicationListener
 	//map
 	Area area;
 	String areaName = startingLevel;
-	//
-	String lastMapLink=startingLink;
+	String mapEntranceLink=startingLink;
 	AreaLoader areaLoader;
 	OrthogonalTiledMapRenderer mapRenderer;
 	Room crntRoom;
@@ -125,9 +125,28 @@ public class Game implements ApplicationListener
 	void drawGUI()
 	{
 		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(1, 0, 0, 1);
+//		shapeRenderer.setColor(1, 0, 0, 1);
 		int length = (int) (HEALTH_BAR_LENGTH*player.getHP()*1.0f/player.getMaxHP());
-		shapeRenderer.rect(GUI_EDGE_MARGIN, screenHeight-HEALTH_BAR_THICKNESS-GUI_EDGE_MARGIN, length, HEALTH_BAR_THICKNESS);
+//		shapeRenderer.rect(GUI_EDGE_MARGIN, screenHeight-HEALTH_BAR_THICKNESS-GUI_EDGE_MARGIN, length, HEALTH_BAR_THICKNESS);
+		
+		shapeRenderer.setColor(1,1,1,1);
+		shapeRenderer.rect(GUI_EDGE_MARGIN,
+						   screenHeight - HEALTH_BAR_THICKNESS - 2*HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
+						   HEALTH_BAR_LENGTH+2*HEALTH_BAR_OUTLINE,
+						   HEALTH_BAR_THICKNESS+2*HEALTH_BAR_OUTLINE);
+		
+		shapeRenderer.setColor(1,0,0,1);
+		shapeRenderer.rect(GUI_EDGE_MARGIN + HEALTH_BAR_OUTLINE,
+						   screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
+						   length,
+						   HEALTH_BAR_THICKNESS);
+		
+		shapeRenderer.setColor(0,0,0,1);
+		shapeRenderer.rect(GUI_EDGE_MARGIN+HEALTH_BAR_OUTLINE+length,
+				           screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
+				           HEALTH_BAR_LENGTH - length,
+				           HEALTH_BAR_THICKNESS);
+		
 		shapeRenderer.end();		
 		
 		controls.render(shapeRenderer, guiBatch, font);
@@ -149,7 +168,7 @@ public class Game implements ApplicationListener
 		else if(controls.right && !controls.left)
 			dir = PrimaryDirection.right;
 		
-		player.setDesiredDir(dir);	
+		player.setDesiredVel(dir, Player.SPEED);	
 		
 		if(controls.x)
 			player.setDesireToShoot();
@@ -193,7 +212,7 @@ public class Game implements ApplicationListener
 		controls = new Controls(screenWidth, screenHeight, touchControls, keyControls);
 		
 		//initialize game world
-		loadArea(startingLevel, lastMapLink);
+		loadArea(startingLevel, mapEntranceLink);
 		
 		initCamera();
 	}
@@ -208,9 +227,8 @@ public class Game implements ApplicationListener
 		
 		if(!link.destMap.equals(""))
 		{
-			//destMap is specified, will load a new map.
 			loadArea(link.destMap, link.destLink);
-			lastMapLink = link.name;
+			mapEntranceLink = link.name;
 		}
 		
 		MapLink dest = area.getMapLink(link.destLink);		
@@ -305,6 +323,38 @@ public class Game implements ApplicationListener
 		//Gdx.gl.glViewport(0, 0, screenWidth, screenHeight);
 		
 		//room occlusion
+		pushScissors();
+		
+		Matrix4 defaultMatrix = batch.getProjectionMatrix();
+		
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		mapRenderer.render();
+		batch.end();
+		
+		batch.begin();
+		gameObjectSystem.render(RenderLayer.floor, batch);
+		gameObjectSystem.render(RenderLayer.above_floor, batch);
+		batch.end();
+		
+		if(DEBUG)
+			physics.debugRender(camera.combined);
+		
+		batch.setProjectionMatrix(defaultMatrix);
+		
+		popScissors();
+		
+		drawGUI();		
+	}
+
+
+	private void popScissors() {
+		if(crntRoom != null)
+			ScissorStack.popScissors();
+	}
+
+
+	private void pushScissors() {
 		crntRoom = area.getCurrentRoom(player.getCenterPos());
 		if(crntRoom != null)
 		{			
@@ -319,7 +369,6 @@ public class Game implements ApplicationListener
 			clip.width = crntRoom.location.width*Game.PIXELS_PER_TILE;
 			clip.height = crntRoom.location.height*Game.PIXELS_PER_TILE;
 			
-//			ScissorStack.calculateScissors(camera, viewportX, viewportY, viewportWidth, viewportHeight, batchTransform, area, scissor);
 			ScissorStack.calculateScissors(camera,
 										   camera.position.x,
 										   camera.position.y,
@@ -329,36 +378,7 @@ public class Game implements ApplicationListener
 										   clip,
 										   scissor);
 			ScissorStack.pushScissors(scissor);
-			System.out.println(scissor);
 		}
-
-		
-		Matrix4 defaultMatrix = batch.getProjectionMatrix();
-		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		mapRenderer.render();
-		batch.end();
-		
-		batch.begin();
-		gameObjectSystem.render(RenderLayer.floor, batch);
-		gameObjectSystem.render(RenderLayer.ground, batch);
-		batch.end();
-		
-		if(DEBUG)
-			physics.debugRender(camera.combined);
-		
-		batch.setProjectionMatrix(defaultMatrix);
-		
-		if(crntRoom != null)
-			ScissorStack.popScissors();
-		
-		drawGUI();
-		
-//		Vector2 pos = player.getCenterPos();
-//		batch.begin();
-//		font.draw(batch, String.format("char pos: %f,%f", pos.x, pos.y), 50+camera.position.x, 50+camera.position.y);
-//		batch.end();
 	}
 
 	@Override
@@ -367,8 +387,6 @@ public class Game implements ApplicationListener
 		screenHeight = height;
 		
 		controls.setResolution(width, height);
-		
-//		camera.setToOrtho(false, width, height);
 	}
 
 	@Override
@@ -392,7 +410,7 @@ public class Game implements ApplicationListener
 			physics.clear();
 			
 			//reload current area
-			loadArea(areaName,lastMapLink);
+			loadArea(areaName,mapEntranceLink);
 			initCamera();
 		}
 	}

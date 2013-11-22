@@ -86,6 +86,8 @@ public class SpriteLoader
         textures.put("yellow_jar", loadTexture("sprites/yellow_jar.png"));
         textures.put("green_jar", loadTexture("sprites/green_jar.png"));
         textures.put("blue_jar", loadTexture("sprites/blue_jar.png"));
+        
+        textures.put("sign", loadTexture("sprites/sign.png"));
 	}
 	
 	public void unloadTextures()

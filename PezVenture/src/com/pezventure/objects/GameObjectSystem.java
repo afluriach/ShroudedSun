@@ -30,7 +30,7 @@ public class GameObjectSystem
 	public GameObjectSystem()
 	{
 		renderLayers.put(RenderLayer.floor, new ArrayList<GameObject>());
-		renderLayers.put(RenderLayer.ground, new ArrayList<GameObject>());
+		renderLayers.put(RenderLayer.above_floor, new ArrayList<GameObject>());
 	}
 		
 	/**

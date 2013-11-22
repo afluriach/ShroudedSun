@@ -34,52 +34,64 @@ public abstract class Entity extends GameObject
 	PrimaryDirection crntDir;
 	PrimaryDirection desiredDir;
 	PrimaryDirection facing = defaultFacing;
-	float speed;
+	float desiredSpeed;
 		
-	public Entity(TilespaceRectMapObject to, float speed, EntityAnimation animation)
+	public Entity(TilespaceRectMapObject to, EntityAnimation animation)
 	{
 		super(to);
-		this.speed = speed;
 		this.animation = animation;
 		//physicsBody = Physics.inst().addRectBody(to.rect, this, BodyType.DynamicBody, MASS, false);
 		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
+		
+		if(to.prop.containsKey("dir"))
+			facing = PrimaryDirection.valueOf(to.prop.get("dir", String.class));
+
 	}
 	
 	public Entity(Vector2 pos, float height, float width, float speed, EntityAnimation animation, String name)
 	{
 		super(name);
-		this.speed = speed;
 		this.animation = animation;
 		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
 	}
 	
 	/**
 	 * Supports only primary (4-dir), single magnitude movement. 
-	 * @param dir direction to move, or null for no movement
+	 * @param desiredDir direction to move, or null for no movement
 	 */
-	public void setVel(PrimaryDirection dir)
+	private void updateVel()
 	{
-//		Gdx.app.log(Game.TAG, "dir set: " + (dir == null ? "null" : dir.toString()));
-		if(dir == null)
+		if(desiredDir == null || desiredSpeed == 0f)
 		{
 			animation.resetAnimation();
 			setVel(Vector2.Zero);
 			stepDistAccumulated = 0;
 		}
-		else if(dir != crntDir)
+		else if(desiredDir != crntDir)
 		{
-			animation.setDirection(dir);
+			animation.setDirection(desiredDir);
 			animation.resetAnimation();
-			facing = dir;
+			facing = desiredDir;
 		}
 		
 		//velocity can be changed by physics engine due to collision with 
 		//objects
-		if(dir != null)
+		if(desiredDir != null)
 		{
-			setVel(dir.getUnitVector().scl(speed));
+			setVel(desiredDir.getUnitVector().scl(desiredSpeed));
 		}
-		crntDir = dir;
+		crntDir = desiredDir;
+	}
+	
+	public void setDesiredVel(PrimaryDirection desired, float speed)
+	{
+		desiredDir = desired;
+		desiredSpeed = speed;
+	}
+	
+	public void setDesiredSpeed(float speed)
+	{
+		desiredSpeed = speed;
 	}
 	
 	public void setDesiredDir(PrimaryDirection desired)
@@ -126,7 +138,7 @@ public abstract class Entity extends GameObject
 			
 		}
 		
-		setVel(desiredDir);
+		updateVel();
 		
 		stepDistAccumulated += getVel().len()*Game.SECONDS_PER_FRAME;
 		if(stepDistAccumulated >= stepLength)
