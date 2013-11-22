@@ -57,4 +57,33 @@ public enum PrimaryDirection
 				throw new Error();
 		}
 	}
+	
+	public PrimaryDirection rotateClockwise()
+	{
+		switch(this)
+		{
+		case up: return right;
+		case right: return down;
+		case down: return left;
+		case left: return up;
+		default: throw new Error();
+		}
+	}
+	
+	public PrimaryDirection rotateCounterclockwise()
+	{
+		switch(this)
+		{
+		case up: return left;
+		case left: return down;
+		case down: return right;
+		case right: return up;
+		default: throw new Error();
+		}
+	}
+	
+	public boolean opposite(PrimaryDirection dir)
+	{
+		return Math.abs(this.getAngle() - dir.getAngle()) == 180f;
+	}
 }
