@@ -33,17 +33,55 @@ public class Controls
 	public static final int dpadThickness = 60;
 	public static final int dpadSectionLength = dpadLength/2 - dpadThickness/2;
 	public static final int dpadSectionOffset = dpadLength/2 + dpadThickness/2;
+
+// xbox style button coloring
+//	public static final Color buttonAdark = Graphics.hsva(135f, .8f, .3f, 1f);
+//	public static final Color buttonBdark = Graphics.hsva(350f, .8f, .3f, 1f);
+//	public static final Color buttonXdark = Graphics.hsva(251f, .8f, .3f, 1f);
+//	public static final Color buttonYdark = Graphics.hsva(49f, .8f, .3f, 1f);
+//	
+//	public static final Color buttonAlight = Graphics.hsva(135f, 1f, .9f, 1f);
+//	public static final Color buttonBlight = Graphics.hsva(350f, 1f, .9f, 1f);
+//	public static final Color buttonXlight = Graphics.hsva(251f, 1f, .9f, 1f);
+//	public static final Color buttonYlight = Graphics.hsva(49f, 1f, .9f, 1f);
+
+//n64 style coloring	
+
+//	public static final Color buttonAdark = Graphics.hsva(251f, .8f, .3f, 1f);
+//	public static final Color buttonAlight = Graphics.hsva(251f, 1f, .9f, 1f);
+//	public static final Color buttonXdark = Graphics.hsva(135f, .8f, .3f, 1f);
+//	public static final Color buttonXlight = Graphics.hsva(135f, 1f, .9f, 1f);
+//	public static final Color buttonBdark = Graphics.hsva(49f, .8f, .3f, 1f);
+//	public static final Color buttonBlight = Graphics.hsva(49f, 1f, .9f, 1f);
+//	public static final Color buttonYdark = Graphics.hsva(49f, .8f, .3f, 1f);
+//	public static final Color buttonYlight = Graphics.hsva(49f, 1f, .9f, 1f);
+
+//gamecube style coloring
+
+//	public static final Color buttonAdark = Graphics.hsva(135f, .8f, .3f, 1f);
+//	public static final Color buttonXdark = Graphics.hsva(350f, .8f, .3f, 1f);
+//	public static final Color buttonBdark = Graphics.hsva(0f, 0f, .3f, 1f);
+//	public static final Color buttonYdark = Graphics.hsva(0f, 0f, .3f, 1f);
+//	
+//	public static final Color buttonAlight = Graphics.hsva(135f, 1f, .9f, 1f);
+//	public static final Color buttonXlight = Graphics.hsva(350f, 1f, .9f, 1f);
+//	public static final Color buttonBlight = Graphics.hsva(0f, 0f, .9f, 1f);
+//	public static final Color buttonYlight = Graphics.hsva(0f, 0f, .9f, 1f);
+
+//ps2 style controls
 	
-	public static final Color buttonAdark = Graphics.hsva(135f, .8f, .3f, 1f);
-	public static final Color buttonBdark = Graphics.hsva(350f, .8f, .3f, 1f);
-	public static final Color buttonXdark = Graphics.hsva(251f, .8f, .3f, 1f);
-	public static final Color buttonYdark = Graphics.hsva(49f, .8f, .3f, 1f);
+	public static final Color buttonYdark = Graphics.hsva(135f, .8f, .3f, 1f);
+	public static final Color buttonBdark = Graphics.hsva(20f, .8f, .3f, 1f);
+	public static final Color buttonAdark = Graphics.hsva(251f, .8f, .3f, 1f);
+	public static final Color buttonXdark = Graphics.hsva(350f, .8f, .3f, 1f);
 	
-	public static final Color buttonAlight = Graphics.hsva(135f, 1f, .9f, 1f);
-	public static final Color buttonBlight = Graphics.hsva(350f, 1f, .9f, 1f);
-	public static final Color buttonXlight = Graphics.hsva(251f, 1f, .9f, 1f);
-	public static final Color buttonYlight = Graphics.hsva(49f, 1f, .9f, 1f);
-			
+	
+	public static final Color buttonXlight = Graphics.hsva(350f, 1f, .9f, 1f);
+	public static final Color buttonYlight = Graphics.hsva(135f, 1f, .9f, 1f);
+	public static final Color buttonBlight = Graphics.hsva(20f, 1f, .9f, 1f);
+	public static final Color buttonAlight = Graphics.hsva(251f, 1f, .9f, 1f);
+
+	
 	public static final Color dpadDark = Graphics.hsva(251f, 0.01f, .3f, 1f);
 	public static final Color dpadLight = Graphics.hsva(251f, 0.01f, .7f, 1f);
 	
