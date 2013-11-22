@@ -33,7 +33,7 @@ public abstract class Bullet extends GameObject
 	@Override
 	public void handleContact(GameObject other)
 	{
-		if(other instanceof Wall || other instanceof Block || other instanceof Door)
+		if(other.renderLayer== RenderLayer.above_floor)
 			expire();
 	}
 }
