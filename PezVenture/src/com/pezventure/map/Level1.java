@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonValue.ValueType;
 import com.pezventure.Game;
 import com.pezventure.objects.BlueEnemy;
 import com.pezventure.objects.Door;
@@ -14,6 +16,12 @@ import com.pezventure.objects.GameObjectSystem;
 
 public class Level1 extends Area
 {
+	class SaveState
+	{
+		public boolean switchRoomSolved = false;
+		public boolean enemyRoomSolved = false;
+	}
+	
 	private static final int NUM_ENEMIES = 3;
 	
 	private Door door1;
@@ -22,6 +30,9 @@ public class Level1 extends Area
 	private FloorSwitch switch1;
 	private FloorSwitch switch2;
 	
+	public boolean switchRoomSolved = false;
+	public boolean enemyRoomSolved = false;
+		
 	List<GameObject> enemies = new ArrayList<GameObject>(3); 
 	
 	public Level1()
@@ -47,13 +58,15 @@ public class Level1 extends Area
 	@Override
 	public void update()
 	{
-		if(switch1.isActivated() && switch2.isActivated())
+		if(!switchRoomSolved && switch1.isActivated() && switch2.isActivated())
 		{
 			door1.unlock();
+			switchRoomSolved = true;
 		}
-		if(GameObject.allExpired(enemies))
+		if(!enemyRoomSolved && GameObject.allExpired(enemies))
 		{
 			door2.unlock();
+			enemyRoomSolved = true;
 		}
 	}
 
@@ -61,6 +74,25 @@ public class Level1 extends Area
 	public void exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void load(JsonValue val) {
+		
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JsonValue save() {
+		JsonValue val = new JsonValue(ValueType.object);
+		
+		SaveState st = new SaveState();
+		st.enemyRoomSolved = enemyRoomSolved;
+		st.switchRoomSolved = switchRoomSolved;
+		
+		
+		return null;
 	}
 
 }

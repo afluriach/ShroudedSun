@@ -2,6 +2,7 @@ package com.pezventure.map;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.objects.Door;
@@ -124,6 +125,18 @@ public class PuzzleRoom extends Area
 
 	@Override
 	public void exit() {
+	}
+
+	@Override
+	public void load(JsonValue val) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JsonValue save() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

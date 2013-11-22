@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 import com.pezventure.DisjointNode;
 import com.pezventure.Game;
 import com.pezventure.objects.GameObjectSystem;
@@ -36,6 +37,9 @@ public abstract class Area
 	public abstract void init();
 	public abstract void update();
 	public abstract void exit();
+	
+	public abstract void load(JsonValue val);
+	public abstract JsonValue save();
 	
 	public Vector2 playerStartPos;
 	
