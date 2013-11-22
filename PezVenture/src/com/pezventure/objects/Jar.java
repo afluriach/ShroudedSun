@@ -47,6 +47,10 @@ public class Jar extends GameObject implements Grabbable
 
 	@Override
 	public void handleContact(com.pezventure.objects.GameObject other) {
+		if(other instanceof Bullet)
+		{
+			other.expire();
+		}
 	}
 
 	@Override
