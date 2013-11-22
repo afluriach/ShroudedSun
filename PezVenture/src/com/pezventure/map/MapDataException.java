@@ -2,6 +2,15 @@ package com.pezventure.map;
 
 public class MapDataException extends RuntimeException {
 
+	public MapDataException()
+	{
+		super();
+	}
+	
+	public MapDataException(String string) {
+		super(string);
+	}
+
 	/**
 	 * 
 	 */
