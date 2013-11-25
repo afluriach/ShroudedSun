@@ -130,6 +130,8 @@ public abstract class Entity extends GameObject
 	 */
 	private void updateVel()
 	{
+		if(desiredVel == null) return;
+		
 		Vector2 velDisp = desiredVel.cpy().sub(getVel());
 		Vector2 dv = velDisp.cpy().nor().scl(acceleration*Game.SECONDS_PER_FRAME);
 		

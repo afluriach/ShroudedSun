@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.pezventure.Game;
@@ -34,6 +35,7 @@ public class Player extends Entity
 	int hp = MAX_HP;
 	float invulnerableTimeRemaining = 0f;
 	float fireTimeRemaining = 0f;
+	Shield shieldObj;
 	
 	//grabbing logic
 	public GameObject holdingItem;
@@ -44,6 +46,7 @@ public class Player extends Entity
 	//flag that determines if the player wants to shoot, set based on the controls.
 	boolean shoot = false;
 	boolean grab = false;
+	public boolean shield = false;
 	
 	public Player(Vector2 pos)
 	{
@@ -53,7 +56,9 @@ public class Player extends Entity
 			  SPEED,
 			  Game.inst.spriteLoader.getSpriteAnimation("link_dark_hat", PrimaryDirection.up), "player");
 		
+		shieldObj = new Shield(getCenterPos());
 		//physicsBody = Physics.inst().addRectBody(pos, PLAYER_SIZE, PLAYER_SIZE, BodyType.DynamicBody, this, MASS, false);
+		Game.inst.gameObjectSystem.addObject(shieldObj);
 	}
 	
 	public void update()
@@ -72,9 +77,12 @@ public class Player extends Entity
 			fireTimeRemaining = 0;
 		}
 		
-		 //can't shoot while holding an item.
+		 //can't shoot or use shieldwhile holding an item.
 		if(holdingItem != null)
+		{
 			shoot = false;
+			shield = false;
+		}
 		
 		//cooldown time between shots
 		if(shoot && fireTimeRemaining <= 0)
@@ -105,6 +113,9 @@ public class Player extends Entity
 			Vector2 holdDisp = getDir().getUnitVector().scl(grabDistance+HIT_CIRCLE_RADIUS);
 			holdingItem.setPos(getCenterPos().add(holdDisp));
 		}
+		
+		shieldObj.setActive(shield);
+		shieldObj.setPos(getCenterPos());
 	}
 	
 	@Override
@@ -165,6 +176,11 @@ public class Player extends Entity
 	public void setGrab()
 	{
 		grab = true;
+	}
+	
+	public void setShield()
+	{
+		shield = true;
 	}
 	
 	@Override

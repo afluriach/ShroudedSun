@@ -45,6 +45,7 @@ public abstract class GameObject
 		addClass("jar", Jar.class);
 		addClass("sign", Sign.class);
 		addClass("facer", Facer.class);
+		addClass("sneaker", Sneaker.class);
 	}
 	
 	public static Class<?> getObjectClass(String name)

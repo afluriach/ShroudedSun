@@ -66,8 +66,8 @@ public class Game implements ApplicationListener
 	
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
-	public static final String startingLevel = "facer_floor";
-	public static final String startingLink = "entrance";
+	public static final String startingLevel = "level1";
+	public static final String startingLink = "player_start";
 	
 	//graphics
 	private OrthographicCamera camera;
@@ -101,6 +101,14 @@ public class Game implements ApplicationListener
 	public boolean touchControls;
 	public int screenHeight;
 	public int screenWidth;
+	
+	enum state
+	{
+		play,
+		dialog,
+		pause,
+		mainMenu,
+	}
 	
 	public Game(boolean touch)
 	{
@@ -177,7 +185,7 @@ public class Game implements ApplicationListener
 			dir = PrimaryDirection.down;
 			vel.y = -1;
 		}
-		else if(controls.left && !controls.right)
+		if(controls.left && !controls.right)
 		{
 			dir = PrimaryDirection.left;
 			vel.x = -1;
@@ -219,8 +227,8 @@ public class Game implements ApplicationListener
 				player.setDesiredDir(player.getDir().rotateClockwise());
 			else if(angleDiff == -135f)
 				player.setDesiredDir(player.getDir().rotateCounterclockwise());
-			else if(angleDiff != 45f && angleDiff != -45f)
-				throw new RuntimeException(String.format("find diagonal dir. facing %f, movement dir %f", player.getDir().getUnitVector().angle(), vel.angle()));
+//			else if(angleDiff != 45f && angleDiff != -45f )
+//				throw new RuntimeException(String.format("find diagonal dir. facing %f, movement dir %f", player.getDir().getUnitVector().angle(), vel.angle()));
 		}
 		if(controls.x)
 			player.setDesireToShoot();
@@ -234,6 +242,8 @@ public class Game implements ApplicationListener
 		{
 			interactHeld = controls.a;
 		}
+		
+		player.shield = controls.b;
 	}
 		
 	

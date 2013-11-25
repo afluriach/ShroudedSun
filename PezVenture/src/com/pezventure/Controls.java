@@ -117,6 +117,7 @@ public class Controls
 	Circle buttonY;
 	
 	Texture playerAttackIcon;
+	Texture playerShieldIcon;
 	
 	public Controls(int width, int height, boolean touch, boolean keys)
 	{
@@ -127,6 +128,7 @@ public class Controls
 		createShapes();
 		
 		playerAttackIcon = Game.inst.spriteLoader.getTexture("bullet_ec");
+		playerShieldIcon = Game.inst.spriteLoader.getTexture("shield32");
 	}
 	
 	/**
@@ -205,6 +207,7 @@ public class Controls
 			batch.setColor(1f, 1f, 1f, 0.3f);
 		
 		Graphics.drawTexture(playerAttackIcon, new Vector2(buttonX.x*Game.TILES_PER_PIXEL,  buttonX.y*Game.TILES_PER_PIXEL), batch);
+		Graphics.drawTexture(playerShieldIcon, new Vector2(buttonB.x*Game.TILES_PER_PIXEL, buttonX.y*Game.TILES_PER_PIXEL), batch);
 		
 		batch.setColor(1f, 1f, 1f, 1f);
 		

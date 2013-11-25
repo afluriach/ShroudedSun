@@ -11,7 +11,7 @@ public class EnemyBullet extends Bullet
 {
 	public static final float speed = 4f;
 	public static final float mass = 2;
-	public static final float radius = 1f;
+	public static final float radius = 0.5f;
 	public static final int damage = 1;
 	
 	Texture texture;
@@ -40,7 +40,9 @@ public class EnemyBullet extends Bullet
 		
 		if(other instanceof Player)
 		{
-			((Player)other).hit(damage);
+			Player player = (Player) other;
+			if(!player.shield)
+				player.hit(damage);
 			expire();
 		}
 	}

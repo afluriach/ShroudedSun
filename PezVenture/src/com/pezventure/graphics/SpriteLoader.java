@@ -88,6 +88,11 @@ public class SpriteLoader
         textures.put("blue_jar", loadTexture("sprites/blue_jar.png"));
         
         textures.put("sign", loadTexture("sprites/sign.png"));
+        
+        textures.put("shield32", loadTexture("sprites/shield32.png"));
+        textures.put("shield64", loadTexture("sprites/shield64.png"));
+        textures.put("shield128", loadTexture("sprites/shield128.png"));
+        
 	}
 	
 	public void unloadTextures()

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
+import com.pezventure.Util;
 import com.pezventure.graphics.Graphics;
 import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
@@ -17,11 +18,19 @@ public class Door extends GameObject
 	private Texture texture;
 	private boolean isLocked = true;
 	
+	FloorSwitch[] switches;
+	String[] switchNames;
+	
 	public Door(TilespaceRectMapObject to)
 	{
 		super(to);
 		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody);
 		texture = Game.inst.spriteLoader.getTexture("door");
+		
+		if(to.prop.containsKey("switch"))
+		{
+			switchNames = to.prop.get("switch", String.class).split("\\s+");
+		}
 	}
 
 	@Override
@@ -36,7 +45,23 @@ public class Door extends GameObject
 	@Override
 	public void update()
 	{
-		//no-op
+		//init switches here. 
+		if(switches == null && switchNames != null)
+		{
+			switches = new FloorSwitch[switchNames.length];
+			
+			for(int i=0;i<switchNames.length; ++i)
+			{
+				switches[i] = (FloorSwitch) Game.inst.gameObjectSystem.getObjectByName(switchNames[i]);
+			}
+		}
+		
+		if(switches != null)
+		{
+			isLocked = !Util.allActivated(switches);
+			physicsBody.getFixtureList().get(0).setSensor(!isLocked);
+
+		}
 	}
 
 	@Override

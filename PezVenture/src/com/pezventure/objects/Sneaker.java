@@ -7,7 +7,7 @@ import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.physics.PrimaryDirection;
 
-public class Facer extends Entity implements Enemy
+public class Sneaker extends Entity implements Enemy
 {
 	private static final int TOUCH_DAMAGE = 1;
 	public static final float invulerabilityLength = 0.5f;
@@ -26,9 +26,9 @@ public class Facer extends Entity implements Enemy
 	float speed;
 	String targetName;
 	
-	public Facer(TilespaceRectMapObject to) {
+	public Sneaker(TilespaceRectMapObject to) {
 		
-		super(to, Game.inst.spriteLoader.getSpriteAnimation("link_blue_hat",
+		super(to, Game.inst.spriteLoader.getSpriteAnimation("link_green_hat",
 				         PrimaryDirection.valueOf(to.prop.get("dir", String.class))));
 		
 		if(to.prop.containsKey("target"))
@@ -86,7 +86,7 @@ public class Facer extends Entity implements Enemy
 			if(target == null) throw new RuntimeException(String.format("target, %s, not found", targetName));
 		}
 		
-		float desiredSpeed = isFacingTarget() ? speed : 0f;		
+		float desiredSpeed = isFacingTargetsBack() ? speed : 0f;		
 		
 		setDesiredVel(getDir().getUnitVector().scl(desiredSpeed));
 		
@@ -99,7 +99,7 @@ public class Facer extends Entity implements Enemy
 		//no-op
 	}
 
-	boolean isFacingTarget()
+	boolean isFacingTargetsBack()
 	{
 		//to find if the target is in the direction of this facer's sight, check the scalar
 		//projection of the displacement to the target, onto the unit vector representing its line of sight. 
@@ -115,7 +115,7 @@ public class Facer extends Entity implements Enemy
 //		Gdx.app.log(Game.TAG, String.format("facing %s, target facing %s, target disp %f,%f, dot %f",
 //							facing.toString(), target.facing.toString(), targetDisp.x, targetDisp.y, facing.getUnitVector().dot(targetDisp)));
 		
-		return (getDir().opposite(target.getDir()) && getDir().getUnitVector().dot(targetDisp) > 0);
+		return (getDir().equals(target.getDir()) && getDir().getUnitVector().dot(targetDisp) > 0);
 			
 	}
 }
