@@ -93,6 +93,7 @@
   <object name="switch" type="switch" x="260" y="730" width="32" height="32">
    <properties>
     <property name="activating_class" value="facer"/>
+    <property name="activation_margin" value="0.5"/>
    </properties>
   </object>
  </objectgroup>
@@ -102,6 +103,8 @@
   </properties>
   <object name="entrance" type="map_link" x="0" y="32" width="32" height="32">
    <properties>
+    <property name="dest_link" value="exit"/>
+    <property name="dest_map" value="puzzle_room"/>
     <property name="entrance_dir" value="right"/>
    </properties>
   </object>

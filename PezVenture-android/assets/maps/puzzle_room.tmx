@@ -238,7 +238,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="map_links" width="20" height="80" visible="0">
+ <objectgroup name="map_links" width="20" height="80">
   <properties>
    <property name="entrance_dir" value="right"/>
   </properties>
@@ -343,7 +343,8 @@
   </object>
   <object name="exit" type="map_link" x="192" y="0" width="32" height="32">
    <properties>
-    <property name="dest_link" value="reward_room"/>
+    <property name="dest_link" value="entrance"/>
+    <property name="dest_map" value="facer_floor"/>
     <property name="entrance_dir" value="down"/>
    </properties>
   </object>
