@@ -1,5 +1,6 @@
 package com.pezventure.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.graphics.SpriteLoader;
@@ -62,9 +63,9 @@ public class Facer extends Entity
 		if(other instanceof PlayerBullet)
 		{
 			if(rotateClockwise)
-				desiredDir = facing.rotateClockwise();
+				setDesiredDir(getDir().rotateClockwise());
 			else
-				desiredDir = facing.rotateCounterclockwise();
+				setDesiredDir(getDir().rotateCounterclockwise());
 			
 			other.expire();
 		}
@@ -78,7 +79,6 @@ public class Facer extends Entity
 	@Override
 	public void update()
 	{
-		super.update();
 		
 		if(target == null)
 		{
@@ -86,7 +86,11 @@ public class Facer extends Entity
 			if(target == null) throw new RuntimeException(String.format("target, %s, not found", targetName));
 		}
 		
-		desiredSpeed = isFacingTarget() ? speed : 0f;		
+		float desiredSpeed = isFacingTarget() ? speed : 0f;		
+		
+		setDesiredVel(getDir().getUnitVector().scl(desiredSpeed));
+		
+		super.update();
 	}
 	
 	@Override
@@ -108,7 +112,10 @@ public class Facer extends Entity
 		
 		Vector2 targetDisp = target.getCenterPos().sub(getCenterPos());
 		
-		return (facing.opposite(target.facing) && facing.getUnitVector().dot(targetDisp) > 0);
+//		Gdx.app.log(Game.TAG, String.format("facing %s, target facing %s, target disp %f,%f, dot %f",
+//							facing.toString(), target.facing.toString(), targetDisp.x, targetDisp.y, facing.getUnitVector().dot(targetDisp)));
+		
+		return (getDir().opposite(target.getDir()) && getDir().getUnitVector().dot(targetDisp) > 0);
 			
 	}
 }

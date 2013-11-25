@@ -157,19 +157,71 @@ public class Game implements ApplicationListener
 		controls.update();
 		
 		//set player movement
+		//velocity and direction are handled separately.
+		//in the case of diagonal movement, don't change direction if one direction matches current
+		//e.g. facing up and direction is up-right
+		
+		//else, change direction to one whose component is closest to current direction
+		//e.g. if facing right and down-left is pressed, face down
+		
 		PrimaryDirection dir = null;
+		Vector2 vel = new Vector2();
 		
 		if(controls.up && !controls.down)
+		{
 			dir = PrimaryDirection.up;
+			vel.y = 1;
+		}
 		else if(controls.down && !controls.up)
+		{
 			dir = PrimaryDirection.down;
+			vel.y = -1;
+		}
 		else if(controls.left && !controls.right)
+		{
 			dir = PrimaryDirection.left;
+			vel.x = -1;
+		}
 		else if(controls.right && !controls.left)
+		{
 			dir = PrimaryDirection.right;
+			vel.x += 1;
+		}
 		
-		player.setDesiredVel(dir, Player.SPEED);	
+		//normalize in case of diagonal velocity
+		if(vel.len2() == 0f)
+			player.setDesiredVel(Vector2.Zero);
+		else
+			player.setDesiredVel(vel.cpy().nor().scl(Player.SPEED));
 		
+		//determine desired dir for the player
+		//TODO add strafe lock 
+		
+		if(vel.len2() == 0f)
+		{
+			//no direction chosen, no change
+		}
+		
+		else if(vel.len2() == 1f)
+		{
+			//no diagonal. simple direction as determined above will work
+			player.setDesiredDir(dir);
+		}
+		else
+		{
+			
+			//only two possibilities. movement direction is off by 45 degrees (don't change direction)
+			//or movement direction is off by 135 degrees (change facing direction by 90 degrees)
+			
+			float angleDiff = vel.angle() - player.getDir().getUnitVector().angle();
+			
+			if(angleDiff == 135f)
+				player.setDesiredDir(player.getDir().rotateClockwise());
+			else if(angleDiff == -135f)
+				player.setDesiredDir(player.getDir().rotateCounterclockwise());
+			else if(angleDiff != 45f && angleDiff != -45f)
+				throw new RuntimeException(String.format("find diagonal dir. facing %f, movement dir %f", player.getDir().getUnitVector().angle(), vel.angle()));
+		}
 		if(controls.x)
 			player.setDesireToShoot();
 				

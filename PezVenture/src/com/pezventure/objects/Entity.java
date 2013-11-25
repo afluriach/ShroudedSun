@@ -16,6 +16,7 @@ public abstract class Entity extends GameObject
 	static final float MASS = 50.0f;
 	static final float HIT_CIRCLE_RADIUS = 0.35f;
 	static final PrimaryDirection defaultFacing = PrimaryDirection.up;
+	static final float acceleration = 4.5f;
 	
 	//entities may flicker to show temporary invulnerbility after being attacked or when about to expire. 
 	boolean isFlickering = false;
@@ -28,13 +29,13 @@ public abstract class Entity extends GameObject
 	
 	EntityAnimation animation;
 	
+	private PrimaryDirection crntDir = defaultFacing;
+	
 	/**
-	 * may be null to indicate no movement
+	 * if set, change the direction on the next cycle
 	 */
-	PrimaryDirection crntDir;
-	PrimaryDirection desiredDir;
-	PrimaryDirection facing = defaultFacing;
-	float desiredSpeed;
+	private PrimaryDirection desiredDir = defaultFacing;
+	private Vector2 desiredVel;
 		
 	public Entity(TilespaceRectMapObject to, EntityAnimation animation)
 	{
@@ -44,7 +45,7 @@ public abstract class Entity extends GameObject
 		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
 		
 		if(to.prop.containsKey("dir"))
-			facing = PrimaryDirection.valueOf(to.prop.get("dir", String.class));
+			crntDir = desiredDir = PrimaryDirection.valueOf(to.prop.get("dir", String.class));
 
 	}
 	
@@ -55,47 +56,111 @@ public abstract class Entity extends GameObject
 		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
 	}
 	
+	private void updateDirection()
+	{
+		if(desiredDir != null)
+		{
+			crntDir = desiredDir;
+			animation.setDirection(crntDir);
+		}
+	}
+	
 	/**
-	 * Supports only primary (4-dir), single magnitude movement. 
-	 * @param desiredDir direction to move, or null for no movement
+	 * calculate and apply acceleration based on current and desired velocity
+	 */
+//	private void updateVelOld()
+//	{
+//		float crntSpeed = getVel().len();
+//		float dv = acceleration*Game.SECONDS_PER_FRAME;
+//		float impulse = MASS*acceleration*Game.SECONDS_PER_FRAME;
+//
+//		
+//		if(desiredDir == crntDir)
+//		{
+//			
+//			//to prevent overshoot or oscillation/jittering, simulate
+//			//the effect of applying acceleration partially to reach the
+//			//desired velocity
+//			if(Math.abs(crntSpeed - desiredSpeed) < dv)
+//			{
+//				setVel(crntDir.getUnitVector().scl(desiredSpeed));
+//				
+//				if(desiredSpeed == 0f)
+//				{
+//					animation.resetAnimation();
+//					stepDistAccumulated = 0;
+//				}
+//			}
+//			else
+//			{
+//				PrimaryDirection dir = (crntSpeed < desiredSpeed) ? crntDir : crntDir.getOpposite();
+//				physicsBody.applyLinearImpulse(dir.getUnitVector().scl(impulse), getCenterPos(), true);
+//			}
+//		}		
+//		else
+//		{
+//			//if stopped, or nearly stopped, change direction
+//			if(crntSpeed < dv)
+//			{
+//				setVel(Vector2.Zero);
+//				animation.resetAnimation();
+//				stepDistAccumulated = 0;
+//				
+//				crntDir = desiredDir;
+//				
+//				animation.setDirection(crntDir);
+//			}
+//			else
+//			{
+//				physicsBody.applyLinearImpulse(crntDir.getOpposite().getUnitVector().scl(impulse), getCenterPos(), true);
+//			}
+//		}
+//		
+//		//velocity can be changed by physics engine due to collision with 
+//		//objects
+////		if(desiredDir != null)
+////		{
+////			setVel(desiredDir.getUnitVector().scl(desiredSpeed));
+////		}
+////		crntDir = desiredDir;
+//	}
+	
+	/**
+	 * apply acceleration based on desired velocity
 	 */
 	private void updateVel()
 	{
-		if(desiredDir == null || desiredSpeed == 0f)
+		Vector2 velDisp = desiredVel.cpy().sub(getVel());
+		Vector2 dv = velDisp.cpy().nor().scl(acceleration*Game.SECONDS_PER_FRAME);
+		
+		
+		//the calculated dv will overshoot the desired velocity. instead set it directly
+		if(dv.len2() > velDisp.len2())
+			setVel(desiredVel);
+		else
+			setVel(getVel().add(dv));
+		
+		if(getVel().len2() == 0f)
 		{
+			//stop walking animation
 			animation.resetAnimation();
-			setVel(Vector2.Zero);
 			stepDistAccumulated = 0;
 		}
-		else if(desiredDir != crntDir)
-		{
-			animation.setDirection(desiredDir);
-			animation.resetAnimation();
-			facing = desiredDir;
-		}
+	}
+	
+	public void setDesiredVel(Vector2 vel)
+	{
+		if(vel == null)
+			throw new NullPointerException();
 		
-		//velocity can be changed by physics engine due to collision with 
-		//objects
-		if(desiredDir != null)
-		{
-			setVel(desiredDir.getUnitVector().scl(desiredSpeed));
-		}
-		crntDir = desiredDir;
+		desiredVel = vel;
 	}
-	
-	public void setDesiredVel(PrimaryDirection desired, float speed)
-	{
-		desiredDir = desired;
-		desiredSpeed = speed;
-	}
-	
-	public void setDesiredSpeed(float speed)
-	{
-		desiredSpeed = speed;
-	}
-	
+		
 	public void setDesiredDir(PrimaryDirection desired)
 	{
+		if(desired == null)
+			throw new NullPointerException();
+
 		desiredDir = desired;
 	}
 	
@@ -138,6 +203,7 @@ public abstract class Entity extends GameObject
 			
 		}
 		
+		updateDirection();
 		updateVel();
 		
 		stepDistAccumulated += getVel().len()*Game.SECONDS_PER_FRAME;
@@ -160,5 +226,10 @@ public abstract class Entity extends GameObject
 		b.setPos(getCenterPos().add(disp));
 		
 		Game.inst.gameObjectSystem.addObject(b);
+	}
+	
+	public PrimaryDirection getDir()
+	{
+		return crntDir;
 	}
 }

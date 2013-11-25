@@ -49,7 +49,8 @@ public class EntityAnimation
 	public void setDirection(PrimaryDirection newDir)
 	{
 		crntDirection = newDir;
-		crntFrame = STANDING_FRAME;
+//		crntFrame = STANDING_FRAME;
+		//when changing direction, stay at the same point in the animation sequence.
 	}
 	
 	public void resetAnimation()

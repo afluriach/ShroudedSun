@@ -3,6 +3,7 @@ package com.pezventure.objects;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -14,7 +15,7 @@ import com.pezventure.physics.PrimaryDirection;
 
 public class Player extends Entity
 {
-	public static final float SPEED = 2.0f;
+	public static final float SPEED = 3.0f;
 	private static final float PLAYER_SIZE = 0.75f;
 	private static final int MAX_HP = 10;
 	private static final float invulerabilityLength = 1.0f;
@@ -80,7 +81,7 @@ public class Player extends Entity
 		{
 			//bullet inital pos shouldnt matter. it's position will be updated by the 
 			//shoot method
-			shoot(new PlayerBullet(getCenterPos(), facing), shotInitDist);
+			shoot(new PlayerBullet(getCenterPos(), getDir()), shotInitDist);
 			shoot = false;
 			fireTimeRemaining = fireInterval;
 		}
@@ -101,7 +102,7 @@ public class Player extends Entity
 		
 		if(holdingItem != null)
 		{
-			Vector2 holdDisp = facing.getUnitVector().scl(grabDistance+HIT_CIRCLE_RADIUS);
+			Vector2 holdDisp = getDir().getUnitVector().scl(grabDistance+HIT_CIRCLE_RADIUS);
 			holdingItem.setPos(getCenterPos().add(holdDisp));
 		}
 	}
@@ -185,7 +186,7 @@ public class Player extends Entity
 	 */
 	public boolean checkGrabbable()
 	{
-		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), facing.getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
+		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir().getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		canGrab = (target != null && target.canGrab());
 				
 		return canGrab;
@@ -195,7 +196,7 @@ public class Player extends Entity
 	public void grab()
 	{
 		//find grabable item player that is in front of the player
-		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), facing.getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
+		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir().getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		GameObject go = (GameObject) target;
 		
 		Gdx.app.log(Game.TAG, "target: " + go);
@@ -215,5 +216,15 @@ public class Player extends Entity
 		holdingItem = null;
 		itemJoint = null;
 	}
+	
+	@Override
+	public void render(SpriteBatch sb)
+	{
+		if(animation != null && showingSprite)
+		{
+			animation.render(sb, getCenterPos());
+		}
+	}
+
 
 }
