@@ -82,8 +82,21 @@ public enum PrimaryDirection
 		}
 	}
 	
+	public PrimaryDirection getOpposite()
+	{
+		switch(this)
+		{
+		case up: return down;
+		case left: return right;
+		case down: return up;
+		case right: return left;
+		default: throw new Error();
+		}
+	}
+	
 	public boolean opposite(PrimaryDirection dir)
 	{
-		return Math.abs(this.getAngle() - dir.getAngle()) == 180f;
+//		return Math.abs(this.getAngle() - dir.getAngle()) == 180f;
+		return this == dir.getOpposite();
 	}
 }
