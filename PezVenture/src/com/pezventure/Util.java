@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.pezventure.objects.FloorSwitch;
 import com.pezventure.objects.GameObject;
 import com.pezventure.physics.PrimaryDirection;
@@ -29,13 +30,18 @@ public class Util
 	{
 		if(Gdx.app.getType() == ApplicationType.Desktop)
 		{
-			return "assets/" + path;
+			return "./bin/" + path;
 		}
 		else
 		{
 			return path;
 		}
 
+	}
+	
+	public static FileHandle getInternalDirectory(String path)
+	{
+		return Gdx.files.internal(getInternalPath(path));
 	}
 	
 	/**
@@ -102,5 +108,25 @@ public class Util
 							 tileSpaceRect.y*Game.PIXELS_PER_TILE,
 							 tileSpaceRect.width*Game.PIXELS_PER_TILE,
 							 tileSpaceRect.height*Game.PIXELS_PER_TILE);
+	}
+	
+	//one-liner to generate a filter with values filled in. would be helpful to create possible filters 
+	//in a map and chose one.
+	//
+	//enemy: collides with 
+	//
+	//collateral vs non-collateral. enemy attack that may damage other enemies vs not.
+	//switches? switches that can only be activated by player or specfic kind of item. could 
+	//use filter to prevent anything other than player projectile (say) from colliding.
+	
+	public static Filter makeFilter(short category, short mask, short group)
+	{
+		Filter filter = new Filter();
+		
+		filter.categoryBits = category;
+		filter.maskBits = mask;
+		filter.groupIndex = group;
+		
+		return filter;
 	}
 }

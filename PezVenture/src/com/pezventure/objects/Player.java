@@ -211,7 +211,7 @@ public class Player extends Entity
 	
 	public void grab()
 	{
-		//find grabable item player that is in front of the player
+		// find grabable item player that is in front of the player
 		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir().getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		GameObject go = (GameObject) target;
 		

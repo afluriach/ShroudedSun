@@ -7,7 +7,7 @@
   <iosInfoPList>Info.plist.xml</iosInfoPList>
   <resources>
     <resource>
-      <directory>../PezVenture-android/assets</directory>
+      <directory>../pezventure-android/assets</directory>
       <includes>
         <include>**</include>
       </includes>

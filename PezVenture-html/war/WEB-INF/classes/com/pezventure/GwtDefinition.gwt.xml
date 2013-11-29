@@ -4,5 +4,5 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='Game' />
 	<entry-point class='com.pezventure.client.GwtLauncher' />
-	<set-configuration-property name="gdx.assetpath" value="../PezVenture-android/assets" />
+	<set-configuration-property name="gdx.assetpath" value="../pezventure-android/assets" />
 </module>

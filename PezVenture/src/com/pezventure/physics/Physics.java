@@ -1,5 +1,8 @@
 package com.pezventure.physics;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.math.Matrix4;
@@ -8,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -32,6 +36,22 @@ public class Physics
 	public static final float DEFAULT_MASS = 1.0f;
 	public static final float GRAVITY = 9.8f;
 	
+	public static final short enemyCategory = 1;
+	public static final short enemyBulletCategory = 2;
+	public static final short playerCategory = 4;
+	public static final short playerBulletCategory = 8;
+	public static final short floorObjectCategory = 16;
+	public static final short aboveFloorObjectCategory = 32;
+	public static final short playerShieldCategory = 64;
+	
+	public static Map<String, Filter> collisionFilters;
+	
+	public static void loadFilters()
+	{
+		collisionFilters = new TreeMap<String, Filter>();
+		
+	}
+	
 	World world;
 	
 	Box2DDebugRenderer box2dRenderer = new Box2DDebugRenderer();
@@ -49,6 +69,7 @@ public class Physics
 		box2dRenderer.setDrawInactiveBodies(true);
 		
 		world.setContactListener(contactHandler);
+		
 	}
 	
 	public void removeBody(Body b)
@@ -156,7 +177,13 @@ public class Physics
 	}
 
 	
-	public Body addRectBody(Vector2 pos,float height, float width, BodyType type, GameObject ref, float mass, boolean sensor)
+	public Body addRectBody(Vector2 pos,
+			                float height,
+			                float width, 
+			                BodyType type,
+			                GameObject ref,
+			                float mass,
+			                boolean sensor)
 	{
 		float area = height*width;
 		float density = mass/area;
@@ -177,6 +204,14 @@ public class Physics
 		
 		b.setUserData(ref);
 		b.resetMassData();
+		
+//		Filter filter = new Filter();
+		//set category bits here
+		Filter filter = f.getFilterData();
+		
+		//default category 1, default mask -1 (all bits), default group 0
+		
+		shape.dispose();
 		
 		return b;
 	}
@@ -203,9 +238,11 @@ public class Physics
 		b.setUserData(ref);
 		b.resetMassData();
 		
+		shape.dispose();
+		
 		return b;
 	}
-	
+		
 	public void debugRender(Matrix4 combined)
 	{
 		box2dRenderer.render(world, combined.cpy().scale(32, 32, 1));
