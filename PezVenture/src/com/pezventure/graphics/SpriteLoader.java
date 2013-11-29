@@ -7,8 +7,10 @@ import java.util.TreeMap;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.physics.PrimaryDirection;
 
@@ -21,13 +23,19 @@ public class SpriteLoader
 	
 	public SpriteLoader()
 	{
-		loadTextures();
+//		loadTextures();
+		loadTexturesInFolder();
 		loadSprites();
 	}
 		
 	private Texture loadTexture(String internalName)
 	{
 		return new Texture( Util.getInternalFile(internalName));
+	}
+	
+	private Texture loadTexture(FileHandle fh)
+	{
+		return new Texture(fh);
 	}
 	
 	private void loadSprites()
@@ -47,7 +55,7 @@ public class SpriteLoader
 //		entitySprites.put("melancholy", new EntitySpriteSet(sprites, 9, 4));
 		
 		int linkSpriteSize = 32;
-		Texture linkSpriteSheet = new Texture(Util.getInternalFile("sprites/link_sprites.png"));
+		Texture linkSpriteSheet = new Texture(Util.getInternalFile("spritesheets/link_sprites.png"));
         TextureRegion [][] linkSprites = TextureRegion.split(linkSpriteSheet, linkSpriteSize, linkSpriteSize);
         spriteSheetsLoaded.add(linkSpriteSheet);
 		
@@ -65,6 +73,23 @@ public class SpriteLoader
         
 	}
 	
+	private void loadTexturesInFolder()
+	{
+		FileHandle handle = Util.getInternalDirectory("sprites/");
+		
+		for(FileHandle fh : handle.list())
+		{
+			if(fh.extension().equals("png"))
+			{
+				textures.put(fh.nameWithoutExtension(), loadTexture(fh));
+//				Gdx.app.log(Game.TAG, String.format("file %s loaded, saved as %s", fh.name(), fh.nameWithoutExtension()));
+			}
+			else
+			{
+//				Gdx.app.log(Game.TAG, String.format("file %s skipped in texture folder", fh.name()));
+			}
+		}
+	}
 	
 	private void loadTextures()
 	{
