@@ -121,7 +121,7 @@
     <property name="entrance_dir" value="up"/>
    </properties>
   </object>
-  <object name="player_start" type="map_link" x="101" y="863" width="32" height="32">
+  <object name="player_start" type="map_link" x="51" y="874" width="32" height="32">
    <properties>
     <property name="entrance_dir" value="up"/>
    </properties>

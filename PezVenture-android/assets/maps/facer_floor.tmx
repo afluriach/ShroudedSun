@@ -51,12 +51,12 @@
  </tileset>
  <layer name="background" width="20" height="80">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3MsQkAIBAEwW9A7b9bKxA/OANhBjbdqqzZLP3067+Thp+f39EKPW75+b36AQAAAPxsA9hCA88AGQAA
+   H4sIAAAAAAAAC+3WQQqAMBAEwXwg+v/fehfEDRlBYzXMtWBv21q2rbi0yavbyTqPx7tsDxl34/Ge8tL1wni8v3rnZn+2t/+nvO95I+YK90qSJGmNDg1YQcMAGQAA
   </data>
  </layer>
  <layer name="walls" width="20" height="80">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3WSwrAIAwFwLfo9/4X7qogtQtbihSZAXchBGKiW5Kp4ez51iyuS9ySuodb6v6ujfnuamitRT75Rs9XztY5U+UMPt2nf98v4saOu97d5P5/8Ob9AAAAAOjhACKxtZ8AGQAA
+   H4sIAAAAAAAAC+2WywrAIAwE99CH/f8f7qkgNYctFQ0yA15kCIqusUjajHGpLzveEO9Qe4ZF7fmeZr1oDe5aqEe91evV2XoyVWfw63ua/X3BW9t7310p/h+4/SP7fvHwZnpRr1AwR97wZnou2fcxIr9/+iUAAAAA9OUGs3YYsQAZAAA=
   </data>
  </layer>
  <objectgroup name="walls" width="20" height="80" visible="0">
@@ -75,12 +75,47 @@
     <property name="dir" value="down"/>
    </properties>
   </object>
+  <object name="facer" type="facer" x="159" y="1061" width="27" height="28">
+   <properties>
+    <property name="dir" value="down"/>
+   </properties>
+  </object>
+  <object name="facer" type="facer" x="160" y="928" width="27" height="28">
+   <properties>
+    <property name="dir" value="down"/>
+   </properties>
+  </object>
+  <object name="follower" type="sneaker" x="64" y="1312" width="32" height="32">
+   <properties>
+    <property name="dir" value="right"/>
+   </properties>
+  </object>
+  <object name="room3_switch" type="floor_switch" x="256" y="1312" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="sneaker"/>
+    <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="environment" width="20" height="80">
-  <object name="room1_door" type="door" x="128" y="832" width="32" height="32"/>
+  <object name="room1_door" type="door" x="128" y="832" width="32" height="32">
+   <properties>
+    <property name="switch" value="room1_switch"/>
+   </properties>
+  </object>
   <object name="sign" type="sign" x="61" y="133" width="32" height="32">
    <properties>
     <property name="msg" value="Some things will move if they like what they see, but it can't change direction on its own."/>
+   </properties>
+  </object>
+  <object name="room2_door" type="door" x="160" y="1184" width="32" height="32">
+   <properties>
+    <property name="switch" value="room2_switch1 room2_switch2"/>
+   </properties>
+  </object>
+  <object name="room3_door" type="door" x="320" y="1440" width="32" height="32">
+   <properties>
+    <property name="switch" value="room3_switch"/>
    </properties>
   </object>
  </objectgroup>
@@ -88,9 +123,22 @@
   <object name="lobby" type="room" x="0" y="0" width="352" height="224"/>
   <object name="corridor" type="room" x="96" y="224" width="96" height="320"/>
   <object name="room1" type="room" x="0" y="544" width="352" height="320"/>
+  <object name="room2" type="room" x="0" y="832" width="352" height="384"/>
  </objectgroup>
  <objectgroup name="floor_objects" width="20" height="80">
-  <object name="switch" type="switch" x="260" y="730" width="32" height="32">
+  <object name="room1_switch" type="switch" x="260" y="730" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+    <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
+  <object name="room2_switch1" type="floor_switch" x="64" y="1120" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+    <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
+  <object name="room2_switch2" type="floor_switch" x="256" y="1120" width="32" height="32">
    <properties>
     <property name="activating_class" value="facer"/>
     <property name="activation_margin" value="0.5"/>
