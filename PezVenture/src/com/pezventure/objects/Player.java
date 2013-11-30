@@ -54,7 +54,7 @@ public class Player extends Entity
 			  PLAYER_SIZE,
 			  PLAYER_SIZE,
 			  SPEED,
-			  Game.inst.spriteLoader.getSpriteAnimation("link_dark_hat", PrimaryDirection.up), "player");
+			  Game.inst.spriteLoader.getSpriteAnimation("cirno", 2), "player");
 		
 		shieldObj = new Shield(getCenterPos());
 		//physicsBody = Physics.inst().addRectBody(pos, PLAYER_SIZE, PLAYER_SIZE, BodyType.DynamicBody, this, MASS, false);
@@ -110,7 +110,7 @@ public class Player extends Entity
 		
 		if(holdingItem != null)
 		{
-			Vector2 holdDisp = getDir().getUnitVector().scl(grabDistance+HIT_CIRCLE_RADIUS);
+			Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(grabDistance+HIT_CIRCLE_RADIUS);
 			holdingItem.setPos(getCenterPos().add(holdDisp));
 		}
 		
@@ -202,7 +202,7 @@ public class Player extends Entity
 	 */
 	public boolean checkGrabbable()
 	{
-		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir().getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
+		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		canGrab = (target != null && target.canGrab());
 				
 		return canGrab;
@@ -212,7 +212,7 @@ public class Player extends Entity
 	public void grab()
 	{
 		// find grabable item player that is in front of the player
-		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir().getAngle(), HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
+		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		GameObject go = (GameObject) target;
 		
 		Gdx.app.log(Game.TAG, "target: " + go);

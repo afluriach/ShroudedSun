@@ -3,6 +3,7 @@ package com.pezventure.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
+import com.pezventure.Util;
 import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.physics.PrimaryDirection;
@@ -28,8 +29,7 @@ public class Facer extends Entity implements Enemy
 	
 	public Facer(TilespaceRectMapObject to) {
 		
-		super(to, Game.inst.spriteLoader.getSpriteAnimation("link_blue_hat",
-				         PrimaryDirection.valueOf(to.prop.get("dir", String.class))));
+		super(to, Game.inst.spriteLoader.getSpriteAnimation("tewi", 2));
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);
@@ -62,10 +62,20 @@ public class Facer extends Entity implements Enemy
 		
 		if(other instanceof PlayerBullet)
 		{
+			//TODO ternary with conditional add/subtract 8
+			int newDir = getDir();
+			
 			if(rotateClockwise)
-				setDesiredDir(getDir().rotateClockwise());
+			{
+				newDir += 2;
+				if(newDir >= 8) newDir -= 8;
+			}
 			else
-				setDesiredDir(getDir().rotateCounterclockwise());
+			{
+				newDir -= 2;
+				if(newDir < 0) newDir += 8;
+			}
+			setDesiredDir(newDir);
 			
 			other.expire();
 		}
@@ -88,7 +98,7 @@ public class Facer extends Entity implements Enemy
 		
 		float desiredSpeed = isFacingTarget() ? speed : 0f;		
 		
-		setDesiredVel(getDir().getUnitVector().scl(desiredSpeed));
+		setDesiredVel(Util.get8DirUnit(getDir()).scl(desiredSpeed));
 		
 		super.update();
 	}
@@ -115,7 +125,16 @@ public class Facer extends Entity implements Enemy
 //		Gdx.app.log(Game.TAG, String.format("facing %s, target facing %s, target disp %f,%f, dot %f",
 //							facing.toString(), target.facing.toString(), targetDisp.x, targetDisp.y, facing.getUnitVector().dot(targetDisp)));
 		
-		return (getDir().opposite(target.getDir()) && getDir().getUnitVector().dot(targetDisp) > 0);
+		//generalize it so it works for 4dir facer vs 8dir player. if the dot product of of the facing vectors is 
+		//negative, they are facing. if < 1, they are diagonal.
+		
+		Vector2 facingVector = Util.get8DirUnit(getDir());
+		Vector2 targetFacingVector = Util.get8DirUnit(target.getDir());
+		
+		boolean facing = facingVector.dot(targetFacingVector) < 0;
+		boolean visible = facingVector.dot(targetDisp) > 0;
+		
+		return (facing && visible);
 			
 	}
 }

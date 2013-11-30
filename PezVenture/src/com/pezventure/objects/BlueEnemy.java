@@ -35,8 +35,8 @@ public class BlueEnemy extends Entity implements Enemy
 	
 	public BlueEnemy(TilespaceRectMapObject to) {
 		
-		super(to, Game.inst.spriteLoader.getSpriteAnimation("link_blue_hat",
-				         PrimaryDirection.valueOf(to.prop.get("dir", String.class))));
+		super(to, Game.inst.spriteLoader.getSpriteAnimation("sakuya", 2));
+		
 		radar = new RadarSensor(getCenterPos(), radarSensorRadius, Player.class);
 	}
 
@@ -98,7 +98,7 @@ public class BlueEnemy extends Entity implements Enemy
 	
 	public void idle()
 	{
-		List<GameObject> detected = radar.getDetectedOjects(getDir().getAngle(), fovAngle);
+		List<GameObject> detected = radar.getDetectedOjects(getDir()*45f, fovAngle);
 		if(!detected.isEmpty())
 		{
 			target = detected.get(0);
@@ -164,7 +164,7 @@ public class BlueEnemy extends Entity implements Enemy
 				}
 			}
 			
-			setDesiredDir(desiredDir);
+			setDesiredDir(desiredDir.getAngle8Dir());
 			setDesiredVel(desiredVel);
 		}
 	}
@@ -172,7 +172,7 @@ public class BlueEnemy extends Entity implements Enemy
 	public void shoot()
 	{
 		//only fire if the angle to the target is appropriate
-		float angleToTarget = target.getCenterPos().sub(getCenterPos()).angle() - getDir().getAngle();
+		float angleToTarget = target.getCenterPos().sub(getCenterPos()).angle() - getDir()*45f;
 		
 		if(Math.abs(angleToTarget) < maxFireAngle)
 		{

@@ -16,7 +16,7 @@ public class PlayerBullet extends Bullet
 	
 	Texture texture;
 	
-	public PlayerBullet(Vector2 pos, PrimaryDirection dir)
+	public PlayerBullet(Vector2 pos, int dir)
 	{
 		super(pos, radius, "PlayerBullet", dir, speed, mass);
 		

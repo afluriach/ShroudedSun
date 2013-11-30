@@ -3,6 +3,7 @@ package com.pezventure.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
+import com.pezventure.Util;
 import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.physics.PrimaryDirection;
@@ -28,8 +29,7 @@ public class Sneaker extends Entity implements Enemy
 	
 	public Sneaker(TilespaceRectMapObject to) {
 		
-		super(to, Game.inst.spriteLoader.getSpriteAnimation("link_green_hat",
-				         PrimaryDirection.valueOf(to.prop.get("dir", String.class))));
+		super(to, Game.inst.spriteLoader.getSpriteAnimation("reisen", 2));
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);
@@ -62,10 +62,19 @@ public class Sneaker extends Entity implements Enemy
 		
 		if(other instanceof PlayerBullet)
 		{
+			int newDir = getDir();
+			
 			if(rotateClockwise)
-				setDesiredDir(getDir().rotateClockwise());
+			{
+				newDir += 2;
+				if(newDir >= 8) newDir -= 8;
+			}
 			else
-				setDesiredDir(getDir().rotateCounterclockwise());
+			{
+				newDir -= 2;
+				if(newDir < 0) newDir += 8;
+			}
+			setDesiredDir(newDir);
 			
 			other.expire();
 		}
@@ -88,7 +97,7 @@ public class Sneaker extends Entity implements Enemy
 		
 		float desiredSpeed = isFacingTargetsBack() ? speed : 0f;		
 		
-		setDesiredVel(getDir().getUnitVector().scl(desiredSpeed));
+		setDesiredVel(Util.get8DirUnit(getDir()).scl(desiredSpeed));
 		
 		super.update();
 	}
@@ -115,7 +124,14 @@ public class Sneaker extends Entity implements Enemy
 //		Gdx.app.log(Game.TAG, String.format("facing %s, target facing %s, target disp %f,%f, dot %f",
 //							facing.toString(), target.facing.toString(), targetDisp.x, targetDisp.y, facing.getUnitVector().dot(targetDisp)));
 		
-		return (getDir().equals(target.getDir()) && getDir().getUnitVector().dot(targetDisp) > 0);
+		Vector2 facingVector = Util.get8DirUnit(getDir());
+		Vector2 targetFacingVector = Util.get8DirUnit(target.getDir());
+		
+		boolean facingBack = facingVector.dot(targetFacingVector) > 0;
+		boolean visible = facingVector.dot(targetDisp) > 0;
+
+		
+		return (facingBack && visible);
 			
 	}
 }

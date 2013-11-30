@@ -129,4 +129,11 @@ public class Util
 		
 		return filter;
 	}
+	
+	public static Vector2 get8DirUnit(int dir)
+	{
+		float angle = dir*45f;
+		
+		return new Vector2(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
+	}
 }

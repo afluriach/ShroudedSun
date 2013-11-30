@@ -4,7 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
+import com.pezventure.Util;
 import com.pezventure.graphics.EntityAnimation4Dir;
+import com.pezventure.graphics.EntityAnimation8Dir;
+import com.pezventure.map.MapDataException;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.physics.Physics;
 import com.pezventure.physics.PrimaryDirection;
@@ -15,7 +18,7 @@ public abstract class Entity extends GameObject
 	static final float stepLength = 0.25f;
 	static final float MASS = 50.0f;
 	static final float HIT_CIRCLE_RADIUS = 0.35f;
-	static final PrimaryDirection defaultFacing = PrimaryDirection.up;
+	static final int defaultFacing = 2;
 	static final float acceleration = 4.5f;
 	
 	//entities may flicker to show temporary invulnerbility after being attacked or when about to expire. 
@@ -27,17 +30,17 @@ public abstract class Entity extends GameObject
 	
 	float stepDistAccumulated=0;
 	
-	EntityAnimation4Dir animation;
+	EntityAnimation8Dir animation;
 	
-	private PrimaryDirection crntDir = defaultFacing;
+	private int crntDir = defaultFacing;
 	
 	/**
 	 * if set, change the direction on the next cycle
 	 */
-	private PrimaryDirection desiredDir = defaultFacing;
+	private int desiredDir = defaultFacing;
 	private Vector2 desiredVel;
 		
-	public Entity(TilespaceRectMapObject to, EntityAnimation4Dir animation)
+	public Entity(TilespaceRectMapObject to, EntityAnimation8Dir animation)
 	{
 		super(to);
 		this.animation = animation;
@@ -45,11 +48,26 @@ public abstract class Entity extends GameObject
 		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
 		
 		if(to.prop.containsKey("dir"))
-			crntDir = desiredDir = PrimaryDirection.valueOf(to.prop.get("dir", String.class));
-
+		{
+			try
+			{
+				crntDir = desiredDir = PrimaryDirection.valueOf(to.prop.get("dir", String.class)).getAngle8Dir();
+			}
+			catch(IllegalArgumentException e)
+			{
+				//the given dir is not a string representing a primary direction.
+				//the direction may also be an 8dir angle
+				
+				crntDir = desiredDir = to.prop.get("dir", Integer.class);
+				
+				if(crntDir < 0 || crntDir >= 8)
+					throw new MapDataException(String.format("invalid dir %d in entity %s", crntDir, to.name));
+			}
+		}
+		animation.setDirection(crntDir);
 	}
 	
-	public Entity(Vector2 pos, float height, float width, float speed, EntityAnimation4Dir animation, String name)
+	public Entity(Vector2 pos, float height, float width, float speed, EntityAnimation8Dir animation, String name)
 	{
 		super(name);
 		this.animation = animation;
@@ -58,11 +76,8 @@ public abstract class Entity extends GameObject
 	
 	private void updateDirection()
 	{
-		if(desiredDir != null)
-		{
-			crntDir = desiredDir;
-			animation.setDirection(crntDir);
-		}
+		crntDir = desiredDir;
+		animation.setDirection(crntDir);
 	}
 	
 	/**
@@ -158,10 +173,10 @@ public abstract class Entity extends GameObject
 		desiredVel = vel;
 	}
 		
-	public void setDesiredDir(PrimaryDirection desired)
+	public void setDesiredDir(int desired)
 	{
-		if(desired == null)
-			throw new NullPointerException();
+		if(desired < 0 || desired >= 8)
+			throw new IllegalArgumentException();
 
 		desiredDir = desired;
 	}
@@ -221,7 +236,7 @@ public abstract class Entity extends GameObject
 	//physics body, in the direction of its movement.
 	public void shoot(Bullet b, float distance)
 	{
-		Vector2 dispDir = b.getDir().getUnitVector();
+		Vector2 dispDir = Util.get8DirUnit(b.getDir());
 		float dispMag = HIT_CIRCLE_RADIUS + b.getRadius() + distance;
 		Vector2 disp = dispDir.scl(dispMag);
 
@@ -230,7 +245,7 @@ public abstract class Entity extends GameObject
 		Game.inst.gameObjectSystem.addObject(b);
 	}
 	
-	public PrimaryDirection getDir()
+	public int getDir()
 	{
 		return crntDir;
 	}

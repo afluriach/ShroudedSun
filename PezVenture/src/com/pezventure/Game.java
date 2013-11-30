@@ -195,12 +195,11 @@ public class Game implements ApplicationListener
 			dir = PrimaryDirection.right;
 			vel.x += 1;
 		}
+
+		//normalize for diagonal movement
+		vel.nor();
 		
-		//normalize in case of diagonal velocity
-		if(vel.len2() == 0f)
-			player.setDesiredVel(Vector2.Zero);
-		else
-			player.setDesiredVel(vel.cpy().nor().scl(Player.SPEED));
+		player.setDesiredVel(vel.scl(Player.SPEED));
 		
 		//determine desired dir for the player
 		//TODO add strafe lock 
@@ -210,26 +209,11 @@ public class Game implements ApplicationListener
 			//no direction chosen, no change
 		}
 		
-		else if(vel.len2() == 1f)
-		{
-			//no diagonal. simple direction as determined above will work
-			player.setDesiredDir(dir);
-		}
 		else
 		{
-			
-			//only two possibilities. movement direction is off by 45 degrees (don't change direction)
-			//or movement direction is off by 135 degrees (change facing direction by 90 degrees)
-			
-			float angleDiff = vel.angle() - player.getDir().getUnitVector().angle();
-			
-			if(angleDiff == 135f)
-				player.setDesiredDir(player.getDir().rotateClockwise());
-			else if(angleDiff == -135f)
-				player.setDesiredDir(player.getDir().rotateCounterclockwise());
-//			else if(angleDiff != 45f && angleDiff != -45f )
-//				throw new RuntimeException(String.format("find diagonal dir. facing %f, movement dir %f", player.getDir().getUnitVector().angle(), vel.angle()));
+			player.setDesiredDir((int) (vel.angle()/45f));
 		}
+
 		if(controls.x)
 			player.setDesireToShoot();
 				

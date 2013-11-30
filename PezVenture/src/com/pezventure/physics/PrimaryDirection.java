@@ -58,6 +58,11 @@ public enum PrimaryDirection
 		}
 	}
 	
+	public int getAngle8Dir()
+	{
+		return (int) (getAngle()/45f);
+	}
+	
 	public PrimaryDirection rotateClockwise()
 	{
 		switch(this)
