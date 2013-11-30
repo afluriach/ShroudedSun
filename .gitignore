@@ -30,3 +30,5 @@ PezVenture-html/war/
 *.ipr
 *.iws
 .idea/
+
+.metadata/.plugins/
