@@ -27,10 +27,10 @@ public class Controls
 	public static final int maxPressEvents = 5;
 	
 	public static final int margin = 20;
-	public static final int buttonRadius = 35;
+	public static final int buttonRadius = 40;
 	public static final int buttonTrimThickness = 5;
 	
-	public static final int dpadLength = 210;
+	public static final int dpadLength = 240;
 	public static final int dpadThickness = 60;
 	public static final int dpadSectionLength = dpadLength/2 - dpadThickness/2;
 	public static final int dpadSectionOffset = dpadLength/2 + dpadThickness/2;
@@ -60,7 +60,7 @@ public class Controls
 	
 	//GUI elements
 	
-	IsoscelesTriangle [] dpadTriangles = new IsoscelesTriangle[8];
+	IsoscelesTriangle [] dpadTriangles = new IsoscelesTriangle[16];
 	
 //	Rectangle dpadUp;
 //	Rectangle dpadDown;
@@ -101,12 +101,24 @@ public class Controls
 	public void createShapes()
 	{
 		Vector2 dpadCenter = new Vector2(margin+dpadLength/2, margin+dpadLength/2);
-		float triangleBase = (float) (dpadLength / (2/Math.sqrt(2) +1));
+		float triangleBase = (float) (dpadLength/2 / (2/Math.sqrt(2) +1));
 		
-		for(int i=0;i<8 ; ++i)
+		for(int i=0;i<16; i++)
 		{
-			Vector2 triangleRay = Util.get8DirUnit(i).scl(dpadLength/2);
+			float angle = i*360f/16 - 11.25f;
+			
+			Vector2 triangleRay = Util.getUnit(angle).scl(dpadLength/2);
 			dpadTriangles[i] = new IsoscelesTriangle(triangleRay, dpadCenter, triangleBase);
+			
+//			float angle1 = i*45f - 22.5f;
+//			if(angle1 < 0) angle1 += 360;
+//			
+//			float angle2 = i*45f + 22.5f;
+//			if(angle2 >= 360) angle2 -= 360;
+//			
+//			dpadTriangles[2*i] = new IsoscelesTriangle(Util.getUnit(angle1).scl(dpadLength/2), dpadCenter, triangleBase);
+//			dpadTriangles[2*i+1] = new IsoscelesTriangle(Util.getUnit(angle2).scl(dpadLength/2), dpadCenter, triangleBase);
+			
 		}
 		
 //		dpadUp = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin+dpadLength/2+dpadThickness/2, dpadThickness, dpadLength/2 - dpadThickness/2);
@@ -164,11 +176,15 @@ public class Controls
 		drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
 		drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
 		
-		for(int i=0;i<8;++i)
+		if(touchControls)
 		{
-			drawDpadTriangle(shapeRenderer, i == controlPad8Dir, dpadTriangles[i]);
+		
+			for(int i=0;i<8;++i)
+			{
+				drawDpadTriangle(shapeRenderer, i == controlPad8Dir, dpadTriangles[2*i]);
+				drawDpadTriangle(shapeRenderer, i == controlPad8Dir, dpadTriangles[2*i+1]);
+			}
 		}
-				
 //		drawDpadSegment(shapeRenderer, up, dpadUp);
 //		drawDpadSegment(shapeRenderer, right, dpadRight);
 //		drawDpadSegment(shapeRenderer, down, dpadDown);
@@ -245,7 +261,7 @@ public class Controls
 		Vector2 point = new Vector2(x,y);
 		for(int i=0;i<8;++i)
 		{
-			if(dpadTriangles[i].contains(point))
+			if(dpadTriangles[2*i].contains(point) || dpadTriangles[2*i+1].contains(point))
 			{
 				controlPad8Dir = i;
 				Gdx.app.log(Game.TAG, String.format("control pad dir %d set", i));

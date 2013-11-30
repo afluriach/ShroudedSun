@@ -144,4 +144,5 @@ public class Util
 	{
 		return new Vector2(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
 	}
+	
 }
