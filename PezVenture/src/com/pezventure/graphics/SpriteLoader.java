@@ -17,15 +17,33 @@ import com.pezventure.physics.PrimaryDirection;
 public class SpriteLoader
 {
 	private Map<String, Texture> textures = new TreeMap<String, Texture>();
-	private Map<String, EntitySpriteSet> entitySpriteSets = new TreeMap<String, EntitySpriteSet>();
+	private Map<String, EntitySpriteSet4Dir> entitySpriteSets4Dir = new TreeMap<String, EntitySpriteSet4Dir>();
+	private Map<String, EntitySpriteSet8Dir> entitySpriteSets8Dir = new TreeMap<String, EntitySpriteSet8Dir>();
 	private Map<String, ProjectileSpriteSet> projectileSpriteSet = new TreeMap<String, ProjectileSpriteSet>();
 	private ArrayList<Texture> spriteSheetsLoaded = new ArrayList<Texture>();
+	
+	private static final String[][] spriteSheetNames = 
+		{
+			{"reimu", "marisa", "cirno"},
+			{"meiling", "patchouli", "sakuya"},
+			{"remilia", "remilia_bat", "flandre"},
+			{"flandre_bat", "chen", "alice"},
+			{"shanghai", "youmu", "yuyuko"},
+			{"ran", "yukari", "keine"},
+			{"tewi", "reisen", "eiren"},
+			{"kaguya", "mokou", "aya"},
+			{"melancholy", "yuuka", "komachi"},
+			{"yamaxanadu", "aki", "hina"},
+			{"nitori", "sanae", "kanako"},
+			{"suwako", "suika", "mini_suika"}
+		};
 	
 	public SpriteLoader()
 	{
 //		loadTextures();
 		loadTexturesInFolder();
 		loadSprites();
+		spritesheet();
 	}
 		
 	private Texture loadTexture(String internalName)
@@ -54,23 +72,45 @@ public class SpriteLoader
 //		entitySprites.put("meiling", new EntitySpriteSet(sprites, 6, 4));
 //		entitySprites.put("melancholy", new EntitySpriteSet(sprites, 9, 4));
 		
+		linkSpritesheet();
+
+        
+        
+	}
+	
+	private void spritesheet()
+	{
+		//starts at 3,10
+		
+		Texture spriteSheet = new Texture(Util.getInternalFile("spritesheets/touhou-5dir-sheet.png"));
+		spriteSheetsLoaded.add(spriteSheet);
+		
+		for(int i=0;i<spriteSheetNames.length; ++i)
+		{
+			for(int j=0;j<spriteSheetNames[i].length; ++j)
+			{
+				EntitySpriteSet8Dir spriteSet = new EntitySpriteSet8Dir(spriteSheet, j, i, 36, 3);
+				
+				entitySpriteSets8Dir.put(spriteSheetNames[i][j], spriteSet);
+			}
+		}
+	}
+
+	private void linkSpritesheet() {
 		int linkSpriteSize = 32;
 		Texture linkSpriteSheet = new Texture(Util.getInternalFile("spritesheets/link_sprites.png"));
         TextureRegion [][] linkSprites = TextureRegion.split(linkSpriteSheet, linkSpriteSize, linkSpriteSize);
         spriteSheetsLoaded.add(linkSpriteSheet);
 		
-        entitySpriteSets.put("link_green", new EntitySpriteSet(linkSprites, 0,0,linkSpriteSize, 3));
-        entitySpriteSets.put("link_green_hat", new EntitySpriteSet(linkSprites, 3,0,linkSpriteSize, 3));
-        entitySpriteSets.put("link_red", new EntitySpriteSet(linkSprites, 6,0,linkSpriteSize, 3));
-        entitySpriteSets.put("link_red_hat", new EntitySpriteSet(linkSprites, 9,0,linkSpriteSize, 3));
+        entitySpriteSets4Dir.put("link_green", new EntitySpriteSet4Dir(linkSprites, 0,0,linkSpriteSize, 3));
+        entitySpriteSets4Dir.put("link_green_hat", new EntitySpriteSet4Dir(linkSprites, 3,0,linkSpriteSize, 3));
+        entitySpriteSets4Dir.put("link_red", new EntitySpriteSet4Dir(linkSprites, 6,0,linkSpriteSize, 3));
+        entitySpriteSets4Dir.put("link_red_hat", new EntitySpriteSet4Dir(linkSprites, 9,0,linkSpriteSize, 3));
         
-        entitySpriteSets.put("link_blue", new EntitySpriteSet(linkSprites, 0,4,linkSpriteSize, 3));
-        entitySpriteSets.put("link_blue_hat", new EntitySpriteSet(linkSprites, 3,4,linkSpriteSize, 3));
-        entitySpriteSets.put("link_dark", new EntitySpriteSet(linkSprites, 6,4,linkSpriteSize, 3));
-        entitySpriteSets.put("link_dark_hat", new EntitySpriteSet(linkSprites, 9,4,linkSpriteSize, 3));
-
-        
-        
+        entitySpriteSets4Dir.put("link_blue", new EntitySpriteSet4Dir(linkSprites, 0,4,linkSpriteSize, 3));
+        entitySpriteSets4Dir.put("link_blue_hat", new EntitySpriteSet4Dir(linkSprites, 3,4,linkSpriteSize, 3));
+        entitySpriteSets4Dir.put("link_dark", new EntitySpriteSet4Dir(linkSprites, 6,4,linkSpriteSize, 3));
+        entitySpriteSets4Dir.put("link_dark_hat", new EntitySpriteSet4Dir(linkSprites, 9,4,linkSpriteSize, 3));
 	}
 	
 	private void loadTexturesInFolder()
@@ -132,13 +172,21 @@ public class SpriteLoader
 		}
 	}
 	
-	public EntityAnimation getSpriteAnimation(String name, PrimaryDirection startingDir)
+	public EntityAnimation8Dir getSpriteAnimation(String name, int startingDir)
 	{
-		if(!entitySpriteSets.containsKey(name))
+		if(!entitySpriteSets8Dir.containsKey(name))
+			throw new NoSuchElementException("unknown sprite name: " + name);
+		
+		return new EntityAnimation8Dir(entitySpriteSets8Dir.get(name), startingDir);
+	}
+	
+	public EntityAnimation4Dir getSpriteAnimation(String name, PrimaryDirection startingDir)
+	{
+		if(!entitySpriteSets4Dir.containsKey(name))
 		{
 			throw new NoSuchElementException("unknow sprite animation: " + name);
 		}
-		return new EntityAnimation(entitySpriteSets.get(name), startingDir);
+		return new EntityAnimation4Dir(entitySpriteSets4Dir.get(name), startingDir);
 	}
 	
 	public Texture getTexture(String name)
@@ -147,4 +195,29 @@ public class SpriteLoader
 			throw new NoSuchElementException(String.format("Texture %s not found", name));
 		return textures.get(name);
 	}
+	
+	
+	
+	public TextureRegion[][] split(TextureRegion region, int tileWidth, int tileHeight, int spacing)
+	{
+		int x = region.getRegionX();
+		int y = region.getRegionY();
+		int width = region.getRegionWidth();
+		int height = region.getRegionHeight();
+
+		int rows = height / tileHeight;
+		int cols = width / tileWidth;
+
+		int startX = x;
+		TextureRegion[][] tiles = new TextureRegion[rows][cols];
+		for (int row = 0; row < rows; row++, y += tileHeight) {
+			x = startX;
+			for (int col = 0; col < cols; col++, x += tileWidth) {
+				tiles[row][col] = new TextureRegion(region.getTexture(), x, y, tileWidth, tileHeight);
+			}
+		}
+
+		return tiles;
+	}
+
 }

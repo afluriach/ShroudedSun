@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
-import com.pezventure.graphics.EntityAnimation;
+import com.pezventure.graphics.EntityAnimation4Dir;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.physics.Physics;
 import com.pezventure.physics.PrimaryDirection;
@@ -27,7 +27,7 @@ public abstract class Entity extends GameObject
 	
 	float stepDistAccumulated=0;
 	
-	EntityAnimation animation;
+	EntityAnimation4Dir animation;
 	
 	private PrimaryDirection crntDir = defaultFacing;
 	
@@ -37,7 +37,7 @@ public abstract class Entity extends GameObject
 	private PrimaryDirection desiredDir = defaultFacing;
 	private Vector2 desiredVel;
 		
-	public Entity(TilespaceRectMapObject to, EntityAnimation animation)
+	public Entity(TilespaceRectMapObject to, EntityAnimation4Dir animation)
 	{
 		super(to);
 		this.animation = animation;
@@ -49,7 +49,7 @@ public abstract class Entity extends GameObject
 
 	}
 	
-	public Entity(Vector2 pos, float height, float width, float speed, EntityAnimation animation, String name)
+	public Entity(Vector2 pos, float height, float width, float speed, EntityAnimation4Dir animation, String name)
 	{
 		super(name);
 		this.animation = animation;

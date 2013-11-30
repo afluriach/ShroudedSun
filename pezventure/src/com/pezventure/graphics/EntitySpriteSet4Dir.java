@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.pezventure.Game;
 import com.pezventure.physics.PrimaryDirection;
 
-public class EntitySpriteSet
+public class EntitySpriteSet4Dir
 {
 	TextureRegion[][] sprites;
 	public final int spriteSize;
 	public final int animationLen;
 	
-	public EntitySpriteSet(TextureRegion[][] spriteSheetSlices, int tileX, int tileY, int spriteSize, int animationLen)
+	public EntitySpriteSet4Dir(TextureRegion[][] spriteSheetSlices, int tileX, int tileY, int spriteSize, int animationLen)
 	{
 		this.spriteSize = spriteSize;
 		this.animationLen = animationLen;
