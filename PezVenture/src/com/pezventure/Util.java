@@ -132,8 +132,16 @@ public class Util
 	
 	public static Vector2 get8DirUnit(int dir)
 	{
+		if(dir == -1)
+			return Vector2.Zero;
+		
 		float angle = dir*45f;
 		
+		return getUnit(angle);
+	}
+	
+	public static Vector2 getUnit(float angle)
+	{
 		return new Vector2(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
 	}
 }

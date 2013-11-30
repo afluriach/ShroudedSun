@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.graphics.Graphics;
+import com.pezventure.physics.PrimaryDirection;
 
 /**
  * Implements touch and button controls and keep track of control state.
@@ -45,10 +46,12 @@ public class Controls
 	int height;
 	
 	//control state
-	boolean up = false;
-	boolean down = false;
-	boolean left = false;
-	boolean right = false;
+//	boolean up = false;
+//	boolean down = false;
+//	boolean left = false;
+//	boolean right = false;
+	
+	int controlPad8Dir = -1;
 	
 	boolean a = false;
 	boolean b = false;
@@ -56,11 +59,14 @@ public class Controls
 	boolean y = false;
 	
 	//GUI elements
-	Rectangle dpadUp;
-	Rectangle dpadDown;
-	Rectangle dpadLeft;
-	Rectangle dpadRight;
-	Rectangle dpadCenter;
+	
+	IsoscelesTriangle [] dpadTriangles = new IsoscelesTriangle[8];
+	
+//	Rectangle dpadUp;
+//	Rectangle dpadDown;
+//	Rectangle dpadLeft;
+//	Rectangle dpadRight;
+//	Rectangle dpadCenter;
 	
 	Circle buttonA;
 	Circle buttonB;
@@ -94,11 +100,20 @@ public class Controls
 	
 	public void createShapes()
 	{
-		dpadUp = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin+dpadLength/2+dpadThickness/2, dpadThickness, dpadLength/2 - dpadThickness/2);
-		dpadDown = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin, dpadThickness, dpadLength/2 - dpadThickness/2);
-		dpadLeft = new Rectangle(margin, margin+dpadLength/2-dpadThickness/2, dpadLength/2 - dpadThickness/2, dpadThickness);
-		dpadRight = new Rectangle(margin+dpadLength/2 + dpadThickness/2, margin+dpadLength/2-dpadThickness/2, dpadLength/2 - dpadThickness/2, dpadThickness);
-		dpadCenter = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin+dpadLength/2-dpadThickness/2, dpadThickness, dpadThickness);
+		Vector2 dpadCenter = new Vector2(margin+dpadLength/2, margin+dpadLength/2);
+		float triangleBase = (float) (dpadLength / (2/Math.sqrt(2) +1));
+		
+		for(int i=0;i<8 ; ++i)
+		{
+			Vector2 triangleRay = Util.get8DirUnit(i).scl(dpadLength/2);
+			dpadTriangles[i] = new IsoscelesTriangle(triangleRay, dpadCenter, triangleBase);
+		}
+		
+//		dpadUp = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin+dpadLength/2+dpadThickness/2, dpadThickness, dpadLength/2 - dpadThickness/2);
+//		dpadDown = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin, dpadThickness, dpadLength/2 - dpadThickness/2);
+//		dpadLeft = new Rectangle(margin, margin+dpadLength/2-dpadThickness/2, dpadLength/2 - dpadThickness/2, dpadThickness);
+//		dpadRight = new Rectangle(margin+dpadLength/2 + dpadThickness/2, margin+dpadLength/2-dpadThickness/2, dpadLength/2 - dpadThickness/2, dpadThickness);
+//		dpadCenter = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin+dpadLength/2-dpadThickness/2, dpadThickness, dpadThickness);
 		
 		buttonA = new Circle(width-margin-3*buttonRadius, margin+buttonRadius, buttonRadius);
 		buttonB = new Circle(width-margin-buttonRadius, margin + 3*buttonRadius, buttonRadius);
@@ -128,6 +143,13 @@ public class Controls
 		shapeRenderer.rect(segment.x, segment.y, segment.width, segment.height);
 	}
 	
+	public void drawDpadTriangle(ShapeRenderer sr, boolean activated, IsoscelesTriangle tri)
+	{
+		sr.setColor(activated ? colors.dpaddark : colors.dpadlight);
+		
+		tri.render(sr);
+	}
+	
 	public void render(ShapeRenderer shapeRenderer, SpriteBatch batch, BitmapFont font)
 	{
 		shapeRenderer.begin(ShapeType.Filled);
@@ -142,13 +164,18 @@ public class Controls
 		drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
 		drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
 		
-		drawDpadSegment(shapeRenderer, up, dpadUp);
-		drawDpadSegment(shapeRenderer, right, dpadRight);
-		drawDpadSegment(shapeRenderer, down, dpadDown);
-		drawDpadSegment(shapeRenderer, left, dpadLeft);
+		for(int i=0;i<8;++i)
+		{
+			drawDpadTriangle(shapeRenderer, i == controlPad8Dir, dpadTriangles[i]);
+		}
+				
+//		drawDpadSegment(shapeRenderer, up, dpadUp);
+//		drawDpadSegment(shapeRenderer, right, dpadRight);
+//		drawDpadSegment(shapeRenderer, down, dpadDown);
+//		drawDpadSegment(shapeRenderer, left, dpadLeft);
 
-		shapeRenderer.setColor(colors.dpaddark);
-		shapeRenderer.rect(dpadCenter.x, dpadCenter.y, dpadCenter.width, dpadCenter.height);
+//		shapeRenderer.setColor(colors.dpaddark);
+//		shapeRenderer.rect(dpadCenter.x, dpadCenter.y, dpadCenter.width, dpadCenter.height);
 		
 		shapeRenderer.end();
 		
@@ -215,10 +242,20 @@ public class Controls
 		if(buttonX.contains(x,y)) this.x = true;
 		if(buttonY.contains(x,y)) this.y = true;
 		
-		if(dpadDown.contains(x,y)) down = true;
-		if(dpadLeft.contains(x,y)) left = true;
-		if(dpadUp.contains(x,y)) up = true;
-		if(dpadRight.contains(x,y)) right = true;		
+		Vector2 point = new Vector2(x,y);
+		for(int i=0;i<8;++i)
+		{
+			if(dpadTriangles[i].contains(point))
+			{
+				controlPad8Dir = i;
+				Gdx.app.log(Game.TAG, String.format("control pad dir %d set", i));
+			}
+		}
+		
+//		if(dpadDown.contains(x,y)) down = true;
+//		if(dpadLeft.contains(x,y)) left = true;
+//		if(dpadUp.contains(x,y)) up = true;
+//		if(dpadRight.contains(x,y)) right = true;		
 	}
 	
 	private void checkKeyPress()
@@ -228,10 +265,31 @@ public class Controls
 		if(Gdx.input.isKeyPressed(Keys.UP)) y = true;
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) x = true;
 		
+		//convert WASD to 8dir style
+		boolean up = false;
+		boolean down = false;
+		boolean left = false;
+		boolean right = false;
+		Vector2 dir = new Vector2();
+		
 		if(Gdx.input.isKeyPressed(Keys.W)) up = true;
 		if(Gdx.input.isKeyPressed(Keys.A)) left = true;
 		if(Gdx.input.isKeyPressed(Keys.S)) down = true;
 		if(Gdx.input.isKeyPressed(Keys.D)) right = true;
+		
+		if(up && !down)
+			dir.y = 1;
+		else if(down && !up)
+			dir.y = -1;
+		if(left && !right)
+			dir.x = -1;
+		else if(right && !left)
+			dir.x = 1;
+		
+		//direction finding is not additive. this will blank any movement detected by
+		//a touch event, so keys have to be checked before touch
+		if(dir.len2() == 0f) controlPad8Dir = -1;
+		else controlPad8Dir = (int) (dir.angle()/45f);
 	}
 	
 	private void resetControlState()
@@ -241,18 +299,15 @@ public class Controls
 		x = false;
 		y = false;
 		
-		up = false;
-		down = false;
-		left = false;
-		right = false;
+		controlPad8Dir = -1;
 	}
 	
 	public void update()
 	{
 		resetControlState();
-		if(touchControls)
-			handleTouchEvents();
 		if(keyControls)
 			checkKeyPress();
+		if(touchControls)
+			handleTouchEvents();
 	}
 }

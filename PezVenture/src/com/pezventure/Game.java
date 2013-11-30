@@ -172,46 +172,19 @@ public class Game implements ApplicationListener
 		//else, change direction to one whose component is closest to current direction
 		//e.g. if facing right and down-left is pressed, face down
 		
-		PrimaryDirection dir = null;
-		Vector2 vel = new Vector2();
-		
-		if(controls.up && !controls.down)
-		{
-			dir = PrimaryDirection.up;
-			vel.y = 1;
-		}
-		else if(controls.down && !controls.up)
-		{
-			dir = PrimaryDirection.down;
-			vel.y = -1;
-		}
-		if(controls.left && !controls.right)
-		{
-			dir = PrimaryDirection.left;
-			vel.x = -1;
-		}
-		else if(controls.right && !controls.left)
-		{
-			dir = PrimaryDirection.right;
-			vel.x += 1;
-		}
-
-		//normalize for diagonal movement
-		vel.nor();
-		
-		player.setDesiredVel(vel.scl(Player.SPEED));
+		player.setDesiredVel(Util.get8DirUnit(controls.controlPad8Dir).scl(Player.SPEED));
 		
 		//determine desired dir for the player
 		//TODO add strafe lock 
 		
-		if(vel.len2() == 0f)
+		if(controls.controlPad8Dir == -1)
 		{
 			//no direction chosen, no change
 		}
 		
 		else
 		{
-			player.setDesiredDir((int) (vel.angle()/45f));
+			player.setDesiredDir(controls.controlPad8Dir);
 		}
 
 		if(controls.x)
