@@ -29,7 +29,7 @@ public class Sneaker extends Entity implements Enemy
 	
 	public Sneaker(TilespaceRectMapObject to) {
 		
-		super(to, Game.inst.spriteLoader.getSpriteAnimation("reisen", 2));
+		super(to, "reisen");
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);

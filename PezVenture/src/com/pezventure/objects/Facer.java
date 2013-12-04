@@ -29,7 +29,7 @@ public class Facer extends Entity implements Enemy
 	
 	public Facer(TilespaceRectMapObject to) {
 		
-		super(to, Game.inst.spriteLoader.getSpriteAnimation("tewi", 2));
+		super(to, "tewi");
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);

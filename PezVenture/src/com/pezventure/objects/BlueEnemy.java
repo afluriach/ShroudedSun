@@ -35,7 +35,7 @@ public class BlueEnemy extends Entity implements Enemy
 	
 	public BlueEnemy(TilespaceRectMapObject to) {
 		
-		super(to, Game.inst.spriteLoader.getSpriteAnimation("sakuya", 2));
+		super(to, "sakuya");
 		
 		radar = new RadarSensor(getCenterPos(), radarSensorRadius, Player.class);
 	}
