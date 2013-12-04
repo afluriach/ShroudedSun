@@ -136,7 +136,7 @@ public class Physics
 		}
 	}
 	
-	public GameObject feeler(Vector2 startingPos, float angleDeg, float distance, Class<?> targetCls)
+	public GameObject closestObjectFeeler(Vector2 startingPos, float angleDeg, float distance, Class<?> targetCls)
 	{
 		Vector2 feeler = Util.ray(angleDeg, distance);
 		Vector2 endPos = startingPos.cpy().add(feeler);
@@ -145,6 +145,25 @@ public class Physics
 		world.rayCast(cb, startingPos, endPos);
 		
 		return cb.getResult();
+	}
+	
+	
+	
+	public float distanceFeeler(Vector2 startingPos, float angleDeg, float distance, Class<?> targetCls)
+	{
+		Vector2 feeler = Util.ray(angleDeg, distance);
+		Vector2 endPos = startingPos.cpy().add(feeler);
+
+		FeelerRaycastCallback cb = new FeelerRaycastCallback(targetCls);
+		world.rayCast(cb, startingPos, endPos);
+		
+		if(cb.getResult() != null)
+			return cb.getFeelerDistFraction()*feeler.len();
+		else
+		{
+			//fraction will be 0. just return length
+			return feeler.len();
+		}
 	}
 	
 	/**

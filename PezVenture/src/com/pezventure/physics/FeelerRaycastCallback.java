@@ -34,6 +34,11 @@ public class FeelerRaycastCallback implements RayCastCallback
 	{
 		return target;
 	}
+	
+	public float getFeelerDistFraction()
+	{
+		return targetPos;
+	}
 
 	@Override
 	public float reportRayFixture(Fixture fixture, Vector2 point,
@@ -58,5 +63,7 @@ public class FeelerRaycastCallback implements RayCastCallback
 		//object
 		return fraction;
 	}
+	
+	
 
 }
