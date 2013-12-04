@@ -4,15 +4,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.physics.PrimaryDirection;
 
-public class ProjectileAnimation 
+public class Animation 
 {
-	ProjectileSpriteSet spriteSet;
+	AnimationSpriteSet spriteSet;
 	float frameIntervalLength;
 	float frameTimeAccumulated;
-	PrimaryDirection direction;
+	PrimaryDirection direction = PrimaryDirection.up;
 	int currentFrame;
 	
-	public ProjectileAnimation(ProjectileSpriteSet spriteSet, float frameTime, PrimaryDirection direction)
+	public Animation(AnimationSpriteSet spriteSet, float frameTime, PrimaryDirection direction)
 	{
 		this.spriteSet = spriteSet;
 		this.direction = direction;

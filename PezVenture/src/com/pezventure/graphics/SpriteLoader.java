@@ -19,10 +19,10 @@ public class SpriteLoader
 	private Map<String, Texture> textures = new TreeMap<String, Texture>();
 	private Map<String, EntitySpriteSet4Dir> entitySpriteSets4Dir = new TreeMap<String, EntitySpriteSet4Dir>();
 	private Map<String, EntitySpriteSet8Dir> entitySpriteSets8Dir = new TreeMap<String, EntitySpriteSet8Dir>();
-	private Map<String, ProjectileSpriteSet> projectileSpriteSet = new TreeMap<String, ProjectileSpriteSet>();
+	private Map<String, AnimationSpriteSet> animationSpriteSet = new TreeMap<String, AnimationSpriteSet>();
 	private ArrayList<Texture> spriteSheetsLoaded = new ArrayList<Texture>();
 	
-	private static final String[][] spriteSheetNames = 
+	public static final String[][] spriteSheetNames = 
 		{
 			{"reimu", "marisa", "cirno"},
 			{"meiling", "patchouli", "sakuya"},
@@ -42,8 +42,9 @@ public class SpriteLoader
 	{
 //		loadTextures();
 		loadTexturesInFolder();
-		loadSprites();
-		spritesheet();
+		load4DirEntitySprites();
+		load8DirTouhouSprites();
+		loadAnimations();
 	}
 		
 	private Texture loadTexture(String internalName)
@@ -56,29 +57,12 @@ public class SpriteLoader
 		return new Texture(fh);
 	}
 	
-	private void loadSprites()
-	{
-//		Texture spriteSheet = new Texture(Util.getInternalFile("sprites/pc_dtl.png"));
-//		
-//		TextureRegion [][] sprites = TextureRegion.split(spriteSheet, Game.ENTITY_SPRITE_SIZE, Game.ENTITY_SPRITE_SIZE);
-//		
-//		entitySprites.put("alice", new EntitySpriteSet(sprites, 0,0));
-//		entitySprites.put("sakuya", new EntitySpriteSet(sprites, 3,0));
-//		entitySprites.put("ran", new EntitySpriteSet(sprites, 6,0));
-//		entitySprites.put("chen", new EntitySpriteSet(sprites, 9,0));
-//        
-//		entitySprites.put("marisa", new EntitySpriteSet(sprites, 0, 4));
-//		entitySprites.put("reimu", new EntitySpriteSet(sprites, 3, 4));
-//		entitySprites.put("meiling", new EntitySpriteSet(sprites, 6, 4));
-//		entitySprites.put("melancholy", new EntitySpriteSet(sprites, 9, 4));
-		
+	private void load4DirEntitySprites()
+	{		
 		linkSpritesheet();
-
-        
-        
 	}
 	
-	private void spritesheet()
+	private void load8DirTouhouSprites()
 	{
 		//starts at 3,10
 		
@@ -94,6 +78,14 @@ public class SpriteLoader
 				entitySpriteSets8Dir.put(spriteSheetNames[i][j], spriteSet);
 			}
 		}
+	}
+	
+	public Animation loadAnimation(String name, float frameInterval, PrimaryDirection dir)
+	{
+		if(!animationSpriteSet.containsKey(name))
+			throw new NoSuchElementException(name + " not found");
+		
+		return new Animation(animationSpriteSet.get(name), frameInterval, dir);
 	}
 
 	private void linkSpritesheet() {
@@ -129,35 +121,33 @@ public class SpriteLoader
 //				Gdx.app.log(Game.TAG, String.format("file %s skipped in texture folder", fh.name()));
 			}
 		}
+	}	
+	
+	/**
+	 * 
+	 * @param sheet texure contianing the animations in one row
+	 * @param spriteSize the size of each sprite
+	 * @param spriteCount the number of frames in the animation. use to ignore unused slots in padded
+	 * images (i.e. if sprite count is not a power of two)
+	 */
+	private void loadAnimation(Texture sheet, int spriteSize, int spriteCount, String name, PrimaryDirection dir)
+	{
+		TextureRegion [][] splice = TextureRegion.split(sheet, spriteSize, spriteSize);
+		TextureRegion[] frames = new TextureRegion[spriteCount];
+		
+		System.arraycopy(splice[0], 0, frames, 0, spriteCount);
+		
+		AnimationSpriteSet spriteSet = new AnimationSpriteSet(frames, dir);
+		animationSpriteSet.put(name, spriteSet);
+		spriteSheetsLoaded.add(sheet);
 	}
 	
-	private void loadTextures()
+	private void loadAnimations()
 	{
-        textures.put("rail_h", loadTexture("sprites/rail_h.png"));
-        textures.put("rail_v", loadTexture("sprites/rail_v.png"));
-        textures.put("rail_curve", loadTexture("sprites/rail_curve.png"));        
-        
-        textures.put("block", loadTexture("sprites/block.png"));
-        textures.put("door", loadTexture("sprites/door.png"));
-        
-        textures.put("switch_inactive", loadTexture("sprites/switch_inactive.png"));
-        textures.put("switch_active", loadTexture("sprites/switch_active.png"));
-        
-        textures.put("bullet_aa", loadTexture("sprites/bullet_aa.png"));
-        textures.put("bullet_ec", loadTexture("sprites/bullet_ec.png"));
-        
-        textures.put("jar", loadTexture("sprites/jar.png"));
-        textures.put("red_jar", loadTexture("sprites/red_jar.png"));
-        textures.put("yellow_jar", loadTexture("sprites/yellow_jar.png"));
-        textures.put("green_jar", loadTexture("sprites/green_jar.png"));
-        textures.put("blue_jar", loadTexture("sprites/blue_jar.png"));
-        
-        textures.put("sign", loadTexture("sprites/sign.png"));
-        
-        textures.put("shield32", loadTexture("sprites/shield32.png"));
-        textures.put("shield64", loadTexture("sprites/shield64.png"));
-        textures.put("shield128", loadTexture("sprites/shield128.png"));
-        
+		loadAnimation(loadTexture("animations/flame64.png"), 64, 8, "fire64", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/flame32.png"), 32, 8, "fire64", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/cirno_bullet_aa.png"), 128, 15, "fire64", PrimaryDirection.up);
+
 	}
 	
 	public void unloadTextures()
