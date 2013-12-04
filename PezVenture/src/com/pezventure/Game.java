@@ -1,8 +1,11 @@
 package com.pezventure;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -31,6 +34,7 @@ import com.pezventure.objects.Player;
 import com.pezventure.objects.RenderLayer;
 import com.pezventure.physics.Physics;
 import com.pezventure.physics.PrimaryDirection;
+import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 public class Game implements ApplicationListener
 {
@@ -51,9 +55,9 @@ public class Game implements ApplicationListener
 	public static final int HEALTH_BAR_LENGTH = 200;
 	public static final int HEALTH_BAR_OUTLINE = 4;
 	
-	public static final int DPAD_LENGTH = 210;
-	public static final int DPAD_THICKNESS = 60;
-	
+	public static final Rectangle dialogPos = new Rectangle(350, 50, 500, 400);
+	public static final float minDialogChangeTime = 0.25f;
+		
 	public static final int MAX_TOUCH_EVENTS = 5;
 	
 	public static final String TAG = "PezVenture";
@@ -66,8 +70,8 @@ public class Game implements ApplicationListener
 	
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
-	public static final String startingLevel = "level1";
-	public static final String startingLink = "player_start";
+	public static final String startingLevel = "facer_floor";
+	public static final String startingLink = "entrance";
 	
 	//graphics
 	private OrthographicCamera camera;
@@ -92,10 +96,12 @@ public class Game implements ApplicationListener
 		
 	//logic
 	float updateTimeAccumulated = 0;
-	Player player;
+	public Player player;
 	public Physics physics;
 	public GameObjectSystem gameObjectSystem;
-	GameObject holding;
+	public Random random = new Random();
+	public Dialog activeDialog;
+	float timeInDialog = 0f;
 	
 	//game session info
 	public boolean touchControls;
@@ -126,7 +132,7 @@ public class Game implements ApplicationListener
 		MapLink link = area.getMapLink(mapLinkStart);
 		System.out.println("link: "+mapLinkStart);
 		
-		player = new Player(Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE));
+		player = new Player(Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
 		gameObjectSystem.addObject(player);		
 	}
 	
@@ -157,7 +163,12 @@ public class Game implements ApplicationListener
 		
 		shapeRenderer.end();		
 		
-		controls.render(shapeRenderer, guiBatch, font);
+		if(activeDialog == null)
+			controls.render(shapeRenderer, guiBatch, font);
+		else
+		{
+			activeDialog.render(batch, shapeRenderer);
+		}
 	}
 	
 	void handleInput()
@@ -192,7 +203,7 @@ public class Game implements ApplicationListener
 				
 		if(controls.a && !interactHeld)
 		{
-			player.setGrab();
+			player.setInteract();
 			interactHeld = true;
 		}
 		else
@@ -221,7 +232,8 @@ public class Game implements ApplicationListener
 		batch = new SpriteBatch();
 		guiBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-		font = new BitmapFont();
+		//font = new BitmapFont();
+		font = new BitmapFont(Gdx.files.internal("fonts/sansation.fnt"));
 		
 		physics = new Physics();
 		spriteLoader = new SpriteLoader();
@@ -320,7 +332,13 @@ public class Game implements ApplicationListener
 
 		
 		//handle input
-		handleInput();
+		if(activeDialog == null)
+			handleInput();
+		else
+		{
+			timeInDialog += Game.SECONDS_PER_FRAME;
+			handleDialogControls();
+		}
 		
 		//update logic
 		updateTimeAccumulated += Gdx.graphics.getDeltaTime();
@@ -329,6 +347,8 @@ public class Game implements ApplicationListener
 			update();
 			updateTimeAccumulated -= SECONDS_PER_FRAME;
 		}
+		
+		
 		
 		//adjust camera
 		moveCamera();
@@ -367,6 +387,43 @@ public class Game implements ApplicationListener
 	}
 
 
+	private void handleDialogControls()
+	{
+		boolean pressed = false;
+		
+		//ignore any button presses before the minimum elapsed time
+		if(timeInDialog < minDialogChangeTime) return;
+		
+		if(touchControls)
+		{
+			for(int i=0; i< MAX_TOUCH_EVENTS; ++i)
+			{
+				if(Gdx.input.isTouched(i))
+				{
+					if(dialogPos.contains(Gdx.input.getX(i), screenHeight - Gdx.input.getY(i)))
+					{
+						pressed = true;
+						break;
+					}
+				}
+				else break;
+			}
+
+		}
+		if(keyControls)
+		{
+			if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+				pressed = true;
+		}
+		
+		if(pressed)
+		{
+			activeDialog = null;
+			timeInDialog = 0f;
+		}
+	}
+
+
 	private void popScissors() {
 		if(crntRoom != null)
 			ScissorStack.popScissors();
@@ -400,6 +457,16 @@ public class Game implements ApplicationListener
 		}
 	}
 
+	public void setDialogMsg(String msg)
+	{
+		activeDialog = new Dialog(dialogPos, font, msg);
+	}
+	
+	public void exitDialog()
+	{
+		activeDialog = null;
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		screenWidth = width;

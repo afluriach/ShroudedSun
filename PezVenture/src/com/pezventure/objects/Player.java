@@ -42,19 +42,16 @@ public class Player extends Entity
 	Joint itemJoint;
 	//is there a grabbable object in front of the player
 	public boolean canGrab = false;
+	public boolean canRead = false;
 	
 	//flag that determines if the player wants to shoot, set based on the controls.
 	boolean shoot = false;
-	boolean grab = false;
+	boolean interact = false;
 	public boolean shield = false;
 	
-	public Player(Vector2 pos)
+	public Player(Vector2 pos, PrimaryDirection startingDir)
 	{
-		super(pos,
-			  PLAYER_SIZE,
-			  PLAYER_SIZE,
-			  SPEED,
-			  Game.inst.spriteLoader.getSpriteAnimation("cirno", 2), "player");
+		super(pos, "cirno", startingDir.getAngle8Dir(), "player");
 		
 		shieldObj = new Shield(getCenterPos());
 		//physicsBody = Physics.inst().addRectBody(pos, PLAYER_SIZE, PLAYER_SIZE, BodyType.DynamicBody, this, MASS, false);
@@ -98,14 +95,18 @@ public class Player extends Entity
 		//may be generalized to interaction button
 		
 		checkGrabbable();
+		checkReadable();
 
-		if(grab)
+		if(interact)
 		{
-			if(holdingItem == null)
-				grab();
-			else
+			if(holdingItem != null)
 				drop();
-			grab = false;
+			else
+			{
+				//nasty hack. will need a better way of generalizing interactions and feelers for smart objects soon.
+				if(!grab()) read();
+			}
+			interact = false;
 		}	
 		
 		if(holdingItem != null)
@@ -173,11 +174,6 @@ public class Player extends Entity
 			shoot = true;
 	}
 	
-	public void setGrab()
-	{
-		grab = true;
-	}
-	
 	public void setShield()
 	{
 		shield = true;
@@ -202,17 +198,23 @@ public class Player extends Entity
 	 */
 	public boolean checkGrabbable()
 	{
-		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
+		Grabbable target = (Grabbable) Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		canGrab = (target != null && target.canGrab());
 				
 		return canGrab;
 			
 	}
 	
-	public void grab()
+	public boolean checkReadable()
 	{
-		// find grabable item player that is in front of the player
-		Grabbable target = (Grabbable) Game.inst.physics.feeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
+		canRead =  Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Sign.class) != null;
+		return canRead;
+	}
+	
+	public boolean grab()
+	{
+		// find grabable item in front of the player. return whether or not an item was grabbed.
+		Grabbable target = (Grabbable) Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
 		GameObject go = (GameObject) target;
 		
 		Gdx.app.log(Game.TAG, "target: " + go);
@@ -221,7 +223,24 @@ public class Player extends Entity
 			holdingItem = (GameObject) target;
 			//itemJoint = Game.inst.physics.joinBodies(physicsBody, go.physicsBody);
 			target.onGrab();
+			return true;
 		}
+		else		
+			return false;
+	}
+	
+	public boolean read()
+	{
+		//check for a sign in front of the player. if found set as active dialog.
+		
+		Sign sign = (Sign) Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Sign.class);
+		
+		if(sign != null)
+		{
+			Game.inst.setDialogMsg(sign.msg);
+			return true;
+		}
+		return false;
 	}
 	
 	public void drop()
@@ -240,6 +259,11 @@ public class Player extends Entity
 		{
 			animation.render(sb, getCenterPos());
 		}
+	}
+	
+	public void setInteract()
+	{
+		interact = true;
 	}
 
 
