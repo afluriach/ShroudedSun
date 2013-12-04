@@ -19,6 +19,7 @@ public class AreaLoader
 		areas.put("level1", Level1.class);
 		areas.put("puzzle_room", PuzzleRoom.class);
 		areas.put("facer_floor", FacerFloor.class);
+		areas.put("meeting_room", MeetingRoom.class);
 		
 	}
 	
