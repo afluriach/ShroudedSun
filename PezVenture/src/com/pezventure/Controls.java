@@ -219,13 +219,17 @@ public class Controls
 			interactMsg = "grab";
 	//		System.out.println("msg set to grab");
 		}
+		else if(Game.inst.player.canRead)
+		{
+			interactMsg = "read";
+		}
 		else
 		{
 			interactMsg = "";
 //			System.out.println("msg set to blank");
 		}
 		
-		drawTextCentered(interactMsg, batch, font, buttonA.x-buttonA.radius+10, buttonA.y, 1.5f);
+		drawTextCentered(interactMsg, batch, font, buttonA.x-buttonA.radius+10, buttonA.y, 1f);
 	}
 	
 	void drawTextCentered(String msg, SpriteBatch batch, BitmapFont font, float x, float y, float scale)
