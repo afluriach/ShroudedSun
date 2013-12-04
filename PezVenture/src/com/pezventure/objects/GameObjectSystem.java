@@ -1,6 +1,7 @@
 package com.pezventure.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -105,6 +106,17 @@ public class GameObjectSystem
 			throw new RuntimeException(String.format("object %s not found", name));
 		
 		return nameMap.get(name);
+	}
+	
+	public ArrayList<GameObject> getObjectsByType(Class<?> cls)
+	{
+		ArrayList<GameObject> results = new ArrayList<GameObject>();
+		for(GameObject go : gameObjects)
+		{
+			if(cls.isInstance(go))
+				results.add(go);
+		}
+		return results;
 	}
 	
 //	public void renderPhysicsShapes(ShapeRenderer sr)
