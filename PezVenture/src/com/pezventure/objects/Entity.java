@@ -40,10 +40,10 @@ public abstract class Entity extends GameObject
 	private int desiredDir = defaultFacing;
 	private Vector2 desiredVel;
 		
-	public Entity(TilespaceRectMapObject to, EntityAnimation8Dir animation)
+	public Entity(TilespaceRectMapObject to, String animation)
 	{
 		super(to);
-		this.animation = animation;
+		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
 		//physicsBody = Physics.inst().addRectBody(to.rect, this, BodyType.DynamicBody, MASS, false);
 		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
 		
@@ -64,15 +64,16 @@ public abstract class Entity extends GameObject
 					throw new MapDataException(String.format("invalid dir %d in entity %s", crntDir, to.name));
 			}
 		}
-		animation.setDirection(crntDir);
+		this.animation.setDirection(crntDir);
 	}
-	
-	public Entity(Vector2 pos, float height, float width, float speed, EntityAnimation8Dir animation, String name)
+		
+	public Entity(Vector2 pos, String animation, int startingDir, String name)
 	{
 		super(name);
-		this.animation = animation;
+		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
 		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
 	}
+
 	
 	private void updateDirection()
 	{
@@ -80,65 +81,6 @@ public abstract class Entity extends GameObject
 		animation.setDirection(crntDir);
 	}
 	
-	/**
-	 * calculate and apply acceleration based on current and desired velocity
-	 */
-//	private void updateVelOld()
-//	{
-//		float crntSpeed = getVel().len();
-//		float dv = acceleration*Game.SECONDS_PER_FRAME;
-//		float impulse = MASS*acceleration*Game.SECONDS_PER_FRAME;
-//
-//		
-//		if(desiredDir == crntDir)
-//		{
-//			
-//			//to prevent overshoot or oscillation/jittering, simulate
-//			//the effect of applying acceleration partially to reach the
-//			//desired velocity
-//			if(Math.abs(crntSpeed - desiredSpeed) < dv)
-//			{
-//				setVel(crntDir.getUnitVector().scl(desiredSpeed));
-//				
-//				if(desiredSpeed == 0f)
-//				{
-//					animation.resetAnimation();
-//					stepDistAccumulated = 0;
-//				}
-//			}
-//			else
-//			{
-//				PrimaryDirection dir = (crntSpeed < desiredSpeed) ? crntDir : crntDir.getOpposite();
-//				physicsBody.applyLinearImpulse(dir.getUnitVector().scl(impulse), getCenterPos(), true);
-//			}
-//		}		
-//		else
-//		{
-//			//if stopped, or nearly stopped, change direction
-//			if(crntSpeed < dv)
-//			{
-//				setVel(Vector2.Zero);
-//				animation.resetAnimation();
-//				stepDistAccumulated = 0;
-//				
-//				crntDir = desiredDir;
-//				
-//				animation.setDirection(crntDir);
-//			}
-//			else
-//			{
-//				physicsBody.applyLinearImpulse(crntDir.getOpposite().getUnitVector().scl(impulse), getCenterPos(), true);
-//			}
-//		}
-//		
-//		//velocity can be changed by physics engine due to collision with 
-//		//objects
-////		if(desiredDir != null)
-////		{
-////			setVel(desiredDir.getUnitVector().scl(desiredSpeed));
-////		}
-////		crntDir = desiredDir;
-//	}
 	
 	/**
 	 * apply acceleration based on desired velocity
@@ -249,4 +191,6 @@ public abstract class Entity extends GameObject
 	{
 		return crntDir;
 	}
+	
+	
 }
