@@ -6,8 +6,6 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -24,17 +21,12 @@ import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.Area;
 import com.pezventure.map.AreaLoader;
-import com.pezventure.map.Level1;
 import com.pezventure.map.MapLink;
-import com.pezventure.map.PuzzleRoom;
 import com.pezventure.map.Room;
-import com.pezventure.objects.GameObject;
 import com.pezventure.objects.GameObjectSystem;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.RenderLayer;
 import com.pezventure.physics.Physics;
-import com.pezventure.physics.PrimaryDirection;
-import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 public class Game implements ApplicationListener
 {
@@ -62,7 +54,7 @@ public class Game implements ApplicationListener
 	
 	public static final String TAG = "PezVenture";
 	
-	public static final int FRAMES_PER_SECOND = 30;
+	public static final int FRAMES_PER_SECOND = 60;
 	public static final float SECONDS_PER_FRAME = 1.0f / FRAMES_PER_SECOND;
 	
 	public static final int PIXELS_PER_TILE = 32;
@@ -70,8 +62,8 @@ public class Game implements ApplicationListener
 	
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
-	public static final String startingLevel = "facer_floor";
-	public static final String startingLink = "entrance";
+	public static final String startingLevel = "level1";
+	public static final String startingLink = "player_start";
 	
 	//graphics
 	private OrthographicCamera camera;
@@ -278,6 +270,8 @@ public class Game implements ApplicationListener
 		Gdx.app.log(Game.TAG, "loading map objects");
 		area.instantiateMapObjects();
 		area.init();
+		
+		gameObjectSystem.initAll();
 		
 		loadPlayer(mapLink);
 		

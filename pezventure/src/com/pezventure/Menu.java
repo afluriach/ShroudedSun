@@ -2,7 +2,6 @@ package com.pezventure;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 
 /**
  * list of menu options. ability to select and go back. 

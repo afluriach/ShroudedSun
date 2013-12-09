@@ -1,11 +1,16 @@
-package com.pezventure.objects;
+package com.pezventure.objects.enemies;
 
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
-import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
+import com.pezventure.objects.Enemy;
+import com.pezventure.objects.EnemyBullet;
+import com.pezventure.objects.Entity;
+import com.pezventure.objects.GameObject;
+import com.pezventure.objects.Player;
+import com.pezventure.objects.RadarSensor;
 import com.pezventure.physics.PrimaryDirection;
 
 public class BlueEnemy extends Entity implements Enemy
@@ -35,9 +40,9 @@ public class BlueEnemy extends Entity implements Enemy
 	
 	public BlueEnemy(TilespaceRectMapObject to) {
 		
-		super(to, "sakuya");
+		super(to, "sakuya", "enemy");
 		
-		radar = new RadarSensor(getCenterPos(), radarSensorRadius, Player.class);
+		radar = new RadarSensor(getCenterPos(), radarSensorRadius, Player.class, "player_sensor");
 	}
 
 	@Override
@@ -51,8 +56,10 @@ public class BlueEnemy extends Entity implements Enemy
 	}
 
 	@Override
-	void onExpire() {
-		Game.inst.physics.removeBody(radar.physicsBody);
+	public void onExpire() {
+//		Game.inst.physics.removeBody(radar.physicsBody);
+		//this will cause the radar's body to be removed when it expires.
+		radar.expire();
 	}
 	
 	public void hit(int damage)
@@ -185,6 +192,12 @@ public class BlueEnemy extends Entity implements Enemy
 	public void handleEndContact(GameObject other)
 	{
 		//no-op
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -2,8 +2,6 @@ package com.pezventure.graphics;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.pezventure.Game;
-import com.pezventure.physics.PrimaryDirection;
 
 public class EntitySpriteSet8Dir
 {
@@ -28,6 +26,7 @@ public class EntitySpriteSet8Dir
 	
 	void loadCharacter(int gridX, int gridY, int animationLen, Texture texture)
 	{
+		//measured from the sprite sheet
 		int charStartingY = 10+196*gridY;
 		int charStartingX = 1+333*gridX;
 		

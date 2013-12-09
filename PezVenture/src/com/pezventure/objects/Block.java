@@ -2,13 +2,10 @@ package com.pezventure.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
-import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.physics.Physics;
 
 public class Block extends GameObject
 {
@@ -16,14 +13,8 @@ public class Block extends GameObject
 	public static final float KINETIC_FRICTION_COEFF = 0.5f;
 	
 	private Texture texture;
-	
 	private boolean moveable;
-	private float pushSpeed;
-	private float pushDist;
-	
-	private Vector2 startPos = null;
-	private boolean moving = false;
-	
+		
 	public Block(TilespaceRectMapObject to)
 	{
 		super(to);
@@ -32,14 +23,12 @@ public class Block extends GameObject
 		if(moveable)
 		{
 			bodyType = BodyType.DynamicBody;
-			pushSpeed = Float.parseFloat((String) to.prop.get("push_speed"));
-			pushDist  = Float.parseFloat((String) to.prop.get("push_dist"));
 		}
 		else
 		{
 			bodyType = BodyType.StaticBody;
 		}
-		physicsBody = Game.inst.physics.addRectBody(to.rect, this, bodyType, MASS, false);
+		physicsBody = Game.inst.physics.addRectBody(to.rect, this, bodyType, MASS, false, "environmental_floor");
 		texture = Game.inst.spriteLoader.getTexture("block");
 	}
 
@@ -98,13 +87,19 @@ public class Block extends GameObject
 	}
 
 	@Override
-	void onExpire() {
+	public void onExpire() {
 		//no-op		
 	}
 
 	@Override
 	public void handleEndContact(GameObject other) {
 		//no-op
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

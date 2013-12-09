@@ -1,18 +1,13 @@
 package com.pezventure.map;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonValue.ValueType;
 import com.pezventure.Game;
-import com.pezventure.objects.BlueEnemy;
 import com.pezventure.objects.Door;
 import com.pezventure.objects.FloorSwitch;
 import com.pezventure.objects.GameObject;
-import com.pezventure.objects.GameObjectSystem;
 
 public class Level1 extends Area
 {
@@ -85,7 +80,7 @@ public class Level1 extends Area
 
 	@Override
 	public JsonValue save() {
-		JsonValue val = new JsonValue(ValueType.object);
+//		JsonValue val = new JsonValue(ValueType.object);
 		
 		SaveState st = new SaveState();
 		st.enemyRoomSolved = enemyRoomSolved;

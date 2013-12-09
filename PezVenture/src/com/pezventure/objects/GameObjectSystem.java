@@ -1,15 +1,11 @@
 package com.pezventure.objects;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
-import com.pezventure.physics.Physics;
 
 public class GameObjectSystem
 {
@@ -70,6 +66,14 @@ public class GameObjectSystem
 		for(GameObject go : gameObjects)
 		{
 			go.update();
+		}
+	}
+	
+	public void initAll()
+	{
+		for(GameObject go : gameObjects)
+		{
+			go.init();
 		}
 	}
 	

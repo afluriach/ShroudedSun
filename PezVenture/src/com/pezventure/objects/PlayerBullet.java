@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
-import com.pezventure.physics.PrimaryDirection;
+import com.pezventure.objects.enemies.BlueEnemy;
 
 public class PlayerBullet extends Bullet
 {
@@ -18,7 +18,7 @@ public class PlayerBullet extends Bullet
 	
 	public PlayerBullet(Vector2 pos, int dir)
 	{
-		super(pos, radius, "PlayerBullet", dir, speed, mass);
+		super(pos, radius, "PlayerBullet", dir, speed, mass, "player_bullet");
 		
 		texture = Game.inst.spriteLoader.getTexture("bullet_ec");
 	}
@@ -46,13 +46,16 @@ public class PlayerBullet extends Bullet
 	}
 
 	@Override
-	void onExpire() {
+	public void onExpire() {
 		
 	}
 	
 	@Override
 	public void handleEndContact(GameObject other) {
-		//no-op
+	}
+
+	@Override
+	public void init() {
 	}
 
 

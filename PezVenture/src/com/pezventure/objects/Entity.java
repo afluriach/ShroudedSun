@@ -5,11 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
 import com.pezventure.Util;
-import com.pezventure.graphics.EntityAnimation4Dir;
 import com.pezventure.graphics.EntityAnimation8Dir;
 import com.pezventure.map.MapDataException;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.physics.Physics;
 import com.pezventure.physics.PrimaryDirection;
 
 public abstract class Entity extends GameObject
@@ -40,12 +38,12 @@ public abstract class Entity extends GameObject
 	private int desiredDir = defaultFacing;
 	private Vector2 desiredVel;
 		
-	public Entity(TilespaceRectMapObject to, String animation)
+	public Entity(TilespaceRectMapObject to, String animation, String filter)
 	{
 		super(to);
 		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
 		//physicsBody = Physics.inst().addRectBody(to.rect, this, BodyType.DynamicBody, MASS, false);
-		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
+		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false, filter);
 		
 		if(to.prop.containsKey("dir"))
 		{
@@ -67,11 +65,11 @@ public abstract class Entity extends GameObject
 		this.animation.setDirection(crntDir);
 	}
 		
-	public Entity(Vector2 pos, String animation, int startingDir, String name)
+	public Entity(Vector2 pos, String animation, int startingDir, String name, String filter)
 	{
 		super(name);
 		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
-		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false);
+		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false, filter);
 	}
 
 	

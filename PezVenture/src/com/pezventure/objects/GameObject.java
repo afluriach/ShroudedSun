@@ -5,29 +5,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.pezventure.Game;
-import com.pezventure.map.MapUtil;
 import com.pezventure.map.TilespaceRectMapObject;
+import com.pezventure.objects.enemies.BlueEnemy;
+import com.pezventure.objects.enemies.Facer;
+import com.pezventure.objects.enemies.Follower;
 import com.pezventure.physics.Physics;
 
 public abstract class GameObject 
 {
 	private static final float collisionBounceMargin = 0.1f;
 	
-	private static Map<String, Class<?>> gameObjectTypes = new HashMap<String, Class<?>>();
+	private static Map<String, Class<? extends GameObject>> gameObjectTypes = new HashMap<String, Class<? extends GameObject>>();
 	private static boolean objectTypesInitialized = false;
 	
-	public static void addClass(String str, Class cls)
+	public static void addClass(String str, Class<? extends GameObject> cls)
 	{
 		gameObjectTypes.put(str,  cls);
 	}
@@ -45,7 +40,7 @@ public abstract class GameObject
 		addClass("jar", Jar.class);
 		addClass("sign", Sign.class);
 		addClass("facer", Facer.class);
-		addClass("sneaker", Sneaker.class);
+		addClass("follower", Follower.class);
 	}
 	
 	public static Class<?> getObjectClass(String name)
@@ -67,7 +62,7 @@ public abstract class GameObject
 	
 	
 	//physics
-	Body physicsBody;
+	protected Body physicsBody;
 	boolean collisionThisFrame = false;	
 	
 	String name;
@@ -207,9 +202,24 @@ public abstract class GameObject
 		return String.format("gameobject class: %s, name: %s", this.getClass().getSimpleName(), name);
 	}
 	
+	public void onExpire()
+	{
+		Game.inst.physics.removeBody(physicsBody);
+	}
+	
+	/**
+	 * 
+	 * @return Is this object any category of object that the player can interact with.
+	 */
+	public boolean canPlayerInteract()
+	{
+		return this instanceof Grabbable && ((Grabbable)this).canGrab() ||
+		       this instanceof Sign;
+	}
+	
 	public abstract void update();
 	public abstract void render(SpriteBatch sb);	
 	public abstract void handleContact(GameObject other);
 	public abstract void handleEndContact(GameObject other);
-	abstract void onExpire();
+	public abstract void init();
 }

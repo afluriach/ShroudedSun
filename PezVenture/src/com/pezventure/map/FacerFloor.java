@@ -1,9 +1,6 @@
 package com.pezventure.map;
 
 import com.badlogic.gdx.utils.JsonValue;
-import com.pezventure.Game;
-import com.pezventure.objects.Door;
-import com.pezventure.objects.FloorSwitch;
 
 public class FacerFloor extends Area {
 	

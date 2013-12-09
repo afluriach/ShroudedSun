@@ -5,12 +5,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.physics.PrimaryDirection;
 
@@ -22,6 +19,8 @@ public class SpriteLoader
 	private Map<String, AnimationSpriteSet> animationSpriteSet = new TreeMap<String, AnimationSpriteSet>();
 	private ArrayList<Texture> spriteSheetsLoaded = new ArrayList<Texture>();
 	
+	
+	//the characters spatial layout in the sprite sheet
 	public static final String[][] spriteSheetNames = 
 		{
 			{"reimu", "marisa", "cirno"},
@@ -40,7 +39,6 @@ public class SpriteLoader
 	
 	public SpriteLoader()
 	{
-//		loadTextures();
 		loadTexturesInFolder();
 		load4DirEntitySprites();
 		load8DirTouhouSprites();
@@ -114,11 +112,6 @@ public class SpriteLoader
 			if(fh.extension().equals("png"))
 			{
 				textures.put(fh.nameWithoutExtension(), loadTexture(fh));
-//				Gdx.app.log(Game.TAG, String.format("file %s loaded, saved as %s", fh.name(), fh.nameWithoutExtension()));
-			}
-			else
-			{
-//				Gdx.app.log(Game.TAG, String.format("file %s skipped in texture folder", fh.name()));
 			}
 		}
 	}	
@@ -165,7 +158,7 @@ public class SpriteLoader
 	public EntityAnimation8Dir getSpriteAnimation(String name, int startingDir)
 	{
 		if(!entitySpriteSets8Dir.containsKey(name))
-			throw new NoSuchElementException("unknown sprite name: " + name);
+			throw new NoSuchElementException(String.format("Sprite %s not found", name));
 		
 		return new EntityAnimation8Dir(entitySpriteSets8Dir.get(name), startingDir);
 	}
@@ -174,7 +167,7 @@ public class SpriteLoader
 	{
 		if(!entitySpriteSets4Dir.containsKey(name))
 		{
-			throw new NoSuchElementException("unknow sprite animation: " + name);
+			throw new NoSuchElementException(String.format("Sprite %s not found", name));
 		}
 		return new EntityAnimation4Dir(entitySpriteSets4Dir.get(name), startingDir);
 	}
@@ -185,29 +178,4 @@ public class SpriteLoader
 			throw new NoSuchElementException(String.format("Texture %s not found", name));
 		return textures.get(name);
 	}
-	
-	
-	
-	public TextureRegion[][] split(TextureRegion region, int tileWidth, int tileHeight, int spacing)
-	{
-		int x = region.getRegionX();
-		int y = region.getRegionY();
-		int width = region.getRegionWidth();
-		int height = region.getRegionHeight();
-
-		int rows = height / tileHeight;
-		int cols = width / tileWidth;
-
-		int startX = x;
-		TextureRegion[][] tiles = new TextureRegion[rows][cols];
-		for (int row = 0; row < rows; row++, y += tileHeight) {
-			x = startX;
-			for (int col = 0; col < cols; col++, x += tileWidth) {
-				tiles[row][col] = new TextureRegion(region.getTexture(), x, y, tileWidth, tileHeight);
-			}
-		}
-
-		return tiles;
-	}
-
 }

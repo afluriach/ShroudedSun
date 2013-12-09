@@ -21,7 +21,7 @@ public class Sign extends GameObject
 			throw new MapDataException("sign must have message on it");
 		}
 		msg = mo.prop.get("msg", String.class);
-		physicsBody = Game.inst.physics.addRectBody(mo.rect, this, BodyType.StaticBody);
+		physicsBody = Game.inst.physics.addRectBody(mo.rect, this, BodyType.StaticBody, "environmental_floor");
 		texture = Game.inst.spriteLoader.getTexture("sign");
 	}
 
@@ -36,20 +36,18 @@ public class Sign extends GameObject
 
 	@Override
 	public void handleContact(GameObject other) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void handleEndContact(GameObject other) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	void onExpire() {
-		// TODO Auto-generated method stub
-		
+	public void onExpire() {
+	}
+
+	@Override
+	public void init() {
 	}
 	
 }

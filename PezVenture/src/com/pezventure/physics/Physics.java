@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -12,18 +11,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
-import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.objects.GameObject;
@@ -36,20 +31,97 @@ public class Physics
 	public static final float DEFAULT_MASS = 1.0f;
 	public static final float GRAVITY = 9.8f;
 	
-	public static final short enemyCategory = 1;
-	public static final short enemyBulletCategory = 2;
-	public static final short playerCategory = 4;
-	public static final short playerBulletCategory = 8;
-	public static final short floorObjectCategory = 16;
-	public static final short aboveFloorObjectCategory = 32;
-	public static final short playerShieldCategory = 64;
+	public static final short enemyCategory            = 1;
+	public static final short enemyBulletCategory      = 2;
+	public static final short playerCategory 		   = 4;
+	public static final short playerBulletCategory 	   = 8;
+	public static final short playerShieldCategory 	   = 16;
+	public static final short onFloorCategory          = 32;
+	public static final short entityHeightCategory     = 64;
+	public static final short environmentCateogry      = 128;
+	public static final short sensorCategory           = 256;
+	public static final short npcCategory              = 512;
 	
 	public static Map<String, Filter> collisionFilters;
 	
 	public static void loadFilters()
 	{
+		Filter filter;
 		collisionFilters = new TreeMap<String, Filter>();
 		
+		//enemy
+		filter = new Filter();
+		filter.categoryBits = enemyCategory;
+		filter.maskBits = playerCategory | playerBulletCategory | playerShieldCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory; 
+		collisionFilters.put("enemy", filter);
+		
+		//enemy bullet
+		filter = new Filter();
+		filter.categoryBits = enemyBulletCategory;
+		filter.maskBits = playerCategory | playerBulletCategory | playerShieldCategory | entityHeightCategory | environmentCateogry | sensorCategory; 
+		collisionFilters.put("enemy_bullet", filter);
+		
+		//player
+		filter = new Filter();
+		filter.categoryBits = playerCategory;
+		filter.maskBits = enemyCategory | enemyBulletCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory;
+		collisionFilters.put("player", filter);
+		
+		//player bullet
+		filter = new Filter();
+		filter.categoryBits = playerBulletCategory;
+		filter.maskBits = enemyCategory | enemyBulletCategory | entityHeightCategory | environmentCateogry | sensorCategory;
+		collisionFilters.put("player_bullet", filter);
+		
+		//player shield
+		filter = new Filter();
+		filter.categoryBits = playerShieldCategory;
+		filter.maskBits = enemyCategory | enemyBulletCategory | entityHeightCategory | sensorCategory;
+		collisionFilters.put("player_shield", filter);
+		
+		//floor object
+		filter = new Filter();
+		filter.categoryBits = onFloorCategory;
+		filter.maskBits = playerCategory | enemyCategory | onFloorCategory | sensorCategory;
+		collisionFilters.put("floor", filter);
+		
+		//environmental object
+		filter = new Filter();
+		filter.categoryBits = environmentCateogry;
+		filter.maskBits = playerCategory | playerBulletCategory | enemyCategory | enemyBulletCategory | environmentCateogry | onFloorCategory | sensorCategory;
+		collisionFilters.put("environmental_floor", filter);
+		
+		//environmental hovering object
+		filter = new Filter();
+		filter.categoryBits = environmentCateogry;
+		filter.maskBits = playerCategory | playerBulletCategory | enemyCategory | enemyBulletCategory | environmentCateogry | sensorCategory;
+		collisionFilters.put("environmental_hovering", filter);
+		
+		//npc
+		filter = new Filter();
+		filter.categoryBits = npcCategory;
+		filter.maskBits = playerCategory | environmentCateogry | sensorCategory | npcCategory | onFloorCategory | entityHeightCategory;
+		collisionFilters.put("npc", filter);
+				
+		//wall
+		filter = new Filter();
+		filter.categoryBits = environmentCateogry;
+		filter.maskBits = playerCategory | playerBulletCategory | enemyCategory | enemyBulletCategory | environmentCateogry | entityHeightCategory | sensorCategory;
+		collisionFilters.put("wall", filter);
+		
+		//player sensor
+		collisionFilters.put("player_sensor", sensorFilter(playerCategory));
+		
+		
+		
+	}
+	
+	public static Filter sensorFilter(short target)
+	{
+		Filter filter = new Filter();
+		filter.categoryBits = sensorCategory;
+		filter.maskBits = target;
+		return filter;
 	}
 	
 	World world;
@@ -69,6 +141,9 @@ public class Physics
 		box2dRenderer.setDrawInactiveBodies(true);
 		
 		world.setContactListener(contactHandler);
+		
+		if(collisionFilters == null)
+			loadFilters();
 		
 	}
 	
@@ -180,19 +255,19 @@ public class Physics
 		return cb.hitTarget();
 	}
 	
-	public Body addRectBody(Rectangle rect, GameObject ref, BodyType type)
+	public Body addRectBody(Rectangle rect, GameObject ref, BodyType type, String filter)
 	{
-		return addRectBody(rect.getCenter(new Vector2()), rect.height, rect.width, type, ref);
+		return addRectBody(rect.getCenter(new Vector2()), rect.height, rect.width, type, ref, filter);
 	}
 
-	public Body addRectBody(Rectangle rect, GameObject ref, BodyType type, float mass, boolean sensor)
+	public Body addRectBody(Rectangle rect, GameObject ref, BodyType type, float mass, boolean sensor, String filter)
 	{
-		return addRectBody(rect.getCenter(new Vector2()), rect.height, rect.width, type, ref, mass, sensor);
+		return addRectBody(rect.getCenter(new Vector2()), rect.height, rect.width, type, ref, mass, sensor, filter);
 	}
 	
-	public Body addRectBody(Vector2 pos,float height, float width, BodyType type, GameObject ref)
+	public Body addRectBody(Vector2 pos,float height, float width, BodyType type, GameObject ref, String filter)
 	{
-		return addRectBody(pos, height, width, type, ref, DEFAULT_MASS, false);
+		return addRectBody(pos, height, width, type, ref, DEFAULT_MASS, false, filter);
 	}
 
 	
@@ -202,7 +277,8 @@ public class Physics
 			                BodyType type,
 			                GameObject ref,
 			                float mass,
-			                boolean sensor)
+			                boolean sensor,
+			                String filter)
 	{
 		float area = height*width;
 		float density = mass/area;
@@ -223,19 +299,15 @@ public class Physics
 		
 		b.setUserData(ref);
 		b.resetMassData();
-		
-//		Filter filter = new Filter();
-		//set category bits here
-		Filter filter = f.getFilterData();
-		
-		//default category 1, default mask -1 (all bits), default group 0
+
+		f.setFilterData(collisionFilters.get(filter));		
 		
 		shape.dispose();
 		
 		return b;
 	}
 	
-	public Body addCircleBody(Vector2 pos, float radius, BodyType type, GameObject ref, float mass, boolean sensor)
+	public Body addCircleBody(Vector2 pos, float radius, BodyType type, GameObject ref, float mass, boolean sensor, String filter)
 	{
 		float area = (float) (Math.PI*radius*radius);
 		float density = mass/area;
@@ -253,6 +325,7 @@ public class Physics
 		
 		Fixture f = b.createFixture(shape, density);
 		f.setSensor(sensor);
+		f.setFilterData(collisionFilters.get(filter));
 		
 		b.setUserData(ref);
 		b.resetMassData();

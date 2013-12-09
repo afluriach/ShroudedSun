@@ -1,14 +1,10 @@
 package com.pezventure.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
-import com.pezventure.Util;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.physics.Physics;
 
 public class Wall extends GameObject
 {
@@ -16,13 +12,13 @@ public class Wall extends GameObject
 	{
 		super(to);
 		
-		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody, 1, false);
+		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody, 1, false, "wall");
 	}
 	
 	public Wall(Rectangle r)
 	{
 		super("wall");
-		physicsBody = Game.inst.physics.addRectBody(r, this, BodyType.StaticBody, 1, false);
+		physicsBody = Game.inst.physics.addRectBody(r, this, BodyType.StaticBody, 1, false, "wall");
 
 	}
 
@@ -36,28 +32,26 @@ public class Wall extends GameObject
 	@Override
 	public void update()
 	{
-		// no-op
 	}
 
 	@Override
 	public void handleContact(GameObject other)
 	{
-//		if(other instanceof Wall || other instanceof Door)
-//			return;
-		//pushCollider(other);
-//		other.undoFrameVel();
-//		other.setVel(Vector2.Zero);
 	}
 
 	@Override
-	void onExpire()
+	public void onExpire()
 	{
-		//no-op, should not happen
 	}
 	
 	@Override
-	public void handleEndContact(GameObject other) {
-		//no-op
+	public void handleEndContact(GameObject other)
+	{
+	}
+
+	@Override
+	public void init()
+	{
 	}
 
 

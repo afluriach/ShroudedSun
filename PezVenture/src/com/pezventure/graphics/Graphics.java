@@ -24,6 +24,21 @@ public class Graphics
 		batch.draw(texture, x, y, texture.getWidth(), texture.getHeight());
 
 	}
+
+	public static void drawTextureRegion(TextureRegion region, Vector2 centerPos, SpriteBatch batch)
+	{
+		int centerPixX = (int) (centerPos.x*Game.PIXELS_PER_TILE);
+		int centerPixY = (int) (centerPos.y*Game.PIXELS_PER_TILE);
+
+		//lower left corner
+		int x = centerPixX - region.getRegionWidth()/2;
+		int y = centerPixY - region.getRegionHeight()/2;
+		
+		//batch.draw(texture, x, y);
+		batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
+
+	}
+
 	
 	/**
 	 * requires ShapeRenderer batch.
@@ -44,7 +59,6 @@ public class Graphics
 	public static Color hsva(float h, float s, float v, float a)
 	{
 		float r1, g1, b1;
-		float r,g,b;
 		float C = v*s;
 		float hPrime = h / 60;
 		float x = C*(1-Math.abs(hPrime % 2.0f - 1));
@@ -93,7 +107,7 @@ public class Graphics
 		}
 		else
 		{
-			throw new IllegalArgumentException(String.format("Illegal hue, %f, given", h));
+			throw new IllegalArgumentException(String.format("Illegal hue given: %f", h));
 		}
 		
 		return new Color(r1+m, g1+m, b1+m, a);

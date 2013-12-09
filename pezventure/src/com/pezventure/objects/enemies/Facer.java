@@ -1,18 +1,19 @@
-package com.pezventure.objects;
+package com.pezventure.objects.enemies;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.Util;
-import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.physics.PrimaryDirection;
+import com.pezventure.objects.Enemy;
+import com.pezventure.objects.Entity;
+import com.pezventure.objects.GameObject;
+import com.pezventure.objects.Player;
+import com.pezventure.objects.PlayerBullet;
 
 public class Facer extends Entity implements Enemy
 {
 	private static final int TOUCH_DAMAGE = 1;
 	public static final float invulerabilityLength = 0.5f;
-	private static final float invulerabilityFlickerInterval = 0.1f;
 	
 	private static final String defaultTarget = "player";
 	private static final float defaultSpeed = 1.0f;
@@ -29,7 +30,7 @@ public class Facer extends Entity implements Enemy
 	
 	public Facer(TilespaceRectMapObject to) {
 		
-		super(to, "tewi");
+		super(to, "tewi", "enemy");
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);
@@ -83,19 +84,12 @@ public class Facer extends Entity implements Enemy
 	}
 
 	@Override
-	void onExpire() {
+	public void onExpire() {
 	}
 		
 	@Override
 	public void update()
-	{
-		
-		if(target == null)
-		{
-			target = (Entity) Game.inst.gameObjectSystem.getObjectByName(targetName);
-			if(target == null) throw new RuntimeException(String.format("target, %s, not found", targetName));
-		}
-		
+	{		
 		float desiredSpeed = isFacingTarget() ? speed : 0f;		
 		
 		setDesiredVel(Util.get8DirUnit(getDir()).scl(desiredSpeed));
@@ -136,5 +130,12 @@ public class Facer extends Entity implements Enemy
 		
 		return (facing && visible);
 			
+	}
+
+	@Override
+	public void init()
+	{
+		target = (Entity) Game.inst.gameObjectSystem.getObjectByName(targetName);
+		if(target == null) throw new RuntimeException(String.format("target, %s, not found", targetName));
 	}
 }

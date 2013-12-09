@@ -1,7 +1,6 @@
 package com.pezventure.graphics;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.pezventure.Game;
 import com.pezventure.physics.PrimaryDirection;
 
 public class EntitySpriteSet4Dir

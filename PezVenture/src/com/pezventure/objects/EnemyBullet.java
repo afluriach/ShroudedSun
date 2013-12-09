@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
-import com.pezventure.physics.PrimaryDirection;
 
 public class EnemyBullet extends Bullet
 {
@@ -18,7 +17,7 @@ public class EnemyBullet extends Bullet
 	
 	public EnemyBullet(Vector2 pos, int dir)
 	{
-		super(pos,radius, "EnemyBullet", dir, speed, mass);
+		super(pos,radius, "EnemyBullet", dir, speed, mass, "enemy_bullet");
 		texture = Game.inst.spriteLoader.getTexture("bullet_aa");
 	}
 	
@@ -46,16 +45,15 @@ public class EnemyBullet extends Bullet
 			expire();
 		}
 	}
-
-	@Override
-	void onExpire() {
-		// TODO Auto-generated method stub
-
-	}
 	
 	@Override
 	public void handleEndContact(GameObject other) {
 		//no-op
+	}
+
+	@Override
+	public void init() {
+		
 	}
 
 

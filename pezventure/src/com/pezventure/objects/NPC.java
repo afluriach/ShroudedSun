@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.Util;
-import com.pezventure.graphics.EntityAnimation8Dir;
 import com.pezventure.map.TilespaceRectMapObject;
 
 
@@ -22,7 +21,7 @@ public class NPC extends Entity
 	Vector2 targetPos;
 	
 	public NPC(TilespaceRectMapObject to, String animation) {
-		super(to, to.prop.get("sprite", String.class));
+		super(to, to.prop.get("sprite", String.class), "npc");
 		
 		if(to.prop.containsKey("speed"))
 		{
@@ -37,7 +36,7 @@ public class NPC extends Entity
 	
 	public NPC(Vector2 pos, String name, int startingDir, String animation)
 	{
-		super(pos, name, startingDir, animation);
+		super(pos, name, startingDir, animation, "npc");
 		speed = defaultSpeed;
 	}
 	
@@ -122,7 +121,7 @@ public class NPC extends Entity
 	}
 
 	@Override
-	void onExpire()
+	public void onExpire()
 	{
 		say(String.format("%s: It's the end for me!", name));
 	}
@@ -149,6 +148,10 @@ public class NPC extends Entity
 		}		
 		
 		super.update();
+	}
+
+	@Override
+	public void init() {
 	}
 	
 }

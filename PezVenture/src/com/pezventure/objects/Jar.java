@@ -20,7 +20,7 @@ public class Jar extends GameObject implements Grabbable
 	public Jar(TilespaceRectMapObject mo) {
 		super(mo);
 	
-		physicsBody = Game.inst.physics.addCircleBody(mo.rect.getCenter(new Vector2()), radius, BodyType.DynamicBody, this, mass, false);
+		physicsBody = Game.inst.physics.addCircleBody(mo.rect.getCenter(new Vector2()), radius, BodyType.DynamicBody, this, mass, false, "environmental_floor");
 		
 		String color = null;
 		
@@ -59,7 +59,7 @@ public class Jar extends GameObject implements Grabbable
 	}
 
 	@Override
-	void onExpire() {
+	public void onExpire() {
 
 	}
 
@@ -76,6 +76,10 @@ public class Jar extends GameObject implements Grabbable
 	@Override
 	public void onDrop() {
 		isGrabbed = false;
+	}
+
+	@Override
+	public void init() {
 	}
 
 }

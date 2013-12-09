@@ -1,36 +1,23 @@
 package com.pezventure.objects;
 
-import java.util.LinkedList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.pezventure.Game;
 import com.pezventure.Util;
-import com.pezventure.graphics.SpriteLoader;
-import com.pezventure.physics.Physics;
 import com.pezventure.physics.PrimaryDirection;
 
 public class Player extends Entity
 {
 	public static final float SPEED = 3.0f;
-	private static final float PLAYER_SIZE = 0.75f;
 	private static final int MAX_HP = 10;
 	private static final float invulerabilityLength = 1.0f;
 	private static final float invulerabilityFlickerInterval = 0.1f;
 	private static final float fireInterval = 0.7f;
 	private static final float shotInitDist = 0.5f;
-	private static final float grabAngle = 15f;
 	private static final float grabDistance = 0.5f;
 	
-	/**
-	 * types of game objects the player can grab.
-	 */
-	private Class[] grabable = {Jar.class};
-	private LinkedList<GameObject> grabableTouching = new LinkedList<GameObject>();
 	
 	int hp = MAX_HP;
 	float invulnerableTimeRemaining = 0f;
@@ -51,7 +38,7 @@ public class Player extends Entity
 	
 	public Player(Vector2 pos, PrimaryDirection startingDir)
 	{
-		super(pos, "cirno", startingDir.getAngle8Dir(), "player");
+		super(pos, "cirno", startingDir.getAngle8Dir(), "player", "player");
 		
 		shieldObj = new Shield(getCenterPos());
 		//physicsBody = Physics.inst().addRectBody(pos, PLAYER_SIZE, PLAYER_SIZE, BodyType.DynamicBody, this, MASS, false);
@@ -59,9 +46,7 @@ public class Player extends Entity
 	}
 	
 	public void update()
-	{
-		super.update();
-		
+	{		
 		invulnerableTimeRemaining -= Game.SECONDS_PER_FRAME;
 		if(invulnerableTimeRemaining < 0)
 		{
@@ -117,6 +102,8 @@ public class Player extends Entity
 		
 		shieldObj.setActive(shield);
 		shieldObj.setPos(getCenterPos());
+		
+		super.update();
 	}
 	
 	@Override
@@ -127,7 +114,7 @@ public class Player extends Entity
 	}
 
 	@Override
-	void onExpire()
+	public void onExpire()
 	{
 		// TODO Auto-generated method stub
 		
@@ -264,6 +251,10 @@ public class Player extends Entity
 	public void setInteract()
 	{
 		interact = true;
+	}
+
+	@Override
+	public void init() {
 	}
 
 

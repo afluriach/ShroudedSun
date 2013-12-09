@@ -6,9 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.graphics.Graphics;
-import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.physics.Physics;
 
 //IDEA: door is a static collider when locked. change to a Dynamic sensor
 //when unlocked, this will make transitions between rooms easier to detect
@@ -24,7 +22,7 @@ public class Door extends GameObject
 	public Door(TilespaceRectMapObject to)
 	{
 		super(to);
-		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody);
+		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody, "environmental_floor");
 		texture = Game.inst.spriteLoader.getTexture("door");
 		
 		if(to.prop.containsKey("switch"))
@@ -44,18 +42,7 @@ public class Door extends GameObject
 
 	@Override
 	public void update()
-	{
-		//init switches here. 
-		if(switches == null && switchNames != null)
-		{
-			switches = new FloorSwitch[switchNames.length];
-			
-			for(int i=0;i<switchNames.length; ++i)
-			{
-				switches[i] = (FloorSwitch) Game.inst.gameObjectSystem.getObjectByName(switchNames[i]);
-			}
-		}
-		
+	{		
 		if(switches != null)
 		{
 			isLocked = !Util.allActivated(switches);
@@ -75,7 +62,7 @@ public class Door extends GameObject
 	}
 
 	@Override
-	void onExpire() {
+	public void onExpire() {
 		//no-op
 	}
 	
@@ -95,6 +82,22 @@ public class Door extends GameObject
 	@Override
 	public void handleEndContact(GameObject other) {
 		//no-op
+	}
+
+	@Override
+	public void init() {
+		//init switches here. 
+		if(switches == null && switchNames != null)
+		{
+			switches = new FloorSwitch[switchNames.length];
+			
+			for(int i=0;i<switchNames.length; ++i)
+			{
+				switches[i] = (FloorSwitch) Game.inst.gameObjectSystem.getObjectByName(switchNames[i]);
+			}
+		}
+
+		
 	}
 
 	

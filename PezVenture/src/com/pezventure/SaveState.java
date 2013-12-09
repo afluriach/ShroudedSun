@@ -1,26 +1,17 @@
 package com.pezventure;
 
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.BitSet;
 import java.util.TreeMap;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.Json.Serializable;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.OrderedMap;
+import com.badlogic.gdx.files.FileHandle;
+import com.pezventure.map.AreaState;
+
 
 //represents persistent game state that can be loaded and stored
-public class SaveState implements Serializable
+public class SaveState
 {
-	TreeMap<String, JsonValue> areaState = new TreeMap<String, JsonValue>();
-			
-	@Override
-	public void write(Json json)
-	{
-		json.toJson(this);
-	}
+	TreeMap<String, AreaState> areaState = new TreeMap<String, AreaState>();
 
-	@Override
-	public void read(Json json, JsonValue jsonData)
-	{
-		json.fromJson(SaveState.class, jsonData.toString());
-	}
 }

@@ -1,15 +1,13 @@
 package com.pezventure;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.pezventure.objects.FloorSwitch;
-import com.pezventure.objects.GameObject;
 import com.pezventure.physics.PrimaryDirection;
 
 public class Util

@@ -1,6 +1,5 @@
 package com.pezventure.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +18,7 @@ public class Shield extends GameObject
 	{
 		super("shield");
 		
-		physicsBody = Game.inst.physics.addCircleBody(pos, radius, BodyType.DynamicBody, this, 1f, true);
+		physicsBody = Game.inst.physics.addCircleBody(pos, radius, BodyType.DynamicBody, this, 1f, true, "player_shield");
 		texture = Game.inst.spriteLoader.getTexture("shield64");
 	}
 	
@@ -65,20 +64,18 @@ public class Shield extends GameObject
 				Vector2 disp = other.getCenterPos().sub(getCenterPos());
 				Vector2 impulse = disp.nor().scl(knockbackForce*Game.SECONDS_PER_FRAME);
 				
+				other.physicsBody.applyLinearImpulse(impulse, other.getCenterPos(), true);
 			}
 		}
 	}
 
 	@Override
 	public void handleEndContact(GameObject other) {
-		// TODO Auto-generated method stub
-		
 	}
 
+
 	@Override
-	void onExpire() {
-		// TODO Auto-generated method stub
-		
+	public void init() {
 	}
 
 }

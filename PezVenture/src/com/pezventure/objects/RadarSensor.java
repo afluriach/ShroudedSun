@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.pezventure.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -16,13 +15,13 @@ public class RadarSensor extends GameObject
 	Class<?> sensingClass;
 	private List<GameObject> detectedObjects = new LinkedList<GameObject>();
 	
-	public RadarSensor(Vector2 pos, float radius, Class<?> sensingClass)
+	public RadarSensor(Vector2 pos, float radius, Class<?> sensingClass, String sensingType)
 	{
 		super("radarSensor");
 		this.radius = radius;
 		this.sensingClass = sensingClass;
 		
-		physicsBody = Game.inst.physics.addCircleBody(pos, radius, BodyType.DynamicBody, this, 1f, true);
+		physicsBody = Game.inst.physics.addCircleBody(pos, radius, BodyType.DynamicBody, this, 1f, true, sensingType);
 	}
 	
 	public List<GameObject> getDetectedObjects()
@@ -83,7 +82,12 @@ public class RadarSensor extends GameObject
 	}
 
 	@Override
-	void onExpire() {
+	public void onExpire() {
+		Game.inst.physics.removeBody(physicsBody);
+	}
+
+	@Override
+	public void init() {
 	}
 
 }

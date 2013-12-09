@@ -1,19 +1,15 @@
 package com.pezventure.graphics;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
-import com.pezventure.physics.PrimaryDirection;
 
 public class EntityAnimation8Dir
 {
 	//the frame in the animation where the character is standing on two legs
-	//i.e. the frame to draw when the entity is not mvoing
+	//i.e. the frame to draw when the entity is not moving
 	private static final int STANDING_FRAME = 1;
-	private static final int textureSize = 32;
 	
 	private EntitySpriteSet8Dir spriteSet;
 	

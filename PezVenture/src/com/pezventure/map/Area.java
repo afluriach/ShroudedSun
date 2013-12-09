@@ -3,9 +3,7 @@ package com.pezventure.map;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -16,7 +14,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import com.pezventure.DisjointNode;
 import com.pezventure.Game;
-import com.pezventure.objects.GameObjectSystem;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.Wall;
 import com.pezventure.physics.PrimaryDirection;

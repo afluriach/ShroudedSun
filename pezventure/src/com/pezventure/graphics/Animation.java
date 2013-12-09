@@ -4,6 +4,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.physics.PrimaryDirection;
 
+/**
+ * Simple animation that cycles through frames based on time.
+ * @author ant
+ *
+ */
 public class Animation 
 {
 	AnimationSpriteSet spriteSet;

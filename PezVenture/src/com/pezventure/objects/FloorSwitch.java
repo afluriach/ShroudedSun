@@ -6,13 +6,10 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
-import com.pezventure.graphics.SpriteLoader;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.physics.Physics;
 
 public class FloorSwitch extends GameObject
 {
@@ -76,7 +73,7 @@ public class FloorSwitch extends GameObject
 		
 		renderLayer = RenderLayer.floor;
 				
-		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.DynamicBody, 1, true);
+		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.DynamicBody, 1, true, "floor");
 	}
 
 	@Override
@@ -93,14 +90,6 @@ public class FloorSwitch extends GameObject
 		{
 			activated = activatedByObject();
 		}
-		
-//		if(!sticky && activated)
-//		{
-//			if(activatingObject.getCenterPos().sub(getCenterPos()).len2() >= activationMargin*activationMargin)
-//			{
-//				activated = false;
-//			}
-//		}
 	}
 
 	@Override
@@ -124,11 +113,6 @@ public class FloorSwitch extends GameObject
 			activatingObjectsOnSwitch.add(other);
 		}
 
-	}
-
-	@Override
-	void onExpire() {
-		//no-op
 	}
 	
 	public boolean isActivated()
@@ -156,5 +140,9 @@ public class FloorSwitch extends GameObject
 			if(go.getCenterPos().sub(getCenterPos()).len2() < activationRadius*activationRadius)
 				return true;
 		return false;
+	}
+
+	@Override
+	public void init() {
 	}
 }
