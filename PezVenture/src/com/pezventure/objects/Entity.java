@@ -1,9 +1,12 @@
 package com.pezventure.objects;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
+import com.pezventure.PathSegment;
 import com.pezventure.Util;
 import com.pezventure.graphics.EntityAnimation8Dir;
 import com.pezventure.map.MapDataException;
@@ -12,12 +15,14 @@ import com.pezventure.physics.PrimaryDirection;
 
 public abstract class Entity extends GameObject
 {
+	private static final float pathNodeArrivalMargin = 0.1f;
 	//cycle through animation (show a step), every time the entity covers distance equal to one step
 	static final float stepLength = 0.25f;
 	static final float MASS = 50.0f;
 	static final float HIT_CIRCLE_RADIUS = 0.35f;
 	static final int defaultFacing = 2;
-	static final float acceleration = 4.5f;
+	static final float maxAcceleration = 4.5f;
+	static final float defaultSpeed = 1f;
 	
 	//entities may flicker to show temporary invulnerbility after being attacked or when about to expire. 
 	boolean isFlickering = false;
@@ -31,13 +36,14 @@ public abstract class Entity extends GameObject
 	EntityAnimation8Dir animation;
 	
 	private int crntDir = defaultFacing;
-	
+		
 	/**
 	 * if set, change the direction on the next cycle
 	 */
 	private int desiredDir = defaultFacing;
-	private Vector2 desiredVel;
-		
+	private Vector2 desiredVel;	
+	private float speed;	
+	
 	public Entity(TilespaceRectMapObject to, String animation, String filter)
 	{
 		super(to);
@@ -62,6 +68,16 @@ public abstract class Entity extends GameObject
 					throw new MapDataException(String.format("invalid dir %d in entity %s", crntDir, to.name));
 			}
 		}
+		
+		if(to.prop.containsKey("speed"))
+		{
+			speed = to.prop.get("speed", Float.class);
+		}
+		else
+		{
+			speed = defaultSpeed;
+		}
+		
 		this.animation.setDirection(crntDir);
 	}
 		
@@ -88,7 +104,7 @@ public abstract class Entity extends GameObject
 		if(desiredVel == null) return;
 		
 		Vector2 velDisp = desiredVel.cpy().sub(getVel());
-		Vector2 dv = velDisp.cpy().nor().scl(acceleration*Game.SECONDS_PER_FRAME);
+		Vector2 dv = velDisp.cpy().nor().scl(maxAcceleration*Game.SECONDS_PER_FRAME);
 		
 		
 		//the calculated dv will overshoot the desired velocity. instead set it directly
@@ -190,5 +206,9 @@ public abstract class Entity extends GameObject
 		return crntDir;
 	}
 	
+	public float getSpeed() {
+		return speed;
+	}
+
 	
 }

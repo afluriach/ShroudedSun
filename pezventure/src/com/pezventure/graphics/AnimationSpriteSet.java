@@ -25,6 +25,6 @@ public class AnimationSpriteSet
 	
 	public void render(SpriteBatch batch, int frameNum, float rotation, Vector2 centerPos)
 	{
-		batch.draw(frames[frameNum], centerPos.x - width/2, centerPos.y - height/2, width/2, height/2, width, height, 1f, 1f, rotation, false);
+		Graphics.drawTextureRegion(frames[frameNum], centerPos, batch, rotation);
 	}
 }

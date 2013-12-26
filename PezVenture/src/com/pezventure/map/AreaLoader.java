@@ -1,12 +1,6 @@
 package com.pezventure.map;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.TreeMap;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.Map;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.pezventure.Game;
 
 public class AreaLoader
 {
@@ -20,7 +14,8 @@ public class AreaLoader
 		areas.put("puzzle_room", PuzzleRoom.class);
 		areas.put("facer_floor", FacerFloor.class);
 		areas.put("meeting_room", MeetingRoom.class);
-		
+		areas.put("level_select", LevelSelect.class);
+		areas.put("torch_puzzle", TorchPuzzle.class);
 	}
 	
 	public Area loadArea(String name)

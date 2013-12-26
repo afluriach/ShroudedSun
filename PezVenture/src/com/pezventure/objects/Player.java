@@ -71,7 +71,7 @@ public class Player extends Entity
 		{
 			//bullet inital pos shouldnt matter. it's position will be updated by the 
 			//shoot method
-			shoot(new PlayerBullet(getCenterPos(), getDir()), shotInitDist);
+			shoot(new PlayerIceBullet(getCenterPos(), getDir()), shotInitDist);
 			shoot = false;
 			fireTimeRemaining = fireInterval;
 		}

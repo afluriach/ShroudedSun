@@ -1,8 +1,14 @@
 package com.pezventure.objects.enemies;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.pezventure.Game;
+import com.pezventure.PathSegment;
+import com.pezventure.AI.AI_FSM;
+import com.pezventure.AI.AI_State;
+import com.pezventure.AI.TorchWalkerFSM;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.objects.Enemy;
 import com.pezventure.objects.Entity;
@@ -10,6 +16,7 @@ import com.pezventure.objects.GameObject;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.PlayerBullet;
 import com.pezventure.objects.Torch;
+import com.pezventure.physics.PrimaryDirection;
 
 
 /**
@@ -25,9 +32,7 @@ public class TorchWalker extends Entity implements Enemy
 	float invulnerableTimeRemaining = 0;
 	float speed = 1f;
 	
-	//TODO change to Torch type after implementing torch
-	ArrayList<GameObject> torches;
-	Torch crntTarget;
+	TorchWalkerFSM fsm;
 	
 	/**
 	 * the object that the facer will watch.
@@ -35,12 +40,13 @@ public class TorchWalker extends Entity implements Enemy
 	
 	public TorchWalker(TilespaceRectMapObject to) {
 		
-		super(to, "utsuho", "enemy");
+		super(to, "komachi", "enemy");
 				
 		if(to.prop.containsKey("speed"))
 		{
 			speed = Float.parseFloat(to.prop.get("speed", String.class));
 		}
+		fsm = new TorchWalkerFSM(this);
 	}
 
 	@Override
@@ -63,44 +69,52 @@ public class TorchWalker extends Entity implements Enemy
 	}
 	
 	//select a random unlit torch from the list of torches. or null if none available.
-	public Torch selectUnlitTorch()
-	{
-		ArrayList<Torch> unlit = new ArrayList<Torch>();
-		
-		for(GameObject go: torches)
-		{
-			Torch t = (Torch) go;
-			if(!t.isActivated()) unlit.add(t);
-		}
-		
-		if(unlit.size() > 0)
-		{
-			int index = Game.inst.random.nextInt(unlit.size());
-			return unlit.get(index);
-		}
-		else
-		{
-			return null;
-		}
-	}
+//	public Torch selectUnlitTorch()
+//	{
+//		ArrayList<Torch> unlit = new ArrayList<Torch>();
+//		
+//		for(GameObject go: torches)
+//		{
+//			Torch t = (Torch) go;
+//			if(!t.isActivated()) unlit.add(t);
+//		}
+//		
+//		if(unlit.size() > 0)
+//		{
+//			int index = Game.inst.random.nextInt(unlit.size());
+//			return unlit.get(index);
+//		}
+//		else
+//		{
+//			return null;
+//		}
+//	}
 		
 	@Override
 	public void update()
-	{		
-		//choose a torch to light. walk over to it and light it. 
+	{
+		//The torchwalker will attempt to light all torches in a room.
+		//It will select a torch, walk over to it, and light it.
 		
-		if(crntTarget == null)
-		{
-			crntTarget = selectUnlitTorch();
-		}
+//		if(crntTarget == null)
+//		{
+//			crntTarget = selectUnlitTorch();	
+//			Gdx.app.log(Game.TAG, String.format("Target selected. name: %s, pos: %f, %f", crntTarget.getName(), crntTarget.getCenterPos().x, crntTarget.getCenterPos().y));
+//		}
+//		
+//		if(crntTarget != null)
+//		{
+//			pathToPos(crntTarget.getCenterPos().add(PrimaryDirection.down.getUnitVector()));
+//			
+//			if(!followingPath())
+//			{
+//				//torch walker should have arrived. light torch
+//				crntTarget.light();
+//				crntTarget = null;
+//			}
+//		}
 		
-		if(crntTarget != null)
-		{
-			//TODO pathfinding
-			
-		}
-				
-		
+		fsm.update();
 		super.update();
 	}
 	
@@ -114,6 +128,7 @@ public class TorchWalker extends Entity implements Enemy
 	public void init()
 	{
 		//init torch list
-		torches = Game.inst.gameObjectSystem.getObjectsByType(Torch.class);			
+//		torches = Game.inst.gameObjectSystem.getObjectsByType(Torch.class);	
+		fsm.init();
 	}
 }

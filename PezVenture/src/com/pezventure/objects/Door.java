@@ -30,6 +30,11 @@ public class Door extends GameObject
 			switchNames = to.prop.get("switch", String.class).split("\\s+");
 		}
 	}
+	
+	public boolean isLocked()
+	{
+		return isLocked;
+	}
 
 	@Override
 	public void render(SpriteBatch sb)

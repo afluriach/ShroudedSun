@@ -1,5 +1,6 @@
 package com.pezventure;
 
+import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -23,6 +24,7 @@ import com.pezventure.map.Area;
 import com.pezventure.map.AreaLoader;
 import com.pezventure.map.MapLink;
 import com.pezventure.map.Room;
+import com.pezventure.map.TileGraph;
 import com.pezventure.objects.GameObjectSystem;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.RenderLayer;
@@ -62,8 +64,8 @@ public class Game implements ApplicationListener
 	
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
-	public static final String startingLevel = "level1";
-	public static final String startingLink = "player_start";
+	public static final String startingLevel = "level_select";
+	public static final String startingLink = "entrance";
 	
 	//graphics
 	private OrthographicCamera camera;
@@ -80,6 +82,7 @@ public class Game implements ApplicationListener
 	AreaLoader areaLoader;
 	OrthogonalTiledMapRenderer mapRenderer;
 	Room crntRoom;
+	TileGraph tileGraph;
 	
 	//control state
 	Controls controls;
@@ -275,6 +278,7 @@ public class Game implements ApplicationListener
 		
 		loadPlayer(mapLink);
 		
+		tileGraph = new TileGraph(area);
 	}
 	
 	void initCamera()
@@ -295,6 +299,7 @@ public class Game implements ApplicationListener
 		gameObjectSystem.updateAll();
 		gameObjectSystem.removeExpired();
 		physics.update();
+		tileGraph.refresh();
 	}
 
 	
@@ -493,6 +498,11 @@ public class Game implements ApplicationListener
 			loadArea(areaName,mapEntranceLink);
 			initCamera();
 		}
+	}
+	
+	public List<PathSegment> getPath(Vector2 startPos, Vector2 endPos)
+	{
+		return tileGraph.getPath(startPos, endPos);
 	}
 	
 }

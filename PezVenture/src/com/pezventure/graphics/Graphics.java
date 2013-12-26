@@ -36,7 +36,18 @@ public class Graphics
 		
 		//batch.draw(texture, x, y);
 		batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
+	}
+		
+	public static void drawTextureRegion(TextureRegion region, Vector2 centerPos, SpriteBatch batch, float rotation)
+	{
+		int centerPixX = (int) (centerPos.x*Game.PIXELS_PER_TILE);
+		int centerPixY = (int) (centerPos.y*Game.PIXELS_PER_TILE);
 
+		//lower left corner
+		int x = centerPixX - region.getRegionWidth()/2;
+		int y = centerPixY - region.getRegionHeight()/2;
+
+		batch.draw(region, x, y, centerPixX, centerPixY, region.getRegionWidth(), region.getRegionHeight(), 1f, 1f, rotation);
 	}
 
 	

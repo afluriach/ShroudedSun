@@ -137,7 +137,7 @@ public class NPC extends Entity
 			{
 				Vector2 disp = targetPos.cpy().sub(getCenterPos());
 			
-				setDesiredVel(disp.scl(speed));
+				setDesiredVel(disp.nor().scl(speed));
 				setDesiredDir((int) (disp.angle()/45f));
 			}
 		}

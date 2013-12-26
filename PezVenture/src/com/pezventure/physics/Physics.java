@@ -17,8 +17,10 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.utils.Array;
 import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.objects.GameObject;
@@ -165,6 +167,7 @@ public class Physics
 	{
 		//should be handled by contact handler instead
 //		handleCollisions();
+		Game.inst.gameObjectSystem.applyAccel();		
 		world.step(Game.SECONDS_PER_FRAME,VELOCITY_ITERATIONS, POSITION_ITERATIONS);		
 	}
 	
@@ -189,7 +192,7 @@ public class Physics
 		}
 	}
 	
-	private boolean contactInvolvesObject(Contact c, GameObject go)
+	private static boolean contactInvolvesObject(Contact c, GameObject go)
 	{
 		return c.getFixtureA().getBody().getUserData() == go ||
 			   c.getFixtureB().getBody().getUserData() == go;
@@ -356,9 +359,8 @@ public class Physics
 		return world.createJoint(def);
 	}
 	
-	
 	public void removeJoint(Joint j)
 	{
 		world.destroyJoint(j);
-	}
+	}	
 }

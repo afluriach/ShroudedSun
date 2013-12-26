@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.pezventure.Game;
 
 public class GameObjectSystem
@@ -122,6 +123,27 @@ public class GameObjectSystem
 		}
 		return results;
 	}
+		
+	public ArrayList<Rectangle> getObstacles()
+	{
+		ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
+		for(GameObject go : gameObjects)
+		{
+			if(go.isObstacle())
+			{
+				obs.add(go.getAABB());
+			}
+		}
+		return obs;
+	}
+	
+	public void applyAccel()
+	{
+		for(GameObject go : gameObjects)
+		{
+			go.applyAccel();
+		}
+	}
 	
 //	public void renderPhysicsShapes(ShapeRenderer sr)
 //	{
@@ -183,6 +205,6 @@ public class GameObjectSystem
 //				}
 //			}
 //		}
-//	}
+//	} 
 
 }

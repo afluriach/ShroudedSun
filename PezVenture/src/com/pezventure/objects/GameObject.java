@@ -5,15 +5,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.pezventure.Game;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.objects.enemies.BlueEnemy;
 import com.pezventure.objects.enemies.Facer;
 import com.pezventure.objects.enemies.Follower;
+import com.pezventure.objects.enemies.TorchWalker;
 import com.pezventure.physics.Physics;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 
 public abstract class GameObject 
 {
@@ -21,6 +30,7 @@ public abstract class GameObject
 	
 	private static Map<String, Class<? extends GameObject>> gameObjectTypes = new HashMap<String, Class<? extends GameObject>>();
 	private static boolean objectTypesInitialized = false;
+	private Vector2 crntAcceleration;
 	
 	public static void addClass(String str, Class<? extends GameObject> cls)
 	{
@@ -41,6 +51,8 @@ public abstract class GameObject
 		addClass("sign", Sign.class);
 		addClass("facer", Facer.class);
 		addClass("follower", Follower.class);
+		addClass("torch", Torch.class);
+		addClass("torch_walker", TorchWalker.class);
 	}
 	
 	public static Class<?> getObjectClass(String name)
@@ -122,71 +134,10 @@ public abstract class GameObject
 		return physicsBody.getLinearVelocity().cpy();
 	}
 	
-	/**
-	 * undo displacement from this frame, intended to move GO back from collision
-	 * add an extra margin to the reverse to make sure game object is no longer
-	 * colliding
-	 */
-	public void undoFrameVel()
-	{
-		//direction of movement
-		Vector2 dir = getVel().nor();		
-		Vector2 dispThisFrame = getVel().scl(Game.SECONDS_PER_FRAME);
-		Vector2 pos = getCenterPos();
-		Vector2 bounceDisp = dir.cpy().scl(-collisionBounceMargin);
-		
-		Vector2 newpos = pos.cpy();
-
-		newpos.sub(dispThisFrame);
-		newpos.add(bounceDisp);
-		
-		
-//		Gdx.app.log(Game.TAG, String.format("class: %s; disp: %f,%f; oldpos: %f,%f, newpos: %f,%f",
-//                getClass().toString(), dispThisFrame.x, dispThisFrame.y, pos.x, pos.y, newpos.x, newpos.y));
-
-		
-		physicsBody.setTransform(newpos, physicsBody.getAngle());
-	}
-
 	public void setPos(Vector2 pos)
 	{
 		physicsBody.setTransform(pos, physicsBody.getAngle());
-//	}
 	}
-
-//	/**
-//	 * Push away the other GameObject so that it is no longer colliding. This
-//	 * works for rectangular physicsbodies (hitboxes) for now. 
-//	 * @param other the Game Object colliding with this
-//	 */
-//	public void pushCollider(GameObject other)
-//	{
-//		//physics parameters should be tuned so that tunnelling isn't possible, 
-//		//but bias towards up/right in case coords equal
-//		Vector2 thisPos = getCenterPos();
-//		Vector2 otherPos = other.getCenterPos();
-//		Vector2 otherNewPos = new Vector2(otherPos.x, otherPos.y);
-//		
-//		if(otherPos.x >= thisPos.x)
-//		{
-//			otherNewPos.x = thisPos.x + hitboxWidth/2 + other.hitboxWidth/2 + collisionBounceMargin;
-//		}
-//		else if(otherPos.x < thisPos.x)
-//		{
-//			otherNewPos.x = thisPos.x - hitboxWidth/2 - other.hitboxWidth/2 - collisionBounceMargin;
-//		}
-//		
-//		if(otherPos.y >= thisPos.y)
-//		{
-//			otherNewPos.y = thisPos.y + hitboxHeight/2 + other.hitboxHeight/2 + collisionBounceMargin;
-//		}
-//		else if(otherPos.y < thisPos.y)
-//		{
-//			otherNewPos.y = thisPos.y - hitboxHeight/2 - other.hitboxHeight/2 - collisionBounceMargin;
-//		}
-//		
-//		other.setPos(otherNewPos);
-//	}
 	
 	public void applyKineticFriction(float uk)
 	{
@@ -215,6 +166,132 @@ public abstract class GameObject
 	{
 		return this instanceof Grabbable && ((Grabbable)this).canGrab() ||
 		       this instanceof Sign;
+	}
+	
+	boolean isObstacle()
+	{
+		Class<?> c = getClass();
+		
+		return c == Block.class ||
+			   c == Door.class && ((Door)this).isLocked() ||
+			   c == Sign.class ||
+			   c == Torch.class;
+//			   c == Wall.class;
+	}
+
+	/**
+	 * 
+	 * @return returns the axis aligned bounding box based on the physics body.
+	 */
+	public Rectangle getAABB()
+	{
+		//start with a rectangle of size 0,0 centered at the center of this body.
+		//Since fixture coordinates are relative to center, start with the center of
+		//the rectangle at the origin. 
+		Vector2 center = Vector2.Zero;
+		Rectangle box = new Rectangle();
+		box.setCenter(center);
+		box.height = 0;
+		box.width = 0;
+		
+		for(Fixture f : physicsBody.getFixtureList())
+		{
+			if(f.getShape().getType() == Shape.Type.Polygon)
+			{
+				//consider each vertex in the polygon. if a point is not in the AABB, 
+				//expand it to include that point.
+				PolygonShape s = (PolygonShape) f.getShape();
+				Vector2 vertex = new Vector2();
+				
+				for(int i=0;i<s.getVertexCount(); ++i)
+				{
+					//vertex coordinates are relative to the center of the body. Or center of fixture(?)
+					//in this case, only one fixture centered on the body. 
+					s.getVertex(i, vertex);
+					
+					if(vertex.x < box.x)
+					{
+						box.width += box.x - vertex.x;
+						box.x = vertex.x;
+					}
+					else if(vertex.x > box.x + box.width)
+					{
+						box.width = vertex.x - box.x;
+					}
+					
+					if(vertex.y < box.y)
+					{
+						box.height += box.y - vertex.y;
+						box.y = vertex.y;
+					}
+					else if(vertex.y > box.y + box.height)
+					{
+						box.height = vertex.y - box.y;
+					}
+				}
+			}
+			else if(f.getShape().getType() == Shape.Type.Circle)
+			{
+				CircleShape s = (CircleShape) f.getShape();
+				
+				//consider bounding square defining the circle.
+				//check each of the four edges based on the four axis-aligned
+				//points on the circle
+				
+				if(center.x - s.getRadius() < box.x)
+				{
+					box.width += box.x - (center.x - s.getRadius());
+					box.x = center.x - s.getRadius();
+				}
+				if(center.x + s.getRadius() > box.x + box.width)
+				{
+					box.width = center.x + s.getRadius() - box.x;
+				}
+				
+				if(center.y - s.getRadius() < box.y)
+				{
+					box.height += box.y - (center.y - s.getRadius());
+					box.y = center.y - s.getRadius();
+				}
+				if(center.y + s.getRadius() > box.y + box.height)
+				{
+					box.height = center.y + s.getRadius() - box.y;
+				}
+				
+			}
+			else
+			{
+				throw new IllegalArgumentException("unsupported fixture shape: " + f.getShape().getType());
+			}
+				
+		}
+		
+		//translate AABB based on the center of the GO
+		
+		box.setCenter(getCenterPos());
+		
+//		Gdx.app.log(Game.TAG, String.format("GO name: %s, AABB xy: %f,%f wh: %f,%f", name, box.x, box.y, box.width, box.height));
+		return box;
+		
+	}	
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public void setAccel(Vector2 acc)
+	{
+		crntAcceleration = acc;
+	}
+	
+	public void applyAccel()
+	{
+		if(crntAcceleration != null)
+		{
+			Vector2 dv = crntAcceleration.cpy().scl(Game.SECONDS_PER_FRAME);
+			setVel(getVel().add(dv));			
+		}
 	}
 	
 	public abstract void update();

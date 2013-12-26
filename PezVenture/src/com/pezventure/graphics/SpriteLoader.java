@@ -137,9 +137,9 @@ public class SpriteLoader
 	
 	private void loadAnimations()
 	{
-		loadAnimation(loadTexture("animations/flame64.png"), 64, 8, "fire64", PrimaryDirection.up);
-		loadAnimation(loadTexture("animations/flame32.png"), 32, 8, "fire64", PrimaryDirection.up);
-		loadAnimation(loadTexture("animations/cirno_bullet_aa.png"), 128, 15, "fire64", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/flame64.png"), 64, 8, "flame64", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/flame32.png"), 32, 8, "flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/cirno_bullet_aa.png"), 128, 15, "cirno_bullet_aa", PrimaryDirection.up);
 
 	}
 	
