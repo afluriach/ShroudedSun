@@ -55,6 +55,8 @@ public class Controls
 	boolean x = false;
 	boolean y = false;
 	
+	boolean pause = false;
+	
 	//GUI elements
 	
 	IsoscelesTriangle [] dpadTriangles = new IsoscelesTriangle[16];
@@ -69,6 +71,8 @@ public class Controls
 	Circle buttonB;
 	Circle buttonX;
 	Circle buttonY;
+	
+	Circle buttonPause;
 	
 	Texture playerAttackIcon;
 	Texture playerShieldIcon;
@@ -128,6 +132,8 @@ public class Controls
 		buttonB = new Circle(width-margin-buttonRadius, margin + 3*buttonRadius, buttonRadius);
 		buttonX = new Circle(width-margin-5*buttonRadius, margin+3*buttonRadius, buttonRadius);
 		buttonY = new Circle(width-margin-3*buttonRadius, margin+5*buttonRadius, buttonRadius);
+		
+		buttonPause = new Circle(width/2, margin+buttonRadius, buttonRadius);
 	}
 	
 	//buttons will be drawn dark with a light trim, unless they
@@ -168,10 +174,14 @@ public class Controls
 		drawButtonOuter(shapeRenderer, colors.xlight, buttonX);
 		drawButtonOuter(shapeRenderer, colors.ylight, buttonY);
 		
+		drawButtonOuter(shapeRenderer, colors.dpadlight, buttonPause);
+		
 		drawButtonInner(shapeRenderer,a, colors.alight, colors.adark, buttonA);
 		drawButtonInner(shapeRenderer,b, colors.blight, colors.bdark, buttonB);
 		drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
 		drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
+		
+		drawButtonInner(shapeRenderer, pause, colors.dpadlight, colors.dpaddark, buttonPause);
 		
 		if(touchControls)
 		{
@@ -204,6 +214,18 @@ public class Controls
 		
 		batch.end();
 		
+		drawInteractMessage(batch, font);
+		
+		drawPauseMessage(batch, font);
+	}
+
+	private void drawPauseMessage(SpriteBatch batch, BitmapFont font) {
+		String pauseMsg = Game.inst.paused ? "resume" : "pause";
+		
+		drawTextCentered(pauseMsg, batch, font, buttonPause.x-buttonA.radius+10, buttonPause.y, 1f);
+	}
+
+	private void drawInteractMessage(SpriteBatch batch, BitmapFont font) {
 		String interactMsg;
 		
 		if(Game.inst.player.holdingItem != null)
@@ -259,6 +281,8 @@ public class Controls
 		if(buttonX.contains(x,y)) this.x = true;
 		if(buttonY.contains(x,y)) this.y = true;
 		
+		if(buttonPause.contains(x,y)) pause = true;
+		
 		Vector2 point = new Vector2(x,y);
 		for(int i=0;i<8;++i)
 		{
@@ -294,6 +318,8 @@ public class Controls
 		if(Gdx.input.isKeyPressed(Keys.S)) down = true;
 		if(Gdx.input.isKeyPressed(Keys.D)) right = true;
 		
+		if(Gdx.input.isKeyPressed(Keys.ESCAPE)) pause = true;
+		
 		if(up && !down)
 			dir.y = 1;
 		else if(down && !up)
@@ -315,6 +341,8 @@ public class Controls
 		b = false;
 		x = false;
 		y = false;
+		
+		pause = false;
 		
 		controlPad8Dir = -1;
 	}

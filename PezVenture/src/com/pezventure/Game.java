@@ -7,6 +7,7 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -88,6 +89,7 @@ public class Game implements ApplicationListener
 	Controls controls;
 	//if the interact button has been held from the previous frame
 	boolean interactHeld = false;
+	boolean pauseHeld = false;
 		
 	//logic
 	float updateTimeAccumulated = 0;
@@ -97,6 +99,7 @@ public class Game implements ApplicationListener
 	public Random random = new Random();
 	public Dialog activeDialog;
 	float timeInDialog = 0f;
+	boolean paused = false;
 	
 	//game session info
 	public boolean touchControls;
@@ -164,11 +167,33 @@ public class Game implements ApplicationListener
 		{
 			activeDialog.render(batch, shapeRenderer);
 		}
+		
+		if(paused)
+		{
+			//TODO draw box/background for the pause message, similar to a dialog box
+			guiBatch.begin();
+			batch.setColor(Color.WHITE);
+			font.draw(guiBatch, "-PAUSED-", screenWidth/2, screenHeight/2);
+			guiBatch.end();
+		}
 	}
 	
 	void handleInput()
 	{
 		controls.update();
+		
+		if(controls.pause && !pauseHeld)
+		{
+			paused = !paused;
+			pauseHeld = true;
+		}
+		else
+		{
+			pauseHeld = controls.pause;
+		}
+		
+		//do not handle other button presses if the game is paused.
+		if(paused) return;
 		
 		//set player movement
 		//velocity and direction are handled separately.
@@ -340,14 +365,15 @@ public class Game implements ApplicationListener
 		}
 		
 		//update logic
-		updateTimeAccumulated += Gdx.graphics.getDeltaTime();
-		while(updateTimeAccumulated >= SECONDS_PER_FRAME)
+		if(activeDialog == null && !paused)
 		{
-			update();
-			updateTimeAccumulated -= SECONDS_PER_FRAME;
+			updateTimeAccumulated += Gdx.graphics.getDeltaTime();
+			while(updateTimeAccumulated >= SECONDS_PER_FRAME)
+			{
+				update();
+				updateTimeAccumulated -= SECONDS_PER_FRAME;
+			}
 		}
-		
-		
 		
 		//adjust camera
 		moveCamera();

@@ -60,6 +60,7 @@ public class BlueEnemy extends Entity implements Enemy
 //		Game.inst.physics.removeBody(radar.physicsBody);
 		//this will cause the radar's body to be removed when it expires.
 		radar.expire();
+		super.onExpire();
 	}
 	
 	public void hit(int damage)

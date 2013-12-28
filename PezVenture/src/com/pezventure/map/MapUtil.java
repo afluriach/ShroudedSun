@@ -87,7 +87,7 @@ public class MapUtil
 		}
 		catch (Exception e)
 		{
-			Gdx.app.log(Game.TAG,  "Error instantiating type: " + type + " constructor exception");
+			Gdx.app.log(Game.TAG,  "Error instantiating type: " + type + " constructor exception: " + e.getLocalizedMessage());
 			e.printStackTrace();
 			throw new RuntimeException("Error instantiating type: " + type + " constructor exception");
 		}
