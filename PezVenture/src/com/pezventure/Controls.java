@@ -174,18 +174,16 @@ public class Controls
 		drawButtonOuter(shapeRenderer, colors.xlight, buttonX);
 		drawButtonOuter(shapeRenderer, colors.ylight, buttonY);
 		
-		drawButtonOuter(shapeRenderer, colors.dpadlight, buttonPause);
-		
 		drawButtonInner(shapeRenderer,a, colors.alight, colors.adark, buttonA);
 		drawButtonInner(shapeRenderer,b, colors.blight, colors.bdark, buttonB);
 		drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
 		drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
-		
-		drawButtonInner(shapeRenderer, pause, colors.dpadlight, colors.dpaddark, buttonPause);
-		
+				
 		if(touchControls)
 		{
-		
+			drawButtonOuter(shapeRenderer, colors.dpadlight, buttonPause);
+			drawButtonInner(shapeRenderer, pause, colors.dpadlight, colors.dpaddark, buttonPause);
+
 			for(int i=0;i<8;++i)
 			{
 				drawDpadTriangle(shapeRenderer, i == controlPad8Dir, dpadTriangles[2*i]);
@@ -222,7 +220,7 @@ public class Controls
 	private void drawPauseMessage(SpriteBatch batch, BitmapFont font) {
 		String pauseMsg = Game.inst.paused ? "resume" : "pause";
 		
-		drawTextCentered(pauseMsg, batch, font, buttonPause.x-buttonA.radius+10, buttonPause.y, 1f);
+		drawTextCentered(pauseMsg, batch, font, buttonPause.x-buttonA.radius+10, buttonPause.y, 0.75f);
 	}
 
 	private void drawInteractMessage(SpriteBatch batch, BitmapFont font) {
