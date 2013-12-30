@@ -295,8 +295,10 @@ public class Game implements ApplicationListener
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(area.map);
 		
-		Gdx.app.log(Game.TAG, "loading map objects");
+		Gdx.app.log(Game.TAG, "loading map objects...");
 		area.instantiateMapObjects();
+		Gdx.app.log(Game.TAG, "...done.");
+		
 		area.init();
 		
 		gameObjectSystem.initAll();

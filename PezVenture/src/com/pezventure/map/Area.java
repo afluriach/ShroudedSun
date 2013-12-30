@@ -3,6 +3,7 @@ package com.pezventure.map;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -123,7 +124,9 @@ public abstract class Area
 		for(TilespaceRectMapObject mo : mapObjects)
 		{
 			Game.inst.gameObjectSystem.addObject(MapUtil.instantiate(mo));
-			System.out.println(mo.name);
+			Vector2 pos = mo.rect.getCenter(new Vector2());
+			
+			Gdx.app.log(Game.TAG, String.format("\tname: %s, type: %s, position: %f,%f", mo.name, mo.type, pos.x, pos.y));
 		}
 		Game.inst.gameObjectSystem.handleAdditions();
 	}
