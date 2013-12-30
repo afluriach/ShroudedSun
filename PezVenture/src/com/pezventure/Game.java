@@ -531,4 +531,18 @@ public class Game implements ApplicationListener
 		return tileGraph.getPath(startPos, endPos);
 	}
 	
+	public List<PathSegment> getPathWithinRadius(Vector2 start, Vector2 target, float minDist, float maxDist)
+	{
+		return tileGraph.radiusSearch(start, target, minDist, maxDist, area.getCurrentRoom(start).location);
+	}
+	
+	public Rectangle getCrntRoom()
+	{
+		return crntRoom.location;
+	}
+	
+	public Rectangle getRoomByLocation(Vector2 pos)
+	{
+		return area.getCurrentRoom(pos).location;
+	}
 }

@@ -1,5 +1,8 @@
 package com.pezventure.objects;
 
+import java.util.HashMap;
+import java.util.TreeMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -16,25 +19,37 @@ public class Player extends Entity
 	private static final float invulerabilityFlickerInterval = 0.1f;
 	private static final float fireInterval = 0.7f;
 	private static final float shotInitDist = 0.5f;
-	private static final float grabDistance = 0.5f;
+	private static final float itemInteractDistance = 0.5f;
 	
+	//map gameobject type to the kind of interaction that can be performed with in.
+	private HashMap<Class<? extends GameObject>, ItemInteraction> interactMap;
 	
 	int hp = MAX_HP;
 	float invulnerableTimeRemaining = 0f;
 	float fireTimeRemaining = 0f;
 	Shield shieldObj;
 	
-	//grabbing logic
+	//interaction logic, including interacting with obejcts in the environment and carrying objects
 	public GameObject holdingItem;
 	Joint itemJoint;
-	//is there a grabbable object in front of the player
-	public boolean canGrab = false;
-	public boolean canRead = false;
+	public String interactMessage = "";
+	private GameObject interactibleObject;
+	private ItemInteraction interaction;
 	
 	//flag that determines if the player wants to shoot, set based on the controls.
 	boolean shoot = false;
 	boolean interact = false;
 	public boolean shield = false;
+	
+	private void initInteractMap()
+	{
+		interactMap = new HashMap<Class<? extends GameObject>, ItemInteraction>();
+		
+		interactMap.put(Sign.class, new Read());
+		interactMap.put(NPC.class, new Talk());
+		interactMap.put(Jar.class, new GrabItem());
+		
+	}
 	
 	public Player(Vector2 pos, PrimaryDirection startingDir)
 	{
@@ -43,6 +58,8 @@ public class Player extends Entity
 		shieldObj = new Shield(getCenterPos());
 		//physicsBody = Physics.inst().addRectBody(pos, PLAYER_SIZE, PLAYER_SIZE, BodyType.DynamicBody, this, MASS, false);
 		Game.inst.gameObjectSystem.addObject(shieldObj);
+		
+		initInteractMap();
 	}
 	
 	public void update()
@@ -78,25 +95,17 @@ public class Player extends Entity
 		
 		
 		//may be generalized to interaction button
-		
-		checkGrabbable();
-		checkReadable();
+		checkInteract();		
 
 		if(interact)
 		{
-			if(holdingItem != null)
-				drop();
-			else
-			{
-				//nasty hack. will need a better way of generalizing interactions and feelers for smart objects soon.
-				if(!grab()) read();
-			}
+			interact();
 			interact = false;
 		}	
 		
 		if(holdingItem != null)
 		{
-			Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(grabDistance+HIT_CIRCLE_RADIUS);
+			Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(itemInteractDistance+HIT_CIRCLE_RADIUS);
 			holdingItem.setPos(getCenterPos().add(holdDisp));
 		}
 		
@@ -180,54 +189,49 @@ public class Player extends Entity
 //	}
 	
 	/**
-	 * checks for a grabbable object and sets the grabbable field
-	 * @return is there is a grabbale object in front of the player
+	 * checks for a smart object (interactible) and set the interact message. save the object and interaction if applicable.
 	 */
-	public boolean checkGrabbable()
+	public void checkInteract()
 	{
-		Grabbable target = (Grabbable) Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
-		canGrab = (target != null && target.canGrab());
-				
-		return canGrab;
-			
-	}
-	
-	public boolean checkReadable()
-	{
-		canRead =  Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Sign.class) != null;
-		return canRead;
-	}
-	
-	public boolean grab()
-	{
-		// find grabable item in front of the player. return whether or not an item was grabbed.
-		Grabbable target = (Grabbable) Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Grabbable.class);
-		GameObject go = (GameObject) target;
-		
-		Gdx.app.log(Game.TAG, "target: " + go);
-		if(target != null  && target.canGrab())
+		//if the player is holding an item, the drop action takes precedence.
+		if(holdingItem != null)
 		{
-			holdingItem = (GameObject) target;
-			//itemJoint = Game.inst.physics.joinBodies(physicsBody, go.physicsBody);
-			target.onGrab();
-			return true;
+			interactMessage = "Drop";
+			return;
 		}
-		else		
-			return false;
+		
+		GameObject obj = Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+itemInteractDistance, GameObject.class);
+		
+		if(obj != null && interactMap.containsKey(obj.getClass()))
+		{
+			interaction = interactMap.get(obj.getClass());
+			if(interaction.canInteract(obj, this))
+			{
+				interactMessage = interaction.interactMessage();
+				interactibleObject = obj;
+			}
+		}
+		else
+		{
+			interactMessage = "";
+			interaction = null;
+			interactibleObject = null;
+		}
 	}
 	
-	public boolean read()
+	/**
+	 * assumes checkInteract was already called this frame so the interaction data is up to date. 
+	 */
+	public void interact()
 	{
-		//check for a sign in front of the player. if found set as active dialog.
-		
-		Sign sign = (Sign) Game.inst.physics.closestObjectFeeler(getCenterPos(), getDir()*45f, HIT_CIRCLE_RADIUS+grabDistance, Sign.class);
-		
-		if(sign != null)
+		if(holdingItem != null)
 		{
-			Game.inst.setDialogMsg(sign.msg);
-			return true;
+			drop();
 		}
-		return false;
+		else if(interactibleObject != null)
+		{
+			interaction.interact(interactibleObject, this);
+		}
 	}
 	
 	public void drop()

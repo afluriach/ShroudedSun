@@ -20,7 +20,7 @@ public class PlayerIceBullet extends Bullet implements Elemental
 	
 	public PlayerIceBullet(Vector2 pos, int dir)
 	{
-		super(pos, radius, "PlayerIceBullet", dir, speed, mass, "player_bullet");
+		super(pos, radius, "PlayerIceBullet", dir*45f, speed, mass, "player_bullet");
 		
 		animation = Game.inst.spriteLoader.loadAnimation("cirno_bullet_aa", 0.1f, PrimaryDirection.up);
 	}

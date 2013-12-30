@@ -155,7 +155,6 @@ public abstract class GameObject
 	
 	public void onExpire()
 	{
-		Game.inst.physics.removeBody(physicsBody);
 	}
 	
 	/**

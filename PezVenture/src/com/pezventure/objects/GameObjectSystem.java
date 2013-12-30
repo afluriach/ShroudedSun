@@ -23,6 +23,7 @@ public class GameObjectSystem
 			renderLayer.clear();
 		}
 		nameMap.clear();
+		objectsToAdd.clear();
 	}
 	
 	public GameObjectSystem()
@@ -90,6 +91,7 @@ public class GameObjectSystem
 			}
 		}
 		
+		//if a gameobject is touching another when it is expiring, the physics engine will not register an end contact
 		for(GameObject go : expired)
 		{
 			Game.inst.physics.handleEndContact(go);

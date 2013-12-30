@@ -20,7 +20,7 @@ public class LookingForTorch extends AI_State<Entity>
 {
 	public LookingForTorch(Entity agent, AI_FSM<Entity> fsm)
 	{
-		super("LookingForTorch", fsm);
+		super(fsm);
 	}
 
 	List<GameObject> torches;

@@ -1,5 +1,6 @@
 package com.pezventure.map;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -26,6 +27,8 @@ public class TileGraph
 	private static final float sqrt2 = (float) Math.sqrt(2);
 	private static final Vector2 edgeToCenter = new Vector2(0.5f, 0.5f);
 	
+	//disjoint sets. used to determine which tiles are reachable from a given starting point
+	int[][] tilePartitions;
 	boolean[][] tiles;
 	int width;
 	int height;
@@ -40,8 +43,7 @@ public class TileGraph
 		
 		tiles = new boolean[height][width];
 		
-		blankTiles();
-		markUnoccupiableTiles();
+		refresh();
 	}
 	
 	private void blankTiles()
@@ -59,6 +61,46 @@ public class TileGraph
 	{
 		blankTiles();
 		markUnoccupiableTiles();
+	}
+	
+	private void calculatePartitions()
+	{
+		int partitionID = 0;
+		
+		for(int i=0;i<height; ++i)
+		{
+			for(int j=0;j<width; ++j, ++partitionID)
+			{
+				if(!tiles[i][j]) tilePartitions[i][j] = -1;
+				
+				else tilePartitions[i][j] = partitionID;
+			}
+		}
+		
+		for(int i=0;i<height; ++i)
+		{
+			for(int j=0;j<width; ++j)
+			{
+				//do not attempt to join tile if it is not occupiable
+				if(!tiles[i][j]) continue;
+				
+				if(j < width - 1)
+				{
+					//attempt to join partition rightward.
+					if(tiles[i][j+1]) tilePartitions[i][j+1] = tilePartitions[i][j];
+				}
+				if(i < height -1)
+				{
+					//attempt to join partition upward
+					if(tiles[i+1][j]) tilePartitions[i+1][j] = tilePartitions[i][j];
+				}
+				if(j < width - 1 && i < height -1)
+				{
+					//attempt to join diagonally. 
+					if(tiles[i+1][j] && tiles[i][j+1]) tilePartitions[i+1][j+1] = tilePartitions[i][j];
+				}
+			}
+		}
 	}
 
 	private void markUnoccupiableTiles() {
@@ -94,6 +136,46 @@ public class TileGraph
 				}
 			}
 		}
+	}
+	
+	//select a random, occupiable tile within a certain distance of a target location and find
+	//a path to that location.
+	//
+	//this assumes all occupiable tiles are reachable. only search within current room.
+	public List<PathSegment> radiusSearch(Vector2 start, Vector2 target, float minDist, float maxDist, Rectangle crntRoom)
+	{
+		ArrayList<IVector2> destinations = new ArrayList<IVector2>();
+		Gdx.app.log(Game.TAG, String.format("radius search. start: %f,%f, target: %f,%f, min: %f, max: %f, room: %f,%f to %f,%f", start.x, start.y, target.x, target.y, minDist, maxDist, crntRoom.x, crntRoom.y, crntRoom.x+crntRoom.width, crntRoom.y+crntRoom.height));
+		
+		for(int y = (int) (start.y - maxDist); y < start.y + maxDist; ++y)
+		{
+			if(y < crntRoom.y || y > crntRoom.y + crntRoom.height) continue;
+			if(y < 0 || y >= height) continue;
+			
+			for(int x = (int) (start.x - maxDist); x < start.x + maxDist; ++x)
+			{
+				if(x < crntRoom.x || x > crntRoom.x + crntRoom.width) continue;
+				if(x < 0 || x >= width) continue;
+				
+				float distToTarget = target.cpy().sub(new Vector2(x+0.5f,y+0.5f)).len();
+				
+//				System.out.println(String.format("checking tile: %d,%d, dist: %f", x, y, distToTarget));
+				
+				if(tiles[y][x] && distToTarget >= minDist && distToTarget <= maxDist)
+					destinations.add(new IVector2(x,y));
+			}
+		}
+		
+		if(destinations.isEmpty())
+		{
+			Gdx.app.log(Game.TAG, "Radius search, no path found.");
+			return null;
+		}
+		
+		IVector2 dest = destinations.get(Game.inst.random.nextInt(destinations.size()));
+		Gdx.app.log(Game.TAG, String.format("Radius search, path to %d,%d.", dest.x, dest.y));
+		
+		return dijkstras(new IVector2(start), dest);
 	}
 	
 	public List<PathSegment> getPath(Vector2 start, Vector2 end)
@@ -258,5 +340,5 @@ public class TileGraph
 			else if(this.cost == o.cost) return 0;
 			else return 0;
 		}
-	}
+	}	
 }

@@ -114,7 +114,8 @@ public class Physics
 		//player sensor
 		collisionFilters.put("player_sensor", sensorFilter(playerCategory));
 		
-		
+		//player bullet sensor
+		collisionFilters.put("player_bullet_sensor", sensorFilter(playerBulletCategory));
 		
 	}
 	

@@ -9,12 +9,10 @@ import com.pezventure.objects.GameObject;
  */
 public abstract class AI_State<AgentType extends GameObject>
 {
-	String name;
 	AI_FSM<AgentType> fsm;
 	
-	public AI_State(String name, AI_FSM<AgentType> fsm)
+	public AI_State(AI_FSM<AgentType> fsm)
 	{
-		this.name = name;
 		this.fsm = fsm;
 	}
 	

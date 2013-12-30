@@ -214,7 +214,8 @@ public class Controls
 		
 		drawInteractMessage(batch, font);
 		
-		drawPauseMessage(batch, font);
+		if(touchControls)
+			drawPauseMessage(batch, font);
 	}
 
 	private void drawPauseMessage(SpriteBatch batch, BitmapFont font) {
@@ -224,28 +225,8 @@ public class Controls
 	}
 
 	private void drawInteractMessage(SpriteBatch batch, BitmapFont font) {
-		String interactMsg;
-		
-		if(Game.inst.player.holdingItem != null)
-		{
-			interactMsg = "drop";
-		//	System.out.println("msg set to drop");
-		}
-		else if(Game.inst.player.canGrab)
-		{
-			interactMsg = "grab";
-	//		System.out.println("msg set to grab");
-		}
-		else if(Game.inst.player.canRead)
-		{
-			interactMsg = "read";
-		}
-		else
-		{
-			interactMsg = "";
-//			System.out.println("msg set to blank");
-		}
-		
+		String interactMsg = Game.inst.player.interactMessage;
+				
 		drawTextCentered(interactMsg, batch, font, buttonA.x-buttonA.radius+10, buttonA.y, 1f);
 	}
 	

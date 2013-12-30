@@ -15,9 +15,9 @@ public class EnemyBullet extends Bullet
 	
 	Texture texture;
 	
-	public EnemyBullet(Vector2 pos, int dir)
+	public EnemyBullet(Vector2 pos, float angle)
 	{
-		super(pos,radius, "EnemyBullet", dir, speed, mass, "enemy_bullet");
+		super(pos,radius, "EnemyBullet", angle, speed, mass, "enemy_bullet");
 		texture = Game.inst.spriteLoader.getTexture("bullet_aa");
 	}
 	

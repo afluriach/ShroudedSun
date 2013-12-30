@@ -192,7 +192,7 @@ public abstract class Entity extends GameObject
 	//physics body, in the direction of its movement.
 	public void shoot(Bullet b, float distance)
 	{
-		Vector2 dispDir = Util.get8DirUnit(b.getDir());
+		Vector2 dispDir = Util.ray(b.getAngle(), 1f);
 		float dispMag = HIT_CIRCLE_RADIUS + b.getRadius() + distance;
 		Vector2 disp = dispDir.scl(dispMag);
 

@@ -25,7 +25,7 @@ public class FollowPath extends AI_State<Entity>
 	
 	public FollowPath(AI_FSM<Entity> fsm, List<PathSegment> path, float speed, AI_State<Entity> next)
 	{
-		super("FollowPathToTorch", fsm);
+		super(fsm);
 		this.path = path;
 		this.speed = speed;
 		nextState = next;
@@ -34,6 +34,8 @@ public class FollowPath extends AI_State<Entity>
 	@Override
 	public void update()
 	{
+		if(crntWaypoint == null) return;
+		
 		if(fsm.agent.getCenterPos().sub(crntWaypoint).len2() < 0.25f)
 		{
 			//move to the next waypoint if there is one, else path is finished
@@ -78,6 +80,15 @@ public class FollowPath extends AI_State<Entity>
 //		System.out.println(sb.toString());
 		
 		//pop and set the first waypoint
+		if(path == null || path.isEmpty())
+		{
+			//ideally shouldn't happen.
+			Gdx.app.log(Game.TAG, "Warning, FollowPath started on an empty path.");
+			fsm.changeState(nextState);
+			return;
+		}
+		
+		
 		crntWaypoint = path.get(0).end;
 		path.remove(0);
 	}

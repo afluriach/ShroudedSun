@@ -1,6 +1,7 @@
 package com.pezventure.objects;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ public class RadarSensor extends GameObject
 	public final float radius;
 	Class<?> sensingClass;
 	private List<GameObject> detectedObjects = new LinkedList<GameObject>();
+	//objects that are in the contact with the radar, but are not visible due to line of sight.
+	private List<GameObject> obstructedObjects = new LinkedList<GameObject>();
 	
 	public RadarSensor(Vector2 pos, float radius, Class<?> sensingClass, String sensingType)
 	{
@@ -54,6 +57,36 @@ public class RadarSensor extends GameObject
 
 	@Override
 	public void update() {
+		
+		//check to see if any previously occluded object within radius of the sensor has since
+		//entered line of sight
+		Iterator<GameObject> obstructedIter = obstructedObjects.iterator();
+		
+		while(obstructedIter.hasNext())
+		{
+			GameObject go = obstructedIter.next();
+			
+			if(Game.inst.physics.lineOfSight(getCenterPos(), go))
+			{
+				detectedObjects.add(go);
+				obstructedIter.remove();
+			}
+		}
+		
+		//convsersely, check to see if any detected object within radius has left line of sight
+		
+		Iterator<GameObject> detectedIter = detectedObjects.iterator();
+		
+		while(detectedIter.hasNext())
+		{
+			GameObject go = detectedIter.next();
+			
+			if(!Game.inst.physics.lineOfSight(getCenterPos(), go))
+			{
+				obstructedObjects.remove(go);
+				detectedIter.remove();
+			}
+		}
 	}
 
 	@Override
@@ -65,10 +98,16 @@ public class RadarSensor extends GameObject
 	{
 		//add to detected objects if it of the right class and there is a line of sight.
 		//assuming enemy is at the center of the radar.
-		if(sensingClass.isInstance(other) && Game.inst.physics.lineOfSight(getCenterPos(), other))
+		if(sensingClass.isInstance(other))
 		{
-//			Gdx.app.log(Game.TAG, String.format("radar target found: %s", other.toString()));
-			detectedObjects.add(other);
+			if(Game.inst.physics.lineOfSight(getCenterPos(), other))
+			{
+				detectedObjects.add(other);
+			}
+			else
+			{
+				obstructedObjects.add(other);
+			}
 		}
 	}
 
@@ -78,6 +117,7 @@ public class RadarSensor extends GameObject
 		if(sensingClass.isInstance(other))
 		{
 			detectedObjects.remove(other);
+			obstructedObjects.remove(other);
 		}
 	}
 

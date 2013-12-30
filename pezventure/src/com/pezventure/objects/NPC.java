@@ -154,4 +154,11 @@ public class NPC extends Entity
 	public void init() {
 	}
 	
+	public String dialog()
+	{
+		//capitalize the first letter of the name
+		String properName = Character.toUpperCase(getName().charAt(0)) + getName().substring(1);
+		return "Hi, my name is " + properName + ".";
+	}
+	
 }

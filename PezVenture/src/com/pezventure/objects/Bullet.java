@@ -7,26 +7,26 @@ import com.pezventure.Util;
 
 public abstract class Bullet extends GameObject
 {
-	int dir;
 	float radius;
+	float angle;
 	
-	public Bullet(Vector2 pos, float radius, String name, int dir, float speed, float mass, String filter)
+	public Bullet(Vector2 pos, float radius, String name, float angle, float speed, float mass, String filter)
 	{
 		super(name);
 		physicsBody = Game.inst.physics.addCircleBody(pos, radius, BodyType.DynamicBody, this, mass, false, filter);
-		setVel(Util.get8DirUnit(dir).scl(speed));
-		this.dir = dir;
+		setVel(Util.ray(angle, speed));
 		this.radius = radius;
+		this.angle = angle;
 	}
-	
-	public int getDir()
-	{
-		return dir;
-	}
-	
+		
 	public float getRadius()
 	{
 		return radius;
+	}
+	
+	public float getAngle()
+	{
+		return angle;
 	}
 	
 	@Override

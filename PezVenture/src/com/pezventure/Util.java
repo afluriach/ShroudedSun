@@ -143,4 +143,15 @@ public class Util
 		return new Vector2(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
 	}
 	
+	public static int getNearestDir(float angle)
+	{
+		float midpointAngle = angle+22.5f;
+		if(midpointAngle > 360f) midpointAngle -= 360f;
+		else if(midpointAngle < 0f) midpointAngle += 360f;
+			
+		int dir = (int) (midpointAngle/45f);
+		
+//		System.out.println(String.format("angle: %f, dir: %d", angle, dir));
+		return dir;
+	}
 }

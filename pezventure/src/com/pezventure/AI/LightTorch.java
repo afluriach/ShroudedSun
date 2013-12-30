@@ -12,7 +12,7 @@ public class LightTorch extends AI_State<Entity>
 	Torch target;
 	public LightTorch(AI_FSM<Entity> fsm, Torch target)
 	{
-		super("LightTorch", fsm);
+		super(fsm);
 		this.target = target;
 	}
 

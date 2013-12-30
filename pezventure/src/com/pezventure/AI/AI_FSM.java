@@ -1,5 +1,7 @@
 package com.pezventure.AI;
 
+import com.badlogic.gdx.Gdx;
+import com.pezventure.Game;
 import com.pezventure.objects.GameObject;
 
 /**
@@ -110,6 +112,8 @@ public abstract class AI_FSM<AgentType extends GameObject>
 	
 	public void changeState(AI_State<? extends AgentType> newState)
 	{
+		Gdx.app.log(Game.TAG, String.format("agent %s changed state from to %s to %s.", agent.getName(), crntState.getClass().getSimpleName(), newState.getClass().getSimpleName()));
+		
 		prevState = crntState;
 		crntState.onExit();
 		newState.onEnter();
