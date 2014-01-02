@@ -19,6 +19,7 @@ import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.objects.enemies.BlueEnemy;
 import com.pezventure.objects.enemies.Facer;
 import com.pezventure.objects.enemies.Follower;
+import com.pezventure.objects.enemies.Guard;
 import com.pezventure.objects.enemies.TorchWalker;
 import com.pezventure.physics.Physics;
 import com.badlogic.gdx.physics.box2d.*;
@@ -53,6 +54,7 @@ public abstract class GameObject
 		addClass("follower", Follower.class);
 		addClass("torch", Torch.class);
 		addClass("torch_walker", TorchWalker.class);
+		addClass("guard", Guard.class);
 	}
 	
 	public static Class<?> getObjectClass(String name)

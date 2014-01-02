@@ -16,6 +16,7 @@ public class AreaLoader
 		areas.put("meeting_room", MeetingRoom.class);
 		areas.put("level_select", LevelSelect.class);
 		areas.put("torch_puzzle", TorchPuzzle.class);
+		areas.put("mansion_sneak_floor", MansionSneakPuzzle.class);
 	}
 	
 	public Area loadArea(String name)

@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.pezventure.Game;
+import com.pezventure.Util;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -14,7 +16,7 @@ public class RadarSensor extends GameObject
 {
 	public final float radius;
 	Class<?> sensingClass;
-	private List<GameObject> detectedObjects = new LinkedList<GameObject>();
+	private List<GameObject> objectsWithinRadius = new LinkedList<GameObject>();
 	//objects that are in the contact with the radar, but are not visible due to line of sight.
 	private List<GameObject> obstructedObjects = new LinkedList<GameObject>();
 	
@@ -27,9 +29,9 @@ public class RadarSensor extends GameObject
 		physicsBody = Game.inst.physics.addCircleBody(pos, radius, BodyType.DynamicBody, this, 1f, true, sensingType);
 	}
 	
-	public List<GameObject> getDetectedObjects()
+	public List<GameObject> getDetectedObjectsWithinRadius()
 	{
-		return detectedObjects;
+		return objectsWithinRadius;
 	}
 	
 	/**
@@ -39,15 +41,19 @@ public class RadarSensor extends GameObject
 	 * the total width of the FOV is 2*fovEdge
 	 * @return list of detected objects
 	 */
-	public List<GameObject> getDetectedOjects(float angleFacing, float fovEdge)
+	public List<GameObject> getDetectedObjects(float angleFacing, float fovEdge)
 	{
+		float acos = (float) Math.cos(Math.toRadians(fovEdge));
+		
 		ArrayList<GameObject> detected = new ArrayList<GameObject>();
-		for (GameObject obj : detectedObjects)
+		for (GameObject obj : objectsWithinRadius)
 		{
 
-			Vector2 disp = obj.getCenterPos().sub(getCenterPos());
-			//Gdx.app.log(Game.TAG, String.format("facing: %f, target dir: %f", angleFacing, disp.angle()));			
-			if(Math.abs(disp.angle() - angleFacing) <= fovEdge)
+			Vector2 disp = obj.getCenterPos().sub(getCenterPos()).nor();
+			
+//			Gdx.app.log(Game.TAG, String.format("facing: %f, target dir: %f", angleFacing, disp.angle()));			
+			
+			if(Util.ray(angleFacing, 1f).dot(disp) >= acos && Game.inst.physics.lineOfSight(getCenterPos(), obj))
 			{
 				detected.add(obj);
 			}
@@ -57,36 +63,6 @@ public class RadarSensor extends GameObject
 
 	@Override
 	public void update() {
-		
-		//check to see if any previously occluded object within radius of the sensor has since
-		//entered line of sight
-		Iterator<GameObject> obstructedIter = obstructedObjects.iterator();
-		
-		while(obstructedIter.hasNext())
-		{
-			GameObject go = obstructedIter.next();
-			
-			if(Game.inst.physics.lineOfSight(getCenterPos(), go))
-			{
-				detectedObjects.add(go);
-				obstructedIter.remove();
-			}
-		}
-		
-		//convsersely, check to see if any detected object within radius has left line of sight
-		
-		Iterator<GameObject> detectedIter = detectedObjects.iterator();
-		
-		while(detectedIter.hasNext())
-		{
-			GameObject go = detectedIter.next();
-			
-			if(!Game.inst.physics.lineOfSight(getCenterPos(), go))
-			{
-				obstructedObjects.remove(go);
-				detectedIter.remove();
-			}
-		}
 	}
 
 	@Override
@@ -100,14 +76,7 @@ public class RadarSensor extends GameObject
 		//assuming enemy is at the center of the radar.
 		if(sensingClass.isInstance(other))
 		{
-			if(Game.inst.physics.lineOfSight(getCenterPos(), other))
-			{
-				detectedObjects.add(other);
-			}
-			else
-			{
-				obstructedObjects.add(other);
-			}
+			objectsWithinRadius.add(other);
 		}
 	}
 
@@ -116,8 +85,7 @@ public class RadarSensor extends GameObject
 	{
 		if(sensingClass.isInstance(other))
 		{
-			detectedObjects.remove(other);
-			obstructedObjects.remove(other);
+			objectsWithinRadius.remove(other);
 		}
 	}
 

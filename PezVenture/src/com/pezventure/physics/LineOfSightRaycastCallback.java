@@ -10,20 +10,11 @@ import com.pezventure.objects.PlayerShieldObject;
 public class LineOfSightRaycastCallback implements RayCastCallback
 {
 	GameObject target;
-	/**
-	 * raycast hit the target gameObject. assuming the raycast was aimed correctly, this should happen if
-	 * the raycast was actually run and not interrupted.
-	 */
-	boolean hitTarget = false;
+	boolean obstructed = false;
 	
-	/**
-	 * 
-	 * @return true if the raycast was run and it hit the target. false if it hit someting else, or if the
-	 * raycast has not yet run.
-	 */
 	public boolean hitTarget()
 	{
-		return hitTarget;
+		return !obstructed;
 	}
 	
 	public LineOfSightRaycastCallback(GameObject target)
@@ -39,18 +30,18 @@ public class LineOfSightRaycastCallback implements RayCastCallback
 		if(obj instanceof PlayerShieldObject || obj instanceof RadarSensor)
 		{
 			//ignore sensors and other invisible objects that do not obstruct LOS
-			return -1;
+			return -1f;
 		}
-		if(obj != target)
+		else if(obj != target)
 		{
-			//raycast hit something else
-			//continue to search the first fraction of the ray
-			return fraction;
+			obstructed = true;
+			return 0f;
 		}
 		else
 		{
-			hitTarget = true;
-			return 0;
+			//obj is target
+			//search within rest of ray for obstructing objects
+			return fraction;
 		}
 	}
 

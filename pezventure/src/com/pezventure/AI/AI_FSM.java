@@ -27,8 +27,6 @@ public abstract class AI_FSM<AgentType extends GameObject>
 	public AI_FSM(AgentType agent)
 	{
 		this.agent = agent;
-		crntState = getStartState();
-		
 	}
 	
 	AI_State<AgentType> crntState;
@@ -43,6 +41,7 @@ public abstract class AI_FSM<AgentType extends GameObject>
 		if(crntState != null)
 		{
 			crntState.onEnter();
+			Game.log(String.format("Agent %s FSM entered state %s.", agent.getName(), crntState.getClass().getSimpleName()));
 		}
 	}
 	

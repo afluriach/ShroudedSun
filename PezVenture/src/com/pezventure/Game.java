@@ -111,6 +111,7 @@ public class Game implements ApplicationListener
 	public Dialog activeDialog;
 	float timeInDialog = 0f;
 	boolean paused = false;
+	public GameEvent onExitDialog;
 	
 	//ability
 	Ability bEquipped;
@@ -345,6 +346,18 @@ public class Game implements ApplicationListener
 		MapLink dest = area.getMapLink(link.destLink);		
 		player.setPos(Util.clearRectangle(dest.location, dest.entranceDir, ENTRANCE_CLEAR_DISTANCE));
 	}
+	
+	void teleport(String destMap, String destLink)
+	{
+		if(!destMap.equals(""))
+		{
+			loadArea(destMap, destLink);
+			mapEntranceLink = destLink;
+		}
+		
+		MapLink dest = area.getMapLink(destLink);		
+		player.setPos(Util.clearRectangle(dest.location, dest.entranceDir, ENTRANCE_CLEAR_DISTANCE));
+	}
 		
 	void loadArea(String areaName, String mapLink)
 	{
@@ -507,30 +520,38 @@ public class Game implements ApplicationListener
 		{
 			activeDialog = null;
 			timeInDialog = 0f;
+			
+			if(onExitDialog != null)
+				onExitDialog.execute();
 		}
 	}
 
 
 	private void popScissors() {
 		if(crntRoom != null)
+		{
 			ScissorStack.popScissors();
+		}
 	}
 
 
 	private void pushScissors() {
 		crntRoom = area.getCurrentRoom(player.getCenterPos());
 		if(crntRoom != null)
-		{			
+		{
+			
+			Rectangle rect = crntRoom.getBox();
+
 			Rectangle scissor = new Rectangle();
 			
 			Rectangle clip = new Rectangle();
 			
 			Vector2 pos = player.getCenterPos();
 			
-			clip.x = (crntRoom.location.x - pos.x)*Game.PIXELS_PER_TILE;
-			clip.y = (crntRoom.location.y - pos.y)*Game.PIXELS_PER_TILE;
-			clip.width = crntRoom.location.width*Game.PIXELS_PER_TILE;
-			clip.height = crntRoom.location.height*Game.PIXELS_PER_TILE;
+			clip.x = (rect.x - pos.x)*Game.PIXELS_PER_TILE;
+			clip.y = (rect.y - pos.y)*Game.PIXELS_PER_TILE;
+			clip.width = rect.width*Game.PIXELS_PER_TILE;
+			clip.height = rect.height*Game.PIXELS_PER_TILE;
 			
 			ScissorStack.calculateScissors(camera,
 										   camera.position.x,
@@ -595,19 +616,9 @@ public class Game implements ApplicationListener
 	
 	public List<PathSegment> getPathWithinRadius(Vector2 start, Vector2 target, float minDist, float maxDist)
 	{
-		return tileGraph.radiusSearch(start, target, minDist, maxDist, area.getCurrentRoom(start).location);
+		return tileGraph.radiusSearch(start, target, minDist, maxDist, area.getCurrentRoom(start).getBox());
 	}
-	
-	public Rectangle getCrntRoom()
-	{
-		return crntRoom.location;
-	}
-	
-	public Rectangle getRoomByLocation(Vector2 pos)
-	{
-		return area.getCurrentRoom(pos).location;
-	}
-		
+			
 	void handleActionAbilityPress(ActionAbility a)
 	{
 		//can't use action ability when holding item
@@ -703,4 +714,10 @@ public class Game implements ApplicationListener
 		abilityWaitTimeRemaining -= Game.SECONDS_PER_FRAME;
 		if(abilityWaitTimeRemaining < 0) abilityWaitTimeRemaining = 0;
 	}
+	
+	public Area getCrntArea()
+	{
+		return area;
+	}
+
 }

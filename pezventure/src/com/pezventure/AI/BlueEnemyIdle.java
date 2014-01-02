@@ -33,7 +33,7 @@ public class BlueEnemyIdle extends AI_State<Entity>
 		//a state may subclass Idle to include movement
 		radar.setPos(fsm.agent.getCenterPos());
 		
-		targets = radar.getDetectedOjects(fsm.agent.getDir()*45f, fovAngle);
+		targets = radar.getDetectedObjects(fsm.agent.getDir()*45f, fovAngle);
 		
 		if(!targets.isEmpty())
 			fsm.changeState(new BlueEnemyAlert(fsm, targets.get(0)));

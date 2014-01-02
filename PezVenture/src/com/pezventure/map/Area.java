@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -28,9 +29,10 @@ public abstract class Area
 	 */
 	float maplinkActivationMargin = 0.2f;
 	
-	ArrayList<Room> rooms = new ArrayList<Room>();
+	TreeMap<String, Room> rooms = new TreeMap<String, Room>();
 	ArrayList<MapLink> links = new ArrayList<MapLink>();
 	ArrayList<TilespaceRectMapObject> mapObjects = new ArrayList<TilespaceRectMapObject>();
+	TreeMap<String, Path> paths = new TreeMap<String, Path>();
 	
 	public abstract void init();
 	public abstract void update();
@@ -42,6 +44,13 @@ public abstract class Area
 	public Vector2 playerStartPos;
 	
 	public TiledMap map;
+	
+	public Path getPath(String name)
+	{
+		if(!paths.containsKey(name))
+			throw new RuntimeException("path " + name + " not found");
+		return paths.get(name);
+	}
 	
 	public Area(TiledMap map)
 	{
@@ -65,11 +74,23 @@ public abstract class Area
 				
 				if(type != null && type.equals("room"))
 				{
-					//add as room
-					Room r = new Room();
-					r.location = MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels);
-					r.name = to.getName();
-					rooms.add(r);
+					//a room objects location is a list of rectangles. room objects with the same name will be merged into a single room object.
+					
+					if(!rooms.containsKey(to.getName()))
+					{
+						//create new room object and add it to map
+						
+						Room r = new Room();
+						r.location.add(MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels));
+						r.name = to.getName();
+						rooms.put(to.getName(), r);
+					}
+					else
+					{
+						//update exiting room object 
+						
+						rooms.get(to.getName()).location.add(MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels));
+					}					
 				}
 				else if(type != null && type.equals("map_link"))
 				{
@@ -107,6 +128,21 @@ public abstract class Area
 				else if(type != null && type.equals("player_start"))
 				{
 					playerStartPos = MapUtil.tilespacePos(to);
+				}
+				else if(type != null && type.equals("path"))
+				{
+					PolylineMapObject mo = (PolylineMapObject) to;
+					boolean loop = to.getProperties().containsKey("loop") && to.getProperties().get("loop", String.class).equals("true");
+					
+					Vector2 origin = new Vector2();
+					origin.x = to.getProperties().get("x", Float.class);
+					origin.y = to.getProperties().get("y", Float.class);
+					
+					paths.put(mo.getName(), new Path(mo.getPolyline().getVertices(), loop, origin));
+					
+					//TODO check if coords are tile units
+					//TODO check if coords are relative to origin
+					
 				}
 				else
 				{
@@ -253,10 +289,11 @@ public abstract class Area
 	
 	public Room getCurrentRoom(Vector2 pos)
 	{
-		for(Room r : rooms)
+		for(Room r : rooms.values())
 		{
-			if(r.location.contains(pos)) return r;
+			for(Rectangle rect : r.location)
+				if(rect.contains(pos)) return r;
 		}
 		return null;
-	}
+	}	
 }

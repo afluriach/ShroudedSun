@@ -57,7 +57,7 @@
  </tileset>
  <layer name="background" width="50" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC93TTQ7BUBDAcWVl6RAOYoH6tvERIe5kIRJsu+AI9AQNd5A4AT2AecmbmIyZN5Zikl/Spl30n3ktFP5nDuAITuAMUnABV5CB3DAEA9AHPdAFHdAGLTA3zAx7A45rqJKOSvTucNdFT7rO/TtaR9t/axzQFMRCz06BcyKkfZQjGXZo+0DYUVNMBFP/7UsPWzYCnDPDO0rRJ6uDoh0NQWgfdcLdbwU4qYB23Birg+MdHYbvgnaMGdyL1HFRYMedsDokUseC4HugHWsBb8G5BriOp2d1aLQOPPv0fPGOlYL+/ziZ4fFFR0iowz0fsQ76nycG2vHLk3z53gu0JsVM0AcAAA==
+   H4sIAAAAAAAAC93TOwrCQBCA4UQrSw/hQSx8Jb4aH4jinSxEUNsUeoTEE0hyB8ETqAdwFnZwGGd3UooDH2xIivxMEgT/MydwBinIwAXkoABX8FKMwQgMwQD0QQwi0ANLxUJxVOCYhgbpqIefDnOuWNL5ZZ/BDnOmHZF9165HR9AVeg4OOCkh7aMWyrDDtQ+EHU2HmWBu331tYctOgJMxvKMaftM6KNrRFvj20SLM9V6AcxHQjhujdXC8I2b4LmjHlMG9SB25A3bcCa1DInWsCL4H2rEV8BacwsN0PC2tw8XVgd8+/b54x8aB/v84V8WjRIePr8Pcn7AO+p8nCtrxy5OUfO4NpL5IM9AHAAA=
   </data>
  </layer>
  <layer name="walls" width="50" height="10">
@@ -94,6 +94,11 @@
   <object name="facer room" type="sign" x="352" y="160" width="32" height="32">
    <properties>
     <property name="msg" value="Facer floor"/>
+   </properties>
+  </object>
+  <object name="mansion_sign" type="sign" x="640" y="160" width="32" height="32">
+   <properties>
+    <property name="msg" value="Mansion sneak floor"/>
    </properties>
   </object>
  </objectgroup>
@@ -137,6 +142,12 @@
    <properties>
     <property name="dest_link" value="entrance"/>
     <property name="dest_map" value="torch_puzzle"/>
+   </properties>
+  </object>
+  <object name="mansion_warp" type="map_link" x="640" y="64" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="entrance"/>
+    <property name="dest_map" value="mansion_sneak_floor"/>
    </properties>
   </object>
  </objectgroup>

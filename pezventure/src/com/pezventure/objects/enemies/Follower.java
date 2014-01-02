@@ -3,6 +3,7 @@ package com.pezventure.objects.enemies;
 import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.Util;
+import com.pezventure.AI.AI_Util;
 import com.pezventure.map.TilespaceRectMapObject;
 import com.pezventure.objects.Entity;
 import com.pezventure.objects.GameObject;
@@ -50,23 +51,6 @@ public class Follower extends Enemy
 		{
 			speed = defaultSpeed;
 		}
-	}
-	
-	public void rotate()
-	{
-		int newDir = getDir();
-		
-		if(rotateClockwise)
-		{
-			newDir += 2;
-			if(newDir >= 8) newDir -= 8;
-		}
-		else
-		{
-			newDir -= 2;
-			if(newDir < 0) newDir += 8;
-		}
-		setDesiredDir(newDir);
 	}
 
 	@Override
@@ -136,6 +120,6 @@ public class Follower extends Enemy
 	@Override
 	public void hit(int damage)
 	{
-		rotate();
+		AI_Util.rotate(rotateClockwise, this);
 	}
 }
