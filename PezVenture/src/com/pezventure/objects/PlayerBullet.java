@@ -9,18 +9,13 @@ import com.pezventure.objects.enemies.BlueEnemy;
 
 public class PlayerBullet extends Bullet
 {
-	public static final int speed = 5;
-	public static final float radius = .5f;
-	public static final float mass = 0.5f;
-	public static final int damage = 1;
-	
 	Texture texture;
-	
-	public PlayerBullet(Vector2 pos, int dir)
-	{
-		super(pos, radius, "PlayerBullet", dir, speed, mass, "player_bullet");
+	int damage;
 		
-		texture = Game.inst.spriteLoader.getTexture("bullet_ec");
+	public PlayerBullet(Vector2 pos, float radius, String name, float angle, float speed, float mass, int damage)
+	{
+		super(pos, radius, name, angle, speed, mass, "player_bullet");
+		this.damage = damage;
 	}
 
 	@Override
@@ -38,9 +33,9 @@ public class PlayerBullet extends Bullet
 	public void handleContact(GameObject other) {
 		super.handleContact(other);
 		
-		if(other instanceof BlueEnemy)
+		if(other instanceof Enemy)
 		{
-			((BlueEnemy)other).hit(damage);
+			((Enemy)other).hit(damage);
 			expire();
 		}
 	}

@@ -131,4 +131,9 @@ public class TorchWalker extends Entity implements Enemy
 //		torches = Game.inst.gameObjectSystem.getObjectsByType(Torch.class);	
 		fsm.init();
 	}
+	
+	public void hit(int damage)
+	{
+		
+	}
 }

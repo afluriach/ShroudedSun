@@ -1,5 +1,6 @@
 package com.pezventure.objects;
 
-public interface Enemy {
-	//for now, a blank interface for type reasons.
+public interface Enemy
+{
+	public void hit(int damage);
 }

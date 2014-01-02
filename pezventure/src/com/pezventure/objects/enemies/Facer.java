@@ -53,6 +53,23 @@ public class Facer extends Entity implements Enemy
 		}
 	}
 
+	public void rotate()
+	{
+		int newDir = getDir();
+		
+		if(rotateClockwise)
+		{
+			newDir += 2;
+			if(newDir >= 8) newDir -= 8;
+		}
+		else
+		{
+			newDir -= 2;
+			if(newDir < 0) newDir += 8;
+		}
+		setDesiredDir(newDir);
+	}
+	
 	@Override
 	public void handleContact(GameObject other)
 	{
@@ -60,27 +77,6 @@ public class Facer extends Entity implements Enemy
 		{
 			((Player)other).hit(TOUCH_DAMAGE);
 		}
-		
-		if(other instanceof PlayerBullet)
-		{
-			//TODO ternary with conditional add/subtract 8
-			int newDir = getDir();
-			
-			if(rotateClockwise)
-			{
-				newDir += 2;
-				if(newDir >= 8) newDir -= 8;
-			}
-			else
-			{
-				newDir -= 2;
-				if(newDir < 0) newDir += 8;
-			}
-			setDesiredDir(newDir);
-			
-			other.expire();
-		}
-
 	}
 
 	@Override
@@ -137,5 +133,11 @@ public class Facer extends Entity implements Enemy
 	{
 		target = (Entity) Game.inst.gameObjectSystem.getObjectByName(targetName);
 		if(target == null) throw new RuntimeException(String.format("target, %s, not found", targetName));
+	}
+
+	@Override
+	public void hit(int damage)
+	{
+		rotate();
 	}
 }

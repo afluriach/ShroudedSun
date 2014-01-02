@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.AI.BlueEnemyFSM;
 import com.pezventure.map.TilespaceRectMapObject;
+import com.pezventure.objects.Elemental;
 import com.pezventure.objects.Enemy;
 import com.pezventure.objects.EnemyBullet;
 import com.pezventure.objects.Entity;
@@ -74,126 +75,18 @@ public class BlueEnemy extends Entity implements Enemy
 	@Override
 	public void update()
 	{
+		if(hp <= 0) expire();
+		
+		invulnerableTimeRemaining -= Game.SECONDS_PER_FRAME;
+		if(invulnerableTimeRemaining < 0)
+		{
+			invulnerableTimeRemaining = 0;
+		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
 		fsm.update();
 		super.update();
-	}
+	}	
 	
-//	@Override
-//	public void update()
-//	{
-//		super.update();
-//		
-//		if(hp <= 0) expire();
-//		
-//		invulnerableTimeRemaining -= Game.SECONDS_PER_FRAME;
-//		if(invulnerableTimeRemaining < 0)
-//		{
-//			invulnerableTimeRemaining = 0;
-//		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-//
-//		if(target == null)
-//		{
-//			idle();
-//		}
-//		else
-//		{
-//			seek();
-//			
-//			fireTimeRemaining -= Game.SECONDS_PER_FRAME;
-//			
-//			if(fireTimeRemaining <= 0)
-//			{
-//				fireTimeRemaining = 0;
-//				shoot();
-//			}
-//		}
-//	}
-	
-//	public void idle()
-//	{
-//		List<GameObject> detected = radar.getDetectedOjects(getDir()*45f, fovAngle);
-//		if(!detected.isEmpty())
-//		{
-//			target = detected.get(0);
-//		}
-//	}
-//	
-//	public void seek()
-//	{
-//		Vector2 dispToTarget = target.getCenterPos().sub(getCenterPos());
-//		float dist = dispToTarget.len();
-//		
-//		Vector2 desiredVel;
-//		
-//		if(dist < minDist)
-//		{
-////			flee();
-//			
-//			desiredVel = dispToTarget.cpy().nor().scl(-1*SPEED);
-//		}
-//		else if(dist >= maxDist)
-//		{
-////			advance();
-//			
-//			desiredVel = dispToTarget.cpy().nor().scl(SPEED);
-//		}
-//		else
-//		{
-//			//try to align with target on one axis. 
-//			
-//			float distX = target.getCenterPos().x - getCenterPos().x;
-//			float distY = target.getCenterPos().y - getCenterPos().y;
-//			
-//			PrimaryDirection desiredDir;
-//			
-//			if(Math.abs(distX) > Math.abs(distY))
-//			{
-//				//closer to aligning on the horizontal. (must move vertically)
-//				
-//				desiredDir = distX < 0 ? PrimaryDirection.left : PrimaryDirection.right;
-//				
-//				if(distY > 0)
-//				{
-//					desiredVel = PrimaryDirection.up.getUnitVector().scl(SPEED);
-//				}
-//				else
-//				{
-//					desiredVel = PrimaryDirection.down.getUnitVector().scl(SPEED);
-//				}
-//			}
-//			else
-//			{
-//				//closer to aligning on the vertical (move horizontally).
-//				
-//				desiredDir = distY < 0 ? PrimaryDirection.down : PrimaryDirection.up;
-//				
-//				if(distX > 0)
-//				{
-//					desiredVel = PrimaryDirection.right.getUnitVector().scl(SPEED);					
-//				}
-//				else
-//				{
-//					desiredVel = PrimaryDirection.left.getUnitVector().scl(SPEED);
-//				}
-//			}
-//			
-//			setDesiredDir(desiredDir.getAngle8Dir());
-//			setDesiredVel(desiredVel);
-//		}
-//	}
-	
-//	public void shoot()
-//	{
-//		//only fire if the angle to the target is appropriate
-//		float angleToTarget = target.getCenterPos().sub(getCenterPos()).angle() - getDir()*45f;
-//		
-//		if(Math.abs(angleToTarget) < maxFireAngle)
-//		{
-//			shoot(new EnemyBullet(getCenterPos(), getDir()*45f), bulletSpawnDist);
-//			fireTimeRemaining= fireTimeInterval;
-//		}
-//	}
-
 	@Override
 	public void handleEndContact(GameObject other)
 	{
@@ -211,6 +104,4 @@ public class BlueEnemy extends Entity implements Enemy
 	{
 		return SPEED;
 	}
-
-
 }
