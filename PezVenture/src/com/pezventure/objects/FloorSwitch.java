@@ -40,7 +40,7 @@ public class FloorSwitch extends GameObject
 	/**
 	 * maximum distance from center of switch to center of object in order to activate.
 	 */
-	private float activationRadius = 0.25f;
+	private float activationRadius = 0.5f;
 	
 	/**
 	 * Objects of the activating class that have collided with the switch. objects are added during handleContact

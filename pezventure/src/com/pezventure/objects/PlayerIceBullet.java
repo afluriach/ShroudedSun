@@ -9,7 +9,7 @@ import com.pezventure.graphics.Graphics;
 import com.pezventure.objects.enemies.BlueEnemy;
 import com.pezventure.physics.PrimaryDirection;
 
-public class PlayerIceBullet extends Bullet implements Elemental
+public class PlayerIceBullet extends PlayerBullet implements Elemental
 {
 	public static final int speed = 5;
 	public static final float radius = .5f;
@@ -20,7 +20,7 @@ public class PlayerIceBullet extends Bullet implements Elemental
 	
 	public PlayerIceBullet(Vector2 pos, int dir)
 	{
-		super(pos, radius, "PlayerIceBullet", dir*45f, speed, mass, "player_bullet");
+		super(pos, radius, "PlayerIceBullet", dir*45f, speed, mass, damage);
 		
 		animation = Game.inst.spriteLoader.loadAnimation("cirno_bullet_aa", 0.1f, PrimaryDirection.up);
 	}
@@ -34,26 +34,6 @@ public class PlayerIceBullet extends Bullet implements Elemental
 	@Override
 	public void render(SpriteBatch sb) {
 		animation.render(getCenterPos(), sb);
-	}
-
-	@Override
-	public void handleContact(GameObject other) {
-		super.handleContact(other);
-		
-		if(other instanceof BlueEnemy)
-		{
-			((BlueEnemy)other).hit(damage);
-			expire();
-		}
-	}
-
-	@Override
-	public void onExpire() {
-		
-	}
-	
-	@Override
-	public void handleEndContact(GameObject other) {
 	}
 
 	@Override

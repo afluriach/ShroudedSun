@@ -131,9 +131,16 @@ public class Game implements ApplicationListener
 		System.out.println("link: "+mapLinkStart);
 		
 		player = new Player(Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
-		gameObjectSystem.addObject(player);		
+		gameObjectSystem.addObject(player);
+		gameObjectSystem.handleAdditions();
 	}
 	
+	public static void log(String msg)
+	{
+		Gdx.app.log(Game.TAG, msg);
+	}
+
+
 	void drawGUI()
 	{
 		shapeRenderer.begin(ShapeType.Filled);
@@ -300,10 +307,9 @@ public class Game implements ApplicationListener
 		Gdx.app.log(Game.TAG, "...done.");
 		
 		area.init();
-		
-		gameObjectSystem.initAll();
-		
+
 		loadPlayer(mapLink);
+		gameObjectSystem.initAll();
 		
 		tileGraph = new TileGraph(area);
 	}

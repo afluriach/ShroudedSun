@@ -4,13 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.objects.Enemy;
 import com.pezventure.objects.Entity;
 import com.pezventure.objects.GameObject;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.PlayerBullet;
 
-public class Follower extends Entity implements Enemy
+public class Follower extends Enemy
 {
 	private static final int TOUCH_DAMAGE = 1;
 	public static final float invulerabilityLength = 0.5f;
@@ -30,7 +29,7 @@ public class Follower extends Entity implements Enemy
 	
 	public Follower(TilespaceRectMapObject to) {
 		
-		super(to, "reisen", "enemy");
+		super(to, "reisen", 1);
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);

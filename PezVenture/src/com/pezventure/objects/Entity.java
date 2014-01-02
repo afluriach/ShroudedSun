@@ -42,7 +42,7 @@ public abstract class Entity extends GameObject
 	 */
 	private int desiredDir = defaultFacing;
 	private Vector2 desiredVel;	
-	private float speed;	
+	protected float speed;	
 	
 	public Entity(TilespaceRectMapObject to, String animation, String filter)
 	{

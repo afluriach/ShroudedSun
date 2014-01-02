@@ -10,7 +10,6 @@ import com.pezventure.AI.AI_FSM;
 import com.pezventure.AI.AI_State;
 import com.pezventure.AI.TorchWalkerFSM;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.objects.Enemy;
 import com.pezventure.objects.Entity;
 import com.pezventure.objects.GameObject;
 import com.pezventure.objects.Player;
@@ -24,7 +23,7 @@ import com.pezventure.physics.PrimaryDirection;
  * @author ant
  *
  */
-public class TorchWalker extends Entity implements Enemy
+public class TorchWalker extends Entity
 {
 	private static final int TOUCH_DAMAGE = 1;
 	public static final float invulerabilityLength = 0.5f;

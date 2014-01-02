@@ -3,9 +3,8 @@ package com.pezventure.objects;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
-import com.pezventure.objects.enemies.BlueEnemy;
+import com.pezventure.objects.enemies.Enemy;
 
 public class PlayerBullet extends Bullet
 {

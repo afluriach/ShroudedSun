@@ -4,13 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.map.TilespaceRectMapObject;
-import com.pezventure.objects.Enemy;
 import com.pezventure.objects.Entity;
 import com.pezventure.objects.GameObject;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.PlayerBullet;
 
-public class Facer extends Entity implements Enemy
+public class Facer extends Enemy
 {
 	private static final int TOUCH_DAMAGE = 1;
 	public static final float invulerabilityLength = 0.5f;
@@ -25,12 +24,11 @@ public class Facer extends Entity implements Enemy
 	 */
 	Entity target;
 	boolean rotateClockwise;
-	float speed;
 	String targetName;
 	
 	public Facer(TilespaceRectMapObject to) {
 		
-		super(to, "tewi", "enemy");
+		super(to, "tewi", 1);
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);
