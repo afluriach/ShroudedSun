@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.pezventure.Game;
@@ -20,6 +21,8 @@ public class Player extends Entity
 	private static final float fireInterval = 0.7f;
 	private static final float shotInitDist = 0.5f;
 	private static final float itemInteractDistance = 0.5f;
+	//where to hold am item relative to the player's center.
+	private static final Vector2 itemHoldPos = new Vector2(0f, 0.2f);
 	
 	//map gameobject type to the kind of interaction that can be performed with in.
 	private HashMap<Class<? extends GameObject>, ItemInteraction> interactMap;
@@ -93,8 +96,6 @@ public class Player extends Entity
 			fireTimeRemaining = fireInterval;
 		}
 		
-		
-		//may be generalized to interaction button
 		checkInteract();		
 
 		if(interact)
@@ -105,8 +106,7 @@ public class Player extends Entity
 		
 		if(holdingItem != null)
 		{
-			Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(itemInteractDistance+HIT_CIRCLE_RADIUS);
-			holdingItem.setPos(getCenterPos().add(holdDisp));
+			holdingItem.setPos(getCenterPos().add(itemHoldPos));
 		}
 		
 		shieldObj.setActive(shield);
@@ -196,7 +196,8 @@ public class Player extends Entity
 		//if the player is holding an item, the drop action takes precedence.
 		if(holdingItem != null)
 		{
-			interactMessage = "Drop";
+			//if there is no room to drop item, do not display message
+			interactMessage = canDrop() ? "Drop" : "";
 			return;
 		}
 		
@@ -224,7 +225,7 @@ public class Player extends Entity
 	 */
 	public void interact()
 	{
-		if(holdingItem != null)
+		if(holdingItem != null && canDrop())
 		{
 			drop();
 		}
@@ -234,11 +235,27 @@ public class Player extends Entity
 		}
 	}
 	
-	public void drop()
+	//only drop if there is room in front of the player to place jar.
+	private boolean canDrop()
 	{
-		Gdx.app.log(Game.TAG, "player drop");
-//		Game.inst.physics.removeJoint(itemJoint);
+		//the center position where the item would be placed
+		Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(itemInteractDistance+HIT_CIRCLE_RADIUS);
+		
+		//the AABB where the jar would be placed
+		Rectangle rect = new Rectangle(holdingItem.getAABB());
+		rect.setCenter(getCenterPos().add(holdDisp));
+		
+		Game.log(String.format("rect: %f,%f %f,%f", rect.x, rect.y, rect.width, rect.height));
+		
+		return !Game.inst.physics.checkSpace(rect, holdingItem);
+	}
+	
+	private void drop()
+	{
+		Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(itemInteractDistance+HIT_CIRCLE_RADIUS);
+		holdingItem.setPos(getCenterPos().add(holdDisp));
 		((Grabbable)holdingItem).onDrop();
+
 		holdingItem = null;
 		itemJoint = null;
 	}

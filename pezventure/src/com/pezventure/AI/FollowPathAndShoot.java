@@ -57,5 +57,10 @@ public class FollowPathAndShoot extends FollowPath
 	{
 		fsm.agent.shoot(new EnemyBullet(fsm.agent.getCenterPos(), angle), bulletSpawnDist);
 	}
+	
+	public void onExit()
+	{
+		bulletRadar.expire();
+	}
 
 }

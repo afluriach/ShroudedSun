@@ -71,11 +71,15 @@ public class Jar extends GameObject implements Grabbable
 	@Override
 	public void onGrab() {
 		isGrabbed = true;
+		setSensor(true);
+		Game.inst.gameObjectSystem.updateRenderLayer(this, RenderLayer.aboveGround);
 	}
 
 	@Override
 	public void onDrop() {
 		isGrabbed = false;
+		setSensor(false);
+		Game.inst.gameObjectSystem.updateRenderLayer(this, RenderLayer.groundLevel);
 	}
 
 	@Override

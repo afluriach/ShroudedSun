@@ -363,5 +363,17 @@ public class Physics
 	public void removeJoint(Joint j)
 	{
 		world.destroyJoint(j);
-	}	
+	}
+	
+	/**
+	 * check to see if there is any object obstructing a given space
+	 * @param rect the area to check
+	 * @return whether or not there is an object present
+	 */
+	public boolean checkSpace(Rectangle rect, GameObject except)
+	{
+		DetectObjectCallback cb = new DetectObjectCallback(except);
+		world.QueryAABB(cb, rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+		return cb.detected();
+	}
 }

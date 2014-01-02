@@ -29,7 +29,8 @@ public class GameObjectSystem
 	public GameObjectSystem()
 	{
 		renderLayers.put(RenderLayer.floor, new ArrayList<GameObject>());
-		renderLayers.put(RenderLayer.above_floor, new ArrayList<GameObject>());
+		renderLayers.put(RenderLayer.groundLevel, new ArrayList<GameObject>());
+		renderLayers.put(RenderLayer.aboveGround, new ArrayList<GameObject>());
 	}
 		
 	/**
@@ -145,6 +146,13 @@ public class GameObjectSystem
 		{
 			go.applyAccel();
 		}
+	}
+	
+	public void updateRenderLayer(GameObject go, RenderLayer newLayer)
+	{
+		renderLayers.get(go.renderLayer).remove(go);
+		go.renderLayer = newLayer;
+		renderLayers.get(newLayer).add(go);
 	}
 	
 //	public void renderPhysicsShapes(ShapeRenderer sr)

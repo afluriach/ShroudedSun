@@ -51,8 +51,7 @@ public class Door extends GameObject
 		if(switches != null)
 		{
 			isLocked = !Util.allActivated(switches);
-			physicsBody.getFixtureList().get(0).setSensor(!isLocked);
-
+			setSensor(!isLocked);
 		}
 	}
 
@@ -73,13 +72,13 @@ public class Door extends GameObject
 	
 	public void unlock()
 	{
-		physicsBody.getFixtureList().get(0).setSensor(true);
+		setSensor(true);
 		isLocked = false;
 	}
 	
 	public void lock()
 	{
-		physicsBody.getFixtureList().get(0).setSensor(false);
+		setSensor(false);
 		isLocked = true;
 
 	}

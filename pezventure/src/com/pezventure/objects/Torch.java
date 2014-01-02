@@ -45,7 +45,7 @@ public class Torch extends GameObject
 			lightTime = 0f;
 		}
 		
-		renderLayer = RenderLayer.above_floor;
+		renderLayer = RenderLayer.groundLevel;
 				
 		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody, 1, false, "environmental_floor");
 	}

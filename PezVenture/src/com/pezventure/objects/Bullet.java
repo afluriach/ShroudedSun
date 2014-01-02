@@ -17,6 +17,7 @@ public abstract class Bullet extends GameObject
 		setVel(Util.ray(angle, speed));
 		this.radius = radius;
 		this.angle = angle;
+		renderLayer = RenderLayer.aboveGround;
 	}
 		
 	public float getRadius()
@@ -32,7 +33,7 @@ public abstract class Bullet extends GameObject
 	@Override
 	public void handleContact(GameObject other)
 	{
-		if(other.renderLayer== RenderLayer.above_floor &&
+		if(other.renderLayer== RenderLayer.groundLevel &&
 		   other.getClass() != RadarSensor.class && 
 		   other.getClass() != Shield.class)
 			expire();

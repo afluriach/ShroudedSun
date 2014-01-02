@@ -36,7 +36,7 @@ public class Game implements ApplicationListener
 	public static Game inst;
 	
 	//constants
-	public static final boolean DEBUG = false;
+	public static final boolean physicsDebugRender = false;
 	public static final boolean keyControls = true;
 	
 	public static final int DEFAULT_SCREEN_WIDTH = 1280;
@@ -406,10 +406,11 @@ public class Game implements ApplicationListener
 		
 		batch.begin();
 		gameObjectSystem.render(RenderLayer.floor, batch);
-		gameObjectSystem.render(RenderLayer.above_floor, batch);
+		gameObjectSystem.render(RenderLayer.groundLevel, batch);
+		gameObjectSystem.render(RenderLayer.aboveGround, batch);
 		batch.end();
 		
-		if(DEBUG)
+		if(physicsDebugRender)
 			physics.debugRender(camera.combined);
 		
 		batch.setProjectionMatrix(defaultMatrix);

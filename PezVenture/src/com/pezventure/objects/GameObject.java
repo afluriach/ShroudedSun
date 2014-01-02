@@ -79,7 +79,7 @@ public abstract class GameObject
 	
 	String name;
 	boolean expired = false;
-	RenderLayer renderLayer = RenderLayer.above_floor;
+	RenderLayer renderLayer = RenderLayer.groundLevel;
 	
 	public GameObject(TilespaceRectMapObject mo)
 	{
@@ -132,6 +132,11 @@ public abstract class GameObject
 	public Vector2 getVel()
 	{
 		return physicsBody.getLinearVelocity().cpy();
+	}
+	
+	public RenderLayer getRenderLayer()
+	{
+		return renderLayer;
 	}
 	
 	public void setPos(Vector2 pos)
@@ -290,6 +295,18 @@ public abstract class GameObject
 		{
 			Vector2 dv = crntAcceleration.cpy().scl(Game.SECONDS_PER_FRAME);
 			setVel(getVel().add(dv));			
+		}
+	}
+	
+	/**
+	 * set each of the GameObjects fixtures to 
+	 * @param sensor the value to set. if true, fixtures will still register collisions but will not have any solid physical presence.
+	 */
+	public void setSensor(boolean sensor)
+	{
+		for(Fixture f : physicsBody.getFixtureList())
+		{
+			f.setSensor(sensor);
 		}
 	}
 	
