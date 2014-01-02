@@ -40,8 +40,7 @@ public class EnemyBullet extends Bullet
 		if(other instanceof Player)
 		{
 			Player player = (Player) other;
-			if(!player.shield)
-				player.hit(damage);
+			player.hit(damage);
 			expire();
 		}
 	}

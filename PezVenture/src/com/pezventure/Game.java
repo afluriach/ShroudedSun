@@ -50,6 +50,12 @@ public class Game implements ApplicationListener
 	public static final int HEALTH_BAR_LENGTH = 200;
 	public static final int HEALTH_BAR_OUTLINE = 4;
 	
+	public static final int HEALTH_MAGIC_SPACING = 10;
+
+	public static final int MAGIC_BAR_THICKNESS = 30;
+	public static final int MAGIC_BAR_LENGTH = 200;
+	public static final int MAGIC_BAR_OUTLINE = 4;
+	
 	public static final Rectangle dialogPos = new Rectangle(350, 50, 500, 400);
 	public static final float minDialogChangeTime = 0.25f;
 		
@@ -67,6 +73,8 @@ public class Game implements ApplicationListener
 
 	public static final String startingLevel = "level_select";
 	public static final String startingLink = "entrance";
+	
+	private static final float abilityWaitInterval = 0.7f;
 	
 	//graphics
 	private OrthographicCamera camera;
@@ -90,6 +98,9 @@ public class Game implements ApplicationListener
 	//if the interact button has been held from the previous frame
 	boolean interactHeld = false;
 	boolean pauseHeld = false;
+	boolean bHeld;
+	boolean xHeld;
+	boolean yHeld;
 		
 	//logic
 	float updateTimeAccumulated = 0;
@@ -100,6 +111,15 @@ public class Game implements ApplicationListener
 	public Dialog activeDialog;
 	float timeInDialog = 0f;
 	boolean paused = false;
+	
+	//ability
+	Ability bEquipped;
+	Ability xEquipped;
+	Ability yEquipped;
+	boolean bToggleActive = false;
+	boolean xToggleActive = false;
+	boolean yToggleActive = false;
+	float abilityWaitTimeRemaining;
 	
 	//game session info
 	public boolean touchControls;
@@ -128,11 +148,24 @@ public class Game implements ApplicationListener
 	public void loadPlayer(String mapLinkStart)
 	{
 		MapLink link = area.getMapLink(mapLinkStart);
-		System.out.println("link: "+mapLinkStart);
+		int hp = 0; 
+		int mp = 0;
+		
+		if(player != null)
+		{
+			hp = player.getHP();
+			mp = player.getMP();
+		}
 		
 		player = new Player(Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
 		gameObjectSystem.addObject(player);
 		gameObjectSystem.handleAdditions();
+		
+		if(hp != 0)
+		{
+			player.setHP(hp);
+			player.setMP(mp);
+		}
 	}
 	
 	public static void log(String msg)
@@ -144,10 +177,10 @@ public class Game implements ApplicationListener
 	void drawGUI()
 	{
 		shapeRenderer.begin(ShapeType.Filled);
-//		shapeRenderer.setColor(1, 0, 0, 1);
-		int length = (int) (HEALTH_BAR_LENGTH*player.getHP()*1.0f/player.getMaxHP());
-//		shapeRenderer.rect(GUI_EDGE_MARGIN, screenHeight-HEALTH_BAR_THICKNESS-GUI_EDGE_MARGIN, length, HEALTH_BAR_THICKNESS);
-		
+		int healthBarLen = (int) (HEALTH_BAR_LENGTH*player.getHP()*1.0f/player.getMaxHP());
+		int magicBarLen  = (int) (MAGIC_BAR_LENGTH*player.getMP()*1.0f/player.getMaxMP());
+
+		//health bar
 		shapeRenderer.setColor(1,1,1,1);
 		shapeRenderer.rect(GUI_EDGE_MARGIN,
 						   screenHeight - HEALTH_BAR_THICKNESS - 2*HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
@@ -157,14 +190,33 @@ public class Game implements ApplicationListener
 		shapeRenderer.setColor(1,0,0,1);
 		shapeRenderer.rect(GUI_EDGE_MARGIN + HEALTH_BAR_OUTLINE,
 						   screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
-						   length,
+						   healthBarLen,
 						   HEALTH_BAR_THICKNESS);
 		
 		shapeRenderer.setColor(0,0,0,1);
-		shapeRenderer.rect(GUI_EDGE_MARGIN+HEALTH_BAR_OUTLINE+length,
+		shapeRenderer.rect(GUI_EDGE_MARGIN+HEALTH_BAR_OUTLINE+healthBarLen,
 				           screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
-				           HEALTH_BAR_LENGTH - length,
+				           HEALTH_BAR_LENGTH - healthBarLen,
 				           HEALTH_BAR_THICKNESS);
+		
+		//magic bar
+		shapeRenderer.setColor(1,1,1,1);
+		shapeRenderer.rect(GUI_EDGE_MARGIN,
+						   screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - 2*MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
+						   MAGIC_BAR_LENGTH+2*MAGIC_BAR_OUTLINE,
+						   MAGIC_BAR_THICKNESS+2*MAGIC_BAR_OUTLINE);
+		
+		shapeRenderer.setColor(0f,0.8f,0.1f,1f);
+		shapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE,
+				           screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
+				           magicBarLen,
+				           MAGIC_BAR_THICKNESS);
+		
+		shapeRenderer.setColor(0,0,0,1);
+		shapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE+magicBarLen,
+						   screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
+				           MAGIC_BAR_LENGTH - magicBarLen,
+				           MAGIC_BAR_THICKNESS);
 		
 		shapeRenderer.end();		
 		
@@ -224,9 +276,6 @@ public class Game implements ApplicationListener
 		{
 			player.setDesiredDir(controls.controlPad8Dir);
 		}
-
-		if(controls.x)
-			player.setDesireToShoot();
 				
 		if(controls.a && !interactHeld)
 		{
@@ -238,7 +287,7 @@ public class Game implements ApplicationListener
 			interactHeld = controls.a;
 		}
 		
-		player.shield = controls.b;
+		checkUpdateAbility();
 	}
 		
 	
@@ -268,6 +317,10 @@ public class Game implements ApplicationListener
 		areaLoader = new AreaLoader();
 		
 		controls = new Controls(screenWidth, screenHeight, touchControls, keyControls);
+		
+		//default abilities
+		bEquipped = new Shield();
+		xEquipped = new IceBullet();
 		
 		//initialize game world
 		loadArea(startingLevel, mapEntranceLink);
@@ -553,5 +606,101 @@ public class Game implements ApplicationListener
 	public Rectangle getRoomByLocation(Vector2 pos)
 	{
 		return area.getCurrentRoom(pos).location;
+	}
+		
+	void handleActionAbilityPress(ActionAbility a)
+	{
+		//can't use action ability when holding item
+		if(abilityWaitTimeRemaining <= 0 && a.canPerform() && player.holdingItem == null)
+		{
+			a.perform();
+			abilityWaitTimeRemaining = abilityWaitInterval;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param a the ability to handle
+	 * @param toggleActive whether or not this toggle ability is active
+	 * @return whether or not this toggle ability is now active.
+	 */
+	boolean handleToggleAbilityPress(ToggleAbility a, boolean toggleActive)
+	{
+		//try to activate
+		if(!toggleActive)
+		{
+			if(a.canActivate())
+			{
+				a.onActivate();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		//deactivate
+		else
+		{
+			a.onDeactivate();
+			return false;
+		}
+	}
+	
+	void checkUpdateAbility()
+	{
+		if(!controls.b) bHeld = false;
+		if(!controls.x) xHeld = false;
+		if(!controls.y) yHeld = false;
+		
+		//only allow one ability use per frame.
+		if(controls.b && bEquipped != null && !bHeld)
+		{
+			bHeld = true;
+			
+			if(bEquipped instanceof ToggleAbility)
+				bToggleActive = handleToggleAbilityPress((ToggleAbility) bEquipped, bToggleActive);
+			else
+				handleActionAbilityPress((ActionAbility) bEquipped);
+		}
+		
+		else if(controls.x && xEquipped != null && !xHeld)
+		{
+			xHeld = true;
+			
+			if(xEquipped instanceof ToggleAbility)
+				xToggleActive = handleToggleAbilityPress((ToggleAbility) xEquipped, xToggleActive);
+			else
+				handleActionAbilityPress((ActionAbility) xEquipped);
+		}
+		
+		else if(controls.y && yEquipped != null && !yHeld)
+		{
+			yHeld = true;
+			
+			if(yEquipped instanceof ToggleAbility)
+				yToggleActive = handleToggleAbilityPress((ToggleAbility) yEquipped, yToggleActive);
+			else
+				handleActionAbilityPress((ActionAbility) yEquipped);
+		}
+		
+		//update toggle ability.
+		if(bToggleActive)
+		{
+			((ToggleAbility)bEquipped).updateActive();
+		}
+		if(xToggleActive)
+		{
+			((ToggleAbility)xEquipped).updateActive();
+		}
+		if(yToggleActive)
+		{
+			((ToggleAbility)yEquipped).updateActive();
+		}
+		
+		//update ability countdown
+		abilityWaitTimeRemaining -= Game.SECONDS_PER_FRAME;
+		if(abilityWaitTimeRemaining < 0) abilityWaitTimeRemaining = 0;
 	}
 }

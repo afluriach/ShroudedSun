@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.pezventure.objects.GameObject;
 import com.pezventure.objects.RadarSensor;
-import com.pezventure.objects.Shield;
+import com.pezventure.objects.PlayerShieldObject;
 
 public class LineOfSightRaycastCallback implements RayCastCallback
 {
@@ -36,7 +36,7 @@ public class LineOfSightRaycastCallback implements RayCastCallback
 	{
 		GameObject obj = (GameObject) fixture.getBody().getUserData();
 		
-		if(obj instanceof Shield || obj instanceof RadarSensor)
+		if(obj instanceof PlayerShieldObject || obj instanceof RadarSensor)
 		{
 			//ignore sensors and other invisible objects that do not obstruct LOS
 			return -1;

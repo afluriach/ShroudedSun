@@ -16,10 +16,10 @@ public class Player extends Entity
 {
 	public static final float SPEED = 3.0f;
 	private static final int MAX_HP = 10;
+	private static final int MAX_MP = 10;
 	private static final float invulerabilityLength = 1.0f;
 	private static final float invulerabilityFlickerInterval = 0.1f;
-	private static final float fireInterval = 0.7f;
-	private static final float shotInitDist = 0.5f;
+	public static final float shotInitDist = 0.5f;
 	private static final float itemInteractDistance = 0.5f;
 	//where to hold am item relative to the player's center.
 	private static final Vector2 itemHoldPos = new Vector2(0f, 0.2f);
@@ -28,21 +28,17 @@ public class Player extends Entity
 	private HashMap<Class<? extends GameObject>, ItemInteraction> interactMap;
 	
 	int hp = MAX_HP;
+	int mp = MAX_MP;
 	float invulnerableTimeRemaining = 0f;
-	float fireTimeRemaining = 0f;
-	Shield shieldObj;
 	
 	//interaction logic, including interacting with obejcts in the environment and carrying objects
 	public GameObject holdingItem;
-	Joint itemJoint;
 	public String interactMessage = "";
 	private GameObject interactibleObject;
 	private ItemInteraction interaction;
 	
 	//flag that determines if the player wants to shoot, set based on the controls.
-	boolean shoot = false;
 	boolean interact = false;
-	public boolean shield = false;
 	
 	private void initInteractMap()
 	{
@@ -58,10 +54,6 @@ public class Player extends Entity
 	{
 		super(pos, "cirno", startingDir.getAngle8Dir(), "player", "player");
 		
-		shieldObj = new Shield(getCenterPos());
-		//physicsBody = Physics.inst().addRectBody(pos, PLAYER_SIZE, PLAYER_SIZE, BodyType.DynamicBody, this, MASS, false);
-		Game.inst.gameObjectSystem.addObject(shieldObj);
-		
 		initInteractMap();
 	}
 	
@@ -72,30 +64,7 @@ public class Player extends Entity
 		{
 			invulnerableTimeRemaining = 0;
 		}
-		
-		fireTimeRemaining -= Game.SECONDS_PER_FRAME;
-		if(fireTimeRemaining < 0)
-		{
-			fireTimeRemaining = 0;
-		}
-		
-		 //can't shoot or use shieldwhile holding an item.
-		if(holdingItem != null)
-		{
-			shoot = false;
-			shield = false;
-		}
-		
-		//cooldown time between shots
-		if(shoot && fireTimeRemaining <= 0)
-		{
-			//bullet inital pos shouldnt matter. it's position will be updated by the 
-			//shoot method
-			shoot(new PlayerIceBullet(getCenterPos(), getDir()), shotInitDist);
-			shoot = false;
-			fireTimeRemaining = fireInterval;
-		}
-		
+							
 		checkInteract();		
 
 		if(interact)
@@ -108,10 +77,7 @@ public class Player extends Entity
 		{
 			holdingItem.setPos(getCenterPos().add(itemHoldPos));
 		}
-		
-		shieldObj.setActive(shield);
-		shieldObj.setPos(getCenterPos());
-		
+				
 		super.update();
 	}
 	
@@ -135,6 +101,31 @@ public class Player extends Entity
 
 	public int getMaxHP() {
 		return MAX_HP;
+	}
+	
+	public int getMP()
+	{
+		return mp;
+	}
+	
+	public void setHP(int hp)
+	{
+		this.hp = hp;
+	}
+	
+	public void setMP(int mp)
+	{
+		this.mp = mp;
+	}
+	
+	public int getMaxMP()
+	{
+		return MAX_MP;
+	}
+	
+	public void useMP(int amount)
+	{
+		mp -= amount;
 	}
 
 	public void heal(int hp)
@@ -163,18 +154,7 @@ public class Player extends Entity
 		this.hp -= hp;
 		
 	}
-	
-	public void setDesireToShoot()
-	{
-		if(fireTimeRemaining <= 0)
-			shoot = true;
-	}
-	
-	public void setShield()
-	{
-		shield = true;
-	}
-	
+		
 	@Override
 	public void handleEndContact(GameObject other)
 	{
@@ -257,7 +237,6 @@ public class Player extends Entity
 		((Grabbable)holdingItem).onDrop();
 
 		holdingItem = null;
-		itemJoint = null;
 	}
 	
 	@Override

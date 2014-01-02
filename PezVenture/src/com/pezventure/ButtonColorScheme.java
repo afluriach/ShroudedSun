@@ -5,33 +5,13 @@ import com.pezventure.graphics.Graphics;
 
 public class ButtonColorScheme
 {	
-	public static ButtonColorScheme n64 =
+	public static ButtonColorScheme scheme =
 			new ButtonColorScheme(Graphics.hsva(251f, .8f, .3f, 1f), Graphics.hsva(251f, 1f, .9f, 1f),
 					              Graphics.hsva(49f, .8f, .3f, 1f), Graphics.hsva(49f, 1f, .9f, 1f),
-					              Graphics.hsva(135f, .8f, .3f, 1f), Graphics.hsva(135f, 1f, .9f, 1f),
+					              Graphics.hsva(49f, .8f, .3f, 1f), Graphics.hsva(49f, 1f, .9f, 1f),
 					              Graphics.hsva(49f, .8f, .3f, 1f), Graphics.hsva(49f, 1f, .9f, 1f),
 					              Graphics.hsva(251f, 0.01f, .3f, 1f), Graphics.hsva(251f, 0.01f, .7f, 1f));
 	
-	public static ButtonColorScheme xbox = 
-			new ButtonColorScheme(Graphics.hsva(135f, .8f, .3f, 1f), Graphics.hsva(135f, 1f, .9f, 1f),
-								  Graphics.hsva(350f, .8f, .3f, 1f),  Graphics.hsva(350f, 1f, .9f, 1f),
-								  Graphics.hsva(251f, .8f, .3f, 1f), Graphics.hsva(251f, 1f, .9f, 1f),
-								  Graphics.hsva(49f, .8f, .3f, 1f), Graphics.hsva(49f, 1f, .9f, 1f),
-								  Graphics.hsva(251f, 0.01f, .3f, 1f), Graphics.hsva(251f, 0.01f, .7f, 1f));
-	
-	public static ButtonColorScheme gamecube = 
-			new ButtonColorScheme(Graphics.hsva(135f, .8f, .3f, 1f), Graphics.hsva(135f, 1f, .9f, 1f),
-			                      Graphics.hsva(0f, 0f, .3f, 1f), Graphics.hsva(0f, 0f, .9f, 1f),
-			                      Graphics.hsva(350f, .8f, .3f, 1f), Graphics.hsva(350f, 1f, .9f, 1f),
-			                      Graphics.hsva(0f, 0f, .3f, 1f), Graphics.hsva(0f, 0f, .9f, 1f),
-			                      Graphics.hsva(251f, 0.01f, .3f, 1f), Graphics.hsva(251f, 0.01f, .7f, 1f));
-	
-	public static ButtonColorScheme ps = 
-			new ButtonColorScheme(Graphics.hsva(251f, .8f, .3f, 1f), Graphics.hsva(251f, 1f, .9f, 1f),
-								  Graphics.hsva(20f, .8f, .3f, 1f), Graphics.hsva(20f, 1f, .9f, 1f),
-							  	  Graphics.hsva(350f, .8f, .3f, 1f), Graphics.hsva(350f, 1f, .9f, 1f),
-								  Graphics.hsva(135f, .8f, .3f, 1f), Graphics.hsva(135f, 1f, .9f, 1f),
-								  Graphics.hsva(251f, 0.01f, .3f, 1f), Graphics.hsva(251f, 0.01f, .7f, 1f));
 	
 	Color adark, alight;
 	Color bdark, blight;

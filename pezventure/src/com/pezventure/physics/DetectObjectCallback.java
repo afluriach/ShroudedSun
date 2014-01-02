@@ -6,7 +6,7 @@ import com.pezventure.Game;
 import com.pezventure.objects.GameObject;
 import com.pezventure.objects.RadarSensor;
 import com.pezventure.objects.RenderLayer;
-import com.pezventure.objects.Shield;
+import com.pezventure.objects.PlayerShieldObject;
 
 /**
  * detect if there is any object on the floor
@@ -35,7 +35,7 @@ public class DetectObjectCallback implements QueryCallback
 		if(go.getRenderLayer() != RenderLayer.floor &&
 		   go != except && 
 		   !(go instanceof RadarSensor) &&
-		   !(go instanceof Shield))
+		   !(go instanceof PlayerShieldObject))
 		{
 			detected = true;
 			return false; //object found, can terminate query.

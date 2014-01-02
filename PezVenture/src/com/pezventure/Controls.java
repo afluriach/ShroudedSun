@@ -32,7 +32,7 @@ public class Controls
 	public static final int dpadSectionLength = dpadLength/2 - dpadThickness/2;
 	public static final int dpadSectionOffset = dpadLength/2 + dpadThickness/2;
 	
-	static final ButtonColorScheme colors = ButtonColorScheme.xbox;
+	static final ButtonColorScheme colors = ButtonColorScheme.scheme;
 	
 	//touch
 	boolean touchControls;
@@ -43,11 +43,6 @@ public class Controls
 	int height;
 	
 	//control state
-//	boolean up = false;
-//	boolean down = false;
-//	boolean left = false;
-//	boolean right = false;
-	
 	int controlPad8Dir = -1;
 	
 	boolean a = false;
@@ -61,22 +56,13 @@ public class Controls
 	
 	IsoscelesTriangle [] dpadTriangles = new IsoscelesTriangle[16];
 	
-//	Rectangle dpadUp;
-//	Rectangle dpadDown;
-//	Rectangle dpadLeft;
-//	Rectangle dpadRight;
-//	Rectangle dpadCenter;
-	
 	Circle buttonA;
 	Circle buttonB;
 	Circle buttonX;
 	Circle buttonY;
 	
 	Circle buttonPause;
-	
-	Texture playerAttackIcon;
-	Texture playerShieldIcon;
-	
+		
 	public Controls(int width, int height, boolean touch, boolean keys)
 	{
 		this.width = width;
@@ -84,9 +70,6 @@ public class Controls
 		touchControls = touch;
 		keyControls = keys;
 		createShapes();
-		
-		playerAttackIcon = Game.inst.spriteLoader.getTexture("bullet_ec");
-		playerShieldIcon = Game.inst.spriteLoader.getTexture("shield32");
 	}
 	
 	/**
@@ -205,9 +188,18 @@ public class Controls
 		if(Game.inst.player.holdingItem != null)
 			batch.setColor(1f, 1f, 1f, 0.3f);
 		
-		Graphics.drawTexture(playerAttackIcon, new Vector2(buttonX.x*Game.TILES_PER_PIXEL,  buttonX.y*Game.TILES_PER_PIXEL), batch);
-		Graphics.drawTexture(playerShieldIcon, new Vector2(buttonB.x*Game.TILES_PER_PIXEL, buttonX.y*Game.TILES_PER_PIXEL), batch);
+		//TODO indicate active toggle ability. 
+		//TODO draw icon transparent if not available
 		
+		if(Game.inst.bEquipped != null)
+			Graphics.drawTexture(Game.inst.bEquipped.icon,  new Vector2(buttonB.x*Game.TILES_PER_PIXEL,  buttonB.y*Game.TILES_PER_PIXEL), batch);
+
+		if(Game.inst.xEquipped != null)
+			Graphics.drawTexture(Game.inst.xEquipped.icon,  new Vector2(buttonX.x*Game.TILES_PER_PIXEL,  buttonX.y*Game.TILES_PER_PIXEL), batch);
+
+		if(Game.inst.yEquipped != null)
+			Graphics.drawTexture(Game.inst.yEquipped.icon,  new Vector2(buttonY.x*Game.TILES_PER_PIXEL,  buttonY.y*Game.TILES_PER_PIXEL), batch);
+
 		batch.setColor(1f, 1f, 1f, 1f);
 		
 		batch.end();

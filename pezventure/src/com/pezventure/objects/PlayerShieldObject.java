@@ -8,14 +8,14 @@ import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
 import com.pezventure.objects.enemies.Enemy;
 
-public class Shield extends GameObject
+public class PlayerShieldObject extends GameObject
 {
 	boolean active = false;
 	Texture texture;
 	final float radius = 1f;
 	float knockbackForce = 200f;
 	
-	public Shield(Vector2 pos)
+	public PlayerShieldObject(Vector2 pos)
 	{
 		super("shield");
 		

@@ -35,7 +35,7 @@ public abstract class Bullet extends GameObject
 	{
 		if(other.renderLayer== RenderLayer.groundLevel &&
 		   other.getClass() != RadarSensor.class && 
-		   other.getClass() != Shield.class)
+		   other.getClass() != PlayerShieldObject.class)
 			expire();
 	}
 }
