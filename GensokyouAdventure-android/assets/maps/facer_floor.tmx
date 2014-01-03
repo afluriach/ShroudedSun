@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="80" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dirt" tilewidth="32" tileheight="32">
+  <image source="../textures/cobblestone.png" width="32" height="32"/>
+  <terraintypes>
+   <terrain name="New Terrain" tile="-1"/>
+  </terraintypes>
+ </tileset>
+ <tileset firstgid="2" source="block.tsx"/>
+ <tileset firstgid="3" name="wall" tilewidth="32" tileheight="32">
+  <image source="../textures/brick.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="4" name="stone_wall_horizontal" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_horizontal.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="5" name="stone_wall_vertical" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_vertical.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="6" name="stone_wall_ll" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_ll_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="7" name="stone_wall_lr" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_lr_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="8" name="stone_wall_ul" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_ul_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="9" name="stone_wall_ur" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_ur_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="10" name="dark_indigo_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/dark_indigo_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="11" name="dark_indigo_2" tilewidth="32" tileheight="32">
+  <image source="../textures/dark_indigo_cobblestone2.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="12" name="dark_indigo_3" tilewidth="32" tileheight="32">
+  <image source="../textures/dark_indigo_cobblestone3.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="13" name="red_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/red_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="14" name="yellow_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/yellow_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="15" name="blue_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/blue_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="16" name="green_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/green_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <layer name="background" width="20" height="80">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3WQQqAMBAEwXwg+v/fehfEDRlBYzXMtWBv21q2rbi0yavbyTqPx7tsDxl34/Ge8tL1wni8v3rnZn+2t/+nvO95I+YK90qSJGmNDg1YQcMAGQAA
+  </data>
+ </layer>
+ <layer name="walls" width="20" height="80">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2WywrAIAwE99CH/f8f7qkgNYctFQ0yA15kCIqusUjajHGpLzveEO9Qe4ZF7fmeZr1oDe5aqEe91evV2XoyVWfw63ua/X3BW9t7310p/h+4/SP7fvHwZnpRr1AwR97wZnou2fcxIr9/+iUAAAAA9OUGs3YYsQAZAAA=
+  </data>
+ </layer>
+ <objectgroup name="walls" width="20" height="80" visible="0">
+  <properties>
+   <property name="name" value="walls"/>
+  </properties>
+ </objectgroup>
+ <objectgroup name="player_start" width="20" height="80" visible="0">
+  <properties>
+   <property name="name" value="player"/>
+  </properties>
+ </objectgroup>
+ <objectgroup name="enemy" width="20" height="80">
+  <object name="facer" type="facer" x="248" y="623" width="24" height="28">
+   <properties>
+    <property name="dir" value="down"/>
+   </properties>
+  </object>
+  <object name="facer" type="facer" x="159" y="1061" width="27" height="28">
+   <properties>
+    <property name="dir" value="down"/>
+   </properties>
+  </object>
+  <object name="facer" type="facer" x="160" y="928" width="27" height="28">
+   <properties>
+    <property name="dir" value="down"/>
+   </properties>
+  </object>
+  <object name="follower" type="follower" x="64" y="1312" width="32" height="32">
+   <properties>
+    <property name="dir" value="right"/>
+   </properties>
+  </object>
+  <object name="room3_switch" type="floor_switch" x="256" y="1312" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="follower"/>
+    <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="environment" width="20" height="80">
+  <object name="room1_door" type="door" x="128" y="832" width="32" height="32">
+   <properties>
+    <property name="switch" value="room1_switch"/>
+   </properties>
+  </object>
+  <object name="sign" type="sign" x="61" y="133" width="32" height="32">
+   <properties>
+    <property name="msg" value="Some things will move if they like what they see, but it can't change direction on its own."/>
+   </properties>
+  </object>
+  <object name="room2_door" type="door" x="160" y="1184" width="32" height="32">
+   <properties>
+    <property name="switch" value="room2_switch1 room2_switch2"/>
+   </properties>
+  </object>
+  <object name="room3_door" type="door" x="320" y="1440" width="32" height="32">
+   <properties>
+    <property name="switch" value="room3_switch"/>
+   </properties>
+  </object>
+  <object name="sign" type="sign" x="249" y="136" width="32" height="32">
+   <properties>
+    <property name="msg" value="Some enemies cannot be killed, but you may be able to change its course with force. "/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="rooms" width="20" height="80">
+  <object name="lobby" type="room" x="0" y="0" width="352" height="224"/>
+  <object name="corridor" type="room" x="96" y="224" width="96" height="320"/>
+  <object name="room1" type="room" x="0" y="544" width="352" height="320"/>
+  <object name="room2" type="room" x="0" y="832" width="352" height="384"/>
+  <object name="room3" type="room" x="0" y="1216" width="352" height="384"/>
+ </objectgroup>
+ <objectgroup name="floor_objects" width="20" height="80">
+  <object name="room1_switch" type="switch" x="260" y="730" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+    <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
+  <object name="room2_switch1" type="floor_switch" x="64" y="1120" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+    <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
+  <object name="room2_switch2" type="floor_switch" x="256" y="1120" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+    <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="map_links" width="20" height="80">
+  <properties>
+   <property name="entrance_dir" value="right"/>
+  </properties>
+  <object name="entrance" type="map_link" x="0" y="32" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="exit"/>
+    <property name="dest_map" value="puzzle_room"/>
+    <property name="entrance_dir" value="right"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="blocks" width="20" height="80" visible="0">
+  <properties>
+   <property name="push_dist" value="1"/>
+   <property name="push_speed" value="0.5"/>
+  </properties>
+ </objectgroup>
+</map>

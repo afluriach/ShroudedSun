@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="80" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dirt" tilewidth="32" tileheight="32">
+  <image source="../textures/cobblestone.png" width="32" height="32"/>
+  <terraintypes>
+   <terrain name="New Terrain" tile="-1"/>
+  </terraintypes>
+ </tileset>
+ <tileset firstgid="2" source="block.tsx"/>
+ <tileset firstgid="3" name="wall" tilewidth="32" tileheight="32">
+  <image source="../textures/brick.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="4" name="stone_wall_horizontal" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_horizontal.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="5" name="stone_wall_vertical" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_vertical.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="6" name="stone_wall_ll" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_ll_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="7" name="stone_wall_lr" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_lr_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="8" name="stone_wall_ul" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_ul_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="9" name="stone_wall_ur" tilewidth="32" tileheight="32">
+  <image source="../textures/stone_wall_ur_corner.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="10" name="dark_indigo_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/dark_indigo_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="11" name="dark_indigo_2" tilewidth="32" tileheight="32">
+  <image source="../textures/dark_indigo_cobblestone2.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="12" name="dark_indigo_3" tilewidth="32" tileheight="32">
+  <image source="../textures/dark_indigo_cobblestone3.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="13" name="red_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/red_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="14" name="yellow_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/yellow_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="15" name="blue_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/blue_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="16" name="green_cobblestone" tilewidth="32" tileheight="32">
+  <image source="../textures/green_cobblestone.png" width="32" height="32"/>
+ </tileset>
+ <layer name="background" width="20" height="80" visible="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2X2w4CIQxE8bXUy/9/rW4iSVPb0rI1Wd1OMlEQTgYsrGJrDV/uipEZ3h6fjzZOOHye1EdZXRhPx10MWywQbLGGJRYKTD7HakssvheebJRvsTDIk/a9E1Y0n5TLw9P6aY1qvB5cKzIer31v/fGzw3NB+8yr1Zd0Dnndzc6QxeK8vSzp/O5h0Tm/IO8avevRWNJd5pF2T0j25rO+O2pvPq8jPFTer/Ky8h1ZkbV61ly8/+adUZHfQDMP3pV4a9+It/adeGs/iDUeMB4wHjAeTHiZ+bL378i8syl7P8Z/guEsHn09Wr6qp3Vln8/iVT1GlP2coOP4/aL1eXjSnbVyj30rX9Xhmm4TZ7KivOx8pVJET/rzWy4AGQAA
+  </data>
+ </layer>
+ <layer name="walls" width="20" height="80" visible="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2WSw6AIAxEGyOK97+wujBxAS3FEcbPS7pRnDC1LUQRGRMhzud7LFsEwREeoIeG3S+7Hhp2v+x6k/hmiPZ+Bu7tIBp7Sc04DW/+rPXsemjY/aL1Uv2hxR09oPG1/kDD7pe9/tB469mqdfbzFw27X3Y9b7+17sWS/rBm/JmS/HlyjNZDw+63pP56zvj/vnENdr/s943a+0GuDmv/f+47tB4adr+152+rOhwKw6OHWOOh5/7Q+ft5NytOr96OABkAAA==
+  </data>
+ </layer>
+ <objectgroup name="walls" width="20" height="80" visible="0">
+  <properties>
+   <property name="name" value="walls"/>
+  </properties>
+ </objectgroup>
+ <objectgroup name="player_start" width="20" height="80" visible="0">
+  <properties>
+   <property name="name" value="player"/>
+  </properties>
+ </objectgroup>
+ <objectgroup name="enemy" width="20" height="80" visible="0"/>
+ <objectgroup name="environment" width="20" height="80" visible="0">
+  <object name="room_2_jar_1" type="jar" x="80" y="896"/>
+  <object name="room_2_jar_2" type="jar" x="144" y="896"/>
+  <object name="room_2_jar_3" type="jar" x="208" y="896"/>
+  <object name="room_2_jar_4" type="jar" x="272" y="896"/>
+  <object name="room_2_switch_1" type="switch" x="64" y="960" width="32" height="32"/>
+  <object name="room_2_switch_2" type="switch" x="128" y="960" width="32" height="32"/>
+  <object name="room_2_switch_3" type="switch" x="192" y="960" width="32" height="32"/>
+  <object name="room_2_switch_4" type="switch" x="256" y="960" width="32" height="32"/>
+  <object name="room_1_switch" type="switch" x="192" y="704" width="32" height="32"/>
+  <object name="jar" type="jar" x="192" y="576" width="32" height="32"/>
+  <object name="red_jar" type="jar" x="96" y="1312" width="32" height="32">
+   <properties>
+    <property name="color" value="red"/>
+   </properties>
+  </object>
+  <object name="yellow_jar" type="jar" x="224" y="1312" width="32" height="32">
+   <properties>
+    <property name="color" value="yellow"/>
+   </properties>
+  </object>
+  <object name="blue_jar" type="jar" x="352" y="1312" width="32" height="32">
+   <properties>
+    <property name="color" value="blue"/>
+   </properties>
+  </object>
+  <object name="green_jar" type="jar" x="480" y="1312" width="32" height="32">
+   <properties>
+    <property name="color" value="green"/>
+   </properties>
+  </object>
+  <object name="left_jar" type="jar" x="96" y="1792" width="32" height="32">
+   <properties>
+    <property name="activation" value="left"/>
+   </properties>
+  </object>
+  <object name="right_jar" type="jar" x="288" y="1789" width="32" height="32">
+   <properties>
+    <property name="activation" value="right"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="96" y="2048" width="32" height="32">
+   <properties>
+    <property name="activation" value="left"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="160" y="2048" width="32" height="32">
+   <properties>
+    <property name="activation" value="right"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="128" y="2016" width="32" height="32">
+   <properties>
+    <property name="activation" value="top"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="128" y="2080" width="32" height="32">
+   <properties>
+    <property name="activation" value="bottom"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="288" y="31" width="32" height="32">
+   <properties>
+    <property name="activation" value="top"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="49" y="204" width="32" height="32">
+   <properties>
+    <property name="activation" value="left"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="563" y="201" width="32" height="32">
+   <properties>
+    <property name="activation" value="right"/>
+   </properties>
+  </object>
+  <object name="jar" type="jar" x="292" y="415" width="32" height="32">
+   <properties>
+    <property name="activation" value="bottom"/>
+   </properties>
+  </object>
+  <object name="door_2_entrance" type="door" x="160" y="448" width="32" height="32"/>
+  <object name="door_3_entrance" type="door" x="416" y="448" width="32" height="32"/>
+  <object name="door_4_entrance" type="door" x="608" y="288" width="32" height="32"/>
+  <object name="door_5_entrance" type="door" x="608" y="128" width="32" height="32"/>
+  <object name="door_6_entrance" type="door" x="384" y="0" width="32" height="32"/>
+  <object name="exit_door" type="door" x="192" y="0" width="32" height="32"/>
+  <object name="door_1_exit" type="door" x="384" y="640" width="32" height="32"/>
+  <object name="door_2_exit" type="door" x="384" y="928" width="32" height="32"/>
+  <object name="door_3_exit" type="door" x="608" y="1216" width="32" height="32"/>
+  <object name="door_4_exit" type="door" x="288" y="1536" width="32" height="32"/>
+  <object name="door_5_exit" type="door" x="384" y="1792" width="32" height="32"/>
+  <object name="door_6_exit" type="door" x="448" y="2048" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="rooms" width="20" height="80" visible="0">
+  <object name="main_room" type="room" x="1" y="2" width="640" height="480">
+   <properties>
+    <property name="id" value="3"/>
+   </properties>
+  </object>
+  <object name="room_1" type="room" x="-2" y="514" width="416" height="288"/>
+  <object name="room_2" type="room" x="0" y="832" width="416" height="224"/>
+  <object name="room_3" type="room" x="0" y="1120" width="640" height="288"/>
+  <object name="room4" type="room" x="0" y="1440" width="320" height="224"/>
+  <object name="room5" type="room" x="0" y="1696" width="416" height="224"/>
+  <object name="room6" type="room" x="0" y="1952" width="480" height="224"/>
+ </objectgroup>
+ <objectgroup name="floor_objects" width="20" height="80" visible="0">
+  <object name="room_4_switch" type="switch" x="96" y="1536" width="32" height="32"/>
+  <object name="jar" type="jar" x="208" y="1552"/>
+  <object name="room_5_left_switch" type="switch" x="164" y="1791" width="32" height="32"/>
+  <object name="room_5_right_switch" type="switch" x="228" y="1791" width="32" height="32"/>
+  <object name="room_6_switch_top" x="288" y="2018" width="32" height="32">
+   <properties>
+    <property name="activation" value="top"/>
+   </properties>
+  </object>
+  <object name="room_6_bottom" type="switch" x="288" y="2080" width="32" height="32">
+   <properties>
+    <property name="activation" value="bottom"/>
+   </properties>
+  </object>
+  <object name="room_6_switch_left" type="switch" x="256" y="2048" width="32" height="32">
+   <properties>
+    <property name="activation" value="left"/>
+   </properties>
+  </object>
+  <object name="room_6_switch_right" type="switch" x="320" y="2048" width="32" height="32">
+   <properties>
+    <property name="activation" value="right"/>
+   </properties>
+  </object>
+  <object name="main_switch_1" type="invisible_switch" x="224" y="128" width="32" height="32">
+   <properties>
+    <property name="activation" value="left"/>
+   </properties>
+  </object>
+  <object name="main_switch_2" type="invisible_switch" x="352" y="128" width="32" height="32">
+   <properties>
+    <property name="activation" value="right"/>
+   </properties>
+  </object>
+  <object name="main_switch_3" type="invisible_switch" x="288" y="256" width="32" height="32">
+   <properties>
+    <property name="activation" value="bottom"/>
+   </properties>
+  </object>
+  <object name="to_room_2" type="map_link" x="160" y="448" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="room_2_entrance"/>
+    <property name="entrance_dir" value="up"/>
+   </properties>
+  </object>
+  <object name="room_3_switch_1" type="invisible_switch" x="96" y="1216" width="32" height="32"/>
+  <object name="room_3_switch_2" type="invisible_switch" x="224" y="1216" width="32" height="32"/>
+  <object name="room_3_switch_3" type="invisible_switch" x="352" y="1216" width="32" height="32"/>
+  <object name="room_3_switch_4" type="invisible_switch" x="480" y="1216" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="map_links" width="20" height="80">
+  <object name="entrance" type="map_link" x="0" y="128" width="32" height="32">
+   <properties>
+    <property name="entrance_dir" value="right"/>
+   </properties>
+  </object>
+  <object name="to_room_1" type="map_link" x="0" y="288" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="room_1_entrance"/>
+    <property name="entrance_dir" value="right"/>
+   </properties>
+  </object>
+  <object name="room_1_entrance" type="map_link" x="0" y="640" width="32" height="32"/>
+  <object name="room_1_exit" type="map_link" x="384" y="640" width="32" height="32">
+   <properties>
+    <property name="entrance_dest" value="entrance"/>
+   </properties>
+  </object>
+  <object name="room_2_entrance" type="map_link" x="0" y="928" width="32" height="32">
+   <properties>
+    <property name="entrance_dir" value="right"/>
+   </properties>
+  </object>
+  <object name="room_2_exit" type="map_link" x="384" y="928" width="32" height="32"/>
+  <object name="room_3_entrance" type="map_link" x="0" y="1216" width="32" height="32"/>
+  <object name="room_3_exit" type="map_link" x="608" y="1216" width="32" height="32"/>
+  <object name="room_4_entrance" type="map_link" x="0" y="1536" width="32" height="32"/>
+  <object name="room_4_exit" type="map_link" x="288" y="1536" width="32" height="32"/>
+  <object name="room_5_entrance" type="map_link" x="0" y="1792" width="32" height="32"/>
+  <object name="room_5_exit" type="map_link" x="384" y="1792" width="32" height="32"/>
+  <object name="room_6_entrance" type="map_link" x="0" y="2048" width="32" height="32"/>
+  <object name="room_6_exit" type="map_link" x="448" y="2048" width="32" height="32"/>
+  <object name="to_room_3" type="map_link" x="416" y="448" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="room_3_entrance"/>
+    <property name="entrance_dir" value="up"/>
+   </properties>
+  </object>
+  <object name="to_room_4" type="map_link" x="608" y="288" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="room_4_entrance"/>
+    <property name="entrance_dir" value="left"/>
+   </properties>
+  </object>
+  <object name="to_room_5" type="map_link" x="608" y="128" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="room_5_entrance"/>
+    <property name="entrance_dir" value="left"/>
+   </properties>
+  </object>
+  <object name="to_room_6" type="map_link" x="384" y="0" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="room_6_entrance"/>
+    <property name="entrance_dir" value="down"/>
+   </properties>
+  </object>
+  <object name="exit" type="map_link" x="192" y="0" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="reward_room"/>
+    <property name="entrance_dir" value="down"/>
+   </properties>
+  </object>
+  <object name="reward_room" type="map_link" x="1" y="2272" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="exit"/>
+    <property name="entrance_dir" value="right"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="blocks" width="20" height="80" visible="0">
+  <properties>
+   <property name="push_dist" value="1"/>
+   <property name="push_speed" value="0.5"/>
+  </properties>
+ </objectgroup>
+</map>
