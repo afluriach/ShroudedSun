@@ -7,8 +7,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.pezventure.objects.ClearListener;
 import com.pezventure.objects.FloorSwitch;
 import com.pezventure.objects.Switch;
+import com.pezventure.objects.SwitchListener;
 import com.pezventure.physics.PrimaryDirection;
 
 public class Util
@@ -154,5 +156,11 @@ public class Util
 		
 //		System.out.println(String.format("angle: %f, dir: %d", angle, dir));
 		return dir;
+	}
+	
+	public static boolean switchClearActivation(SwitchListener switchListener, ClearListener clearListener)
+	{
+		return     (switchListener == null || switchListener.isActivated()) &&
+				   (clearListener == null || clearListener.isActivated());
 	}
 }

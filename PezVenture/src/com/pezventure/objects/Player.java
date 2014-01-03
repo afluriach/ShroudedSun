@@ -52,7 +52,7 @@ public class Player extends Entity {
 	}
 
 	public Player(Vector2 pos, PrimaryDirection startingDir) {
-		super(pos, "cirno", startingDir.getAngle8Dir(), "player", "player");
+		super(pos, "cirno", startingDir.getAngle8Dir(), "player", "player", false);
 
 		initInteractMap();
 	}
@@ -146,20 +146,48 @@ public class Player extends Entity {
 		// grabableTouching.remove(other);
 	}
 
-	// public boolean canGrabObject(GameObject go)
-	// {
-	// Vector2 disp = go.getCenterPos().sub(getCenterPos());
-	//
-	// return Math.abs(disp.angle() - facing.getAngle()) < grabAngle;
-	// }
-
+	void checkItemClass(GameObject obj)
+	{
+		for(Class<? extends GameObject> cls : interactMap.keySet())
+		{
+			if(cls.isInstance(obj))
+			{
+				ItemInteraction action = interactMap.get(cls);
+				
+				if(action.canInteract(obj, this))
+				{
+					setItemInteraction(obj, action);
+					return;
+				}
+			}
+		}
+		
+		blankInteraction();
+	}
+	
+	void setItemInteraction(GameObject obj, ItemInteraction action)
+	{
+		interaction = action;
+		interactMessage = action.interactMessage();
+		interactibleObject = obj;
+	}
+	
+	void blankInteraction()
+	{
+		interactMessage = "";
+		interaction = null;
+		interactibleObject = null;
+	}
+	
 	/**
 	 * checks for a smart object (interactible) and set the interact message.
 	 * save the object and interaction if applicable.
 	 */
-	public void checkInteract() {
+	public void checkInteract()
+	{
 		// if the player is holding an item, the drop action takes precedence.
-		if (holdingItem != null) {
+		if (holdingItem != null)
+		{
 			// if there is no room to drop item, do not display message
 			interactMessage = canDrop() ? "Drop" : "";
 			return;
@@ -169,17 +197,7 @@ public class Player extends Entity {
 				getDir() * 45f, HIT_CIRCLE_RADIUS + itemInteractDistance,
 				GameObject.class);
 
-		if (obj != null && interactMap.containsKey(obj.getClass())) {
-			interaction = interactMap.get(obj.getClass());
-			if (interaction.canInteract(obj, this)) {
-				interactMessage = interaction.interactMessage();
-				interactibleObject = obj;
-			}
-		} else {
-			interactMessage = "";
-			interaction = null;
-			interactibleObject = null;
-		}
+		checkItemClass(obj);
 	}
 
 	/**

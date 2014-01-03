@@ -11,7 +11,7 @@ public class Talk implements ItemInteraction
 
 	public void interact(GameObject obj, Player player)
 	{
-		Game.inst.setDialogMsg(((NPC)obj).dialog());
+		((NPC)obj).talk();
 	}
 
 	public String interactMessage()

@@ -44,12 +44,12 @@ public abstract class Entity extends GameObject
 	private Vector2 desiredVel;	
 	protected float speed;	
 	
-	public Entity(TilespaceRectMapObject to, String animation, String filter)
+	public Entity(TilespaceRectMapObject to, String animation, String filter, boolean stationary)
 	{
 		super(to);
 		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
 		//physicsBody = Physics.inst().addRectBody(to.rect, this, BodyType.DynamicBody, MASS, false);
-		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false, filter);
+		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, stationary ? BodyType.StaticBody : BodyType.DynamicBody, this, MASS, false, filter);
 		
 		if(to.prop.containsKey("dir"))
 		{
@@ -81,11 +81,11 @@ public abstract class Entity extends GameObject
 		this.animation.setDirection(crntDir);
 	}
 		
-	public Entity(Vector2 pos, String animation, int startingDir, String name, String filter)
+	public Entity(Vector2 pos, String animation, int startingDir, String name, String filter, boolean stationary)
 	{
 		super(name);
 		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
-		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, BodyType.DynamicBody, this, MASS, false, filter);
+		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, stationary ? BodyType.StaticBody : BodyType.DynamicBody, this, MASS, false, filter);
 	}
 
 	

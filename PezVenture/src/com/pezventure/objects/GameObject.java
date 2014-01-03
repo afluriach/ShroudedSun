@@ -54,6 +54,7 @@ public abstract class GameObject
 		addClass("torch", Torch.class);
 		addClass("torch_walker", TorchWalker.class);
 		addClass("guard", Guard.class);
+		addClass("stationary_npc", StationaryNPC.class);
 		
 		addClass("map_link", Door.class);
 	}
@@ -106,16 +107,7 @@ public abstract class GameObject
 	{
 		return expired;
 	}
-	
-	public static boolean allExpired(String[] names)
-	{
-		for(String name : names)
-		{
-			if (Game.inst.gameObjectSystem.hasObject(name)) return false;
-		}		
-		return true;
-	}
-	
+		
 	public static boolean allExpired(Iterable<GameObject> list)
 	{
 		for(GameObject go : list)

@@ -39,7 +39,7 @@ public class TorchWalker extends Entity
 	
 	public TorchWalker(TilespaceRectMapObject to) {
 		
-		super(to, "komachi", "enemy");
+		super(to, "komachi", "enemy", false);
 				
 		if(to.prop.containsKey("speed"))
 		{

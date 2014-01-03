@@ -20,8 +20,8 @@ public class Door extends GameObject implements Switch
 	private Texture unlockedTexture;
 	private boolean isLocked = true;
 	
-	ArrayList<Switch> switches;
-	String[] switchNames;
+	SwitchListener switchListener;
+	ClearListener clearListener;
 	
 	//a door may operate like a maplink. if destlink is not set, then opening the door
 	//will simply involve moving through it to the other side.
@@ -36,7 +36,10 @@ public class Door extends GameObject implements Switch
 		unlockedTexture = Game.inst.spriteLoader.getTexture("door");
 		
 		if(to.prop.containsKey("switch"))
-			switchNames = to.prop.get("switch", String.class).split("\\s+");
+			switchListener = new SwitchListener(to.prop.get("switch", String.class));
+		
+		if(to.prop.containsKey("cleared"))
+			clearListener = new ClearListener(to.prop.get("cleared", String.class));
 		
 		if(to.prop.containsKey("dest_map"))
 			destMap = to.prop.get("dest_map", String.class);
@@ -47,6 +50,8 @@ public class Door extends GameObject implements Switch
 		if(to.prop.containsKey("open"))
 			isLocked = false;
 
+		//door is a solid object, unlike a barrier which disappears when unlocked.
+		setSensor(false);
 	}
 	
 	public boolean isLocked()
@@ -70,10 +75,18 @@ public class Door extends GameObject implements Switch
 	@Override
 	public void update()
 	{		
-		if(switches != null)
+		//if one listener or both are not null, they will be checked for door activation.
+		//if both are not null, both need to be activated to unlock the door.
+		//
+		//do not unlock door if no listener. in this case, the door is probably unlocked in an
+		//event-based manner somewhere else.
+		
+		if(switchListener != null) switchListener.update();
+		if(clearListener != null) clearListener.update();
+		
+		if(switchListener != null || clearListener != null)
 		{
-			isLocked = !Util.allActivated(switches);
-			setSensor(!isLocked);
+			isLocked = !Util.switchClearActivation(switchListener, clearListener);
 		}
 	}
 
@@ -88,15 +101,12 @@ public class Door extends GameObject implements Switch
 	
 	public void unlock()
 	{
-		setSensor(true);
 		isLocked = false;
 	}
 	
 	public void lock()
 	{
-		setSensor(false);
 		isLocked = true;
-
 	}
 
 	@Override
@@ -104,16 +114,8 @@ public class Door extends GameObject implements Switch
 	}
 
 	@Override
-	public void init() {
-		//init switches here. 
-		if(switches == null && switchNames != null)
-		{
-			switches = new ArrayList<Switch>(switchNames.length);
-			
-			for(int i=0;i<switchNames.length; ++i)
-			{
-				switches.add( (Switch) Game.inst.gameObjectSystem.getObjectByName(switchNames[i]));
-			}
-		}
+	public void init()
+	{
+		if(switchListener != null) switchListener.init();
 	}
 }

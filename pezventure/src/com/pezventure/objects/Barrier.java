@@ -13,14 +13,13 @@ import com.pezventure.map.TilespaceRectMapObject;
 //barrier is a static collider when locked. change to a Dynamic sensor
 //when unlocked
 
-public class Barrier extends GameObject
+public class Barrier extends GameObject implements Switch
 {
 	private Texture texture;
 	private boolean isLocked = true;
 	
-	ArrayList<Switch> switches;
-	String[] switchNames;
-	String[]  targetNames;
+	SwitchListener switchListener;
+	ClearListener clearListener;
 	
 	public Barrier(TilespaceRectMapObject to)
 	{
@@ -30,12 +29,12 @@ public class Barrier extends GameObject
 		
 		if(to.prop.containsKey("switch"))
 		{
-			switchNames = to.prop.get("switch", String.class).split("\\s+");
+			switchListener = new SwitchListener(to.prop.get("switch", String.class));
 		}
 		
 		if(to.prop.containsKey("cleared"))
 		{
-			targetNames = to.prop.get("cleared", String.class).split("\\s+");
+			clearListener = new ClearListener(to.prop.get("cleared", String.class));
 		}
 	}		
 	public boolean isLocked()
@@ -54,17 +53,22 @@ public class Barrier extends GameObject
 
 	@Override
 	public void update()
-	{		
-		if(switches != null)
+	{
+		//if one listener or both are not null, they will be checked for door activation.
+		//if both are not null, both need to be activated to unlock the door.
+		//
+		//do not unlock door if no listener. in this case, the door is probably unlocked in an
+		//event-based manner somewhere else.
+		
+		if(switchListener != null) switchListener.update();
+		if(clearListener != null) clearListener.update();
+		
+		if(switchListener != null || clearListener != null)
 		{
-			isLocked = !Util.allActivated(switches);
-			setSensor(!isLocked);
+			isLocked = !Util.switchClearActivation(switchListener, clearListener);
 		}
-		if(targetNames != null)
-		{
-			isLocked = !GameObject.allExpired(targetNames);
-			setSensor(!isLocked);
-		}
+		
+		setSensor(!isLocked);
 	}
 
 	@Override
@@ -94,19 +98,14 @@ public class Barrier extends GameObject
 	}
 
 	@Override
-	public void init() {
-		//init switches here. 
-		if(switches == null && switchNames != null)
-		{
-			switches = new ArrayList<Switch>(switchNames.length);
-			
-			for(int i=0;i<switchNames.length; ++i)
-			{
-				switches.add((Switch) Game.inst.gameObjectSystem.getObjectByName(switchNames[i]));
-			}
-		}
-
-		
+	public void init()
+	{
+		if(switchListener != null) switchListener.init();
+	}
+	@Override
+	public boolean isActivated()
+	{
+		return !isLocked;
 	}
 
 	

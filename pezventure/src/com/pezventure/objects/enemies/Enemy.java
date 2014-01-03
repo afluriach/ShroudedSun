@@ -21,7 +21,7 @@ public class Enemy extends Entity
 	
 	public Enemy(TilespaceRectMapObject mo, String animation, int hp)
 	{
-		super(mo, animation, "enemy");
+		super(mo, animation, "enemy", false);
 		this.hp = hp;
 	}
 	

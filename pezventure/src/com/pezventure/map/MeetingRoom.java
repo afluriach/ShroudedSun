@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import com.pezventure.Game;
 import com.pezventure.graphics.SpriteLoader;
-import com.pezventure.objects.NPC;
+import com.pezventure.objects.RandomWalkNPC;
 
 public class MeetingRoom extends Area {
 
@@ -26,7 +26,7 @@ public class MeetingRoom extends Area {
 				Vector2 pos = new Vector2(4+i*6, 4+j*6);
 				String name = SpriteLoader.spriteSheetNames[spriteNameRow][spriteNameCol++];
 				
-				Game.inst.gameObjectSystem.addObject(new NPC(pos, name, 2, name));
+				Game.inst.gameObjectSystem.addObject(new RandomWalkNPC(pos, name, 2, name));
 				
 				if(spriteNameCol >= 3)
 				{

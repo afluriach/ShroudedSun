@@ -124,4 +124,42 @@
    </properties>
   </object>
  </objectgroup>
+ <objectgroup name="npc" width="20" height="30">
+  <object name="alice" type="stationary_npc" x="32" y="640" width="32" height="32">
+   <properties>
+    <property name="cleared" value="enemy1 enemy2 enemy3"/>
+    <property name="dir" value="right"/>
+    <property name="msg1" value="Ugh, these monsters are so mean. What am I going to do?"/>
+    <property name="msg2" value="Wow, you're pretty strong. Maybe it pays to be tough. Looks like that door finally opened too. I was wondering about that."/>
+    <property name="sprite" value="alice"/>
+   </properties>
+  </object>
+  <object name="rumia" type="stationary_npc" x="32" y="160" width="32" height="32">
+   <properties>
+    <property name="dir" value="right"/>
+    <property name="msg1" value="I just want to open the door but I can't figure out how. I'm not very good at puzzles. I don't want to get stuck here."/>
+    <property name="msg2" value="Who cares how you opened it, the important thing is that I'm free!"/>
+    <property name="sprite" value="tewi"/>
+    <property name="switch" value="to_puzzle_room"/>
+   </properties>
+  </object>
+  <object name="flandre" type="stationary_npc" x="576" y="160" width="32" height="32">
+   <properties>
+    <property name="dir" value="left"/>
+    <property name="msg1" value="I've been stuck here for so long. I'm starting to think this door's never going to open."/>
+    <property name="msg2" value="How did the door open like that? I tried stepping on the switches but it wouldn't open for me. Maybe I broke it too?"/>
+    <property name="sprite" value="flandre"/>
+    <property name="switch" value="to_puzzle_room"/>
+   </properties>
+  </object>
+  <object name="tewi" type="stationary_npc" x="32" y="704" width="32" height="32">
+   <properties>
+    <property name="dir" value="down"/>
+    <property name="msg1" value="Some of these blocks are pretty heavy. I wish I was stong enough to move them."/>
+    <property name="msg2" value="How did you do that!? I can't believe you're smarter and stronger than I am..."/>
+    <property name="sprite" value="tewi"/>
+    <property name="switch" value="barrier1"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
