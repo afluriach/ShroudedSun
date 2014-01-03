@@ -112,7 +112,7 @@
     <property name="dest_map" value="level_select"/>
    </properties>
   </object>
-  <object name="player_caught_teleport" type="map_link" x="36" y="639" width="32" height="32">
+  <object name="player_caught_teleport" type="map_link" x="128" y="160" width="32" height="32">
    <properties>
     <property name="entrance_dir" value="right"/>
    </properties>

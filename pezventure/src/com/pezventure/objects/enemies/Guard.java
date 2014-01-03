@@ -49,7 +49,9 @@ public class Guard extends Enemy
 		radar.setPos(getCenterPos());
 		radar.update();
 		
-		if(!radar.getDetectedObjects(getDir()*45f, fovAngle).isEmpty())
+		//only catch player if she is in the same room as the guard. 		
+		if(!radar.getDetectedObjects(getDir()*45f, fovAngle).isEmpty() &&
+			Game.inst.getCrntArea().getCurrentRoom(getCenterPos()) == Game.inst.getCrntArea().getCurrentRoom(Game.inst.player.getCenterPos()))
 		{
 			catchPlayer();
 		}

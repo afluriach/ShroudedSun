@@ -504,6 +504,7 @@ public class Game implements ApplicationListener
 		//ignore any button presses before the minimum elapsed time
 		if(timeInDialog < minDialogChangeTime) return;
 		
+		//any touch on the dialog box to continue;
 		if(touchControls)
 		{
 			for(int i=0; i< MAX_TOUCH_EVENTS; ++i)
@@ -520,6 +521,7 @@ public class Game implements ApplicationListener
 			}
 
 		}
+		
 		if(keyControls)
 		{
 			if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
@@ -532,7 +534,10 @@ public class Game implements ApplicationListener
 			timeInDialog = 0f;
 			
 			if(onExitDialog != null)
+			{
 				onExitDialog.run();
+				onExitDialog = null;
+			}
 		}
 	}
 
