@@ -245,8 +245,6 @@ public class Controls
 	
 	private void checkTouchPress(int x, int y)
 	{		
-		Gdx.app.log(Game.TAG, String.format("touch: %d,%d", x,y));
-
 		if(buttonA.contains(x,y)) a = true;
 		if(buttonB.contains(x,y)) b = true;
 		if(buttonX.contains(x,y)) this.x = true;
@@ -260,14 +258,8 @@ public class Controls
 			if(dpadTriangles[2*i].contains(point) || dpadTriangles[2*i+1].contains(point))
 			{
 				controlPad8Dir = i;
-				Gdx.app.log(Game.TAG, String.format("control pad dir %d set", i));
 			}
 		}
-		
-//		if(dpadDown.contains(x,y)) down = true;
-//		if(dpadLeft.contains(x,y)) left = true;
-//		if(dpadUp.contains(x,y)) up = true;
-//		if(dpadRight.contains(x,y)) right = true;		
 	}
 	
 	private void checkKeyPress()

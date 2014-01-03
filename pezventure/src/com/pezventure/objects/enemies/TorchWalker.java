@@ -98,7 +98,6 @@ public class TorchWalker extends Entity
 //		if(crntTarget == null)
 //		{
 //			crntTarget = selectUnlitTorch();	
-//			Gdx.app.log(Game.TAG, String.format("Target selected. name: %s, pos: %f, %f", crntTarget.getName(), crntTarget.getCenterPos().x, crntTarget.getCenterPos().y));
 //		}
 //		
 //		if(crntTarget != null)

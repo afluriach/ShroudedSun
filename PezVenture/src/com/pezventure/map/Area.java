@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import com.pezventure.DisjointNode;
 import com.pezventure.Game;
+import com.pezventure.objects.Door;
 import com.pezventure.objects.Player;
 import com.pezventure.objects.Wall;
 import com.pezventure.physics.PrimaryDirection;
@@ -41,8 +42,6 @@ public abstract class Area
 	public abstract void load(JsonValue val);
 	public abstract JsonValue save();
 	
-	public Vector2 playerStartPos;
-	
 	public TiledMap map;
 	
 	public Path getPath(String name)
@@ -66,83 +65,38 @@ public abstract class Area
 			{
 				MapProperties props = to.getProperties();
 				String type = props.get("type", String.class);
-				
-//				Gdx.app.log(Game.TAG, "to loaded: " + to.getName() + " " + type);
-				
+								
 				//add all layer properties to properties of each object in layer
 				props.putAll(group.getProperties());
 				
 				if(type != null && type.equals("room"))
 				{
-					//a room objects location is a list of rectangles. room objects with the same name will be merged into a single room object.
-					
-					if(!rooms.containsKey(to.getName()))
-					{
-						//create new room object and add it to map
-						
-						Room r = new Room();
-						r.location.add(MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels));
-						r.name = to.getName();
-						rooms.put(to.getName(), r);
-					}
-					else
-					{
-						//update exiting room object 
-						
-						rooms.get(to.getName()).location.add(MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels));
-					}					
+					loadRoom(mapHeightPixels, to);					
 				}
+				
+				//
 				else if(type != null && type.equals("map_link"))
 				{
-					//add as MapLink
-					MapLink link = new MapLink();
-					
-					link.name = to.getName();
-					link.location = MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels);
-					
-					if(props.containsKey("entrance_dir"))
-						link.entranceDir = PrimaryDirection.valueOf(props.get("entrance_dir", String.class));
-					
-					if(props.containsKey("dest_link"))
-						link.destLink = props.get("dest_link", String.class);
-					else link.destLink = "";
-					
-					if(props.containsKey("dest_map"))
-						link.destMap = props.get("dest_map", String.class);
-					else link.destMap = "";
-
-					//allowing map or link.
-					//map only: go to first link in map (for map with only one link)
-					//link only: go to link in this map, do not change area / load new map.
-					
-//					boolean mapEmpty = link.destMap == "";
-//					boolean linkEmpty = link.destLink == "";
-//					if((mapEmpty || linkEmpty) && !(mapEmpty && linkEmpty))
-//					{
-//						if(mapEmpty)
-//							throw new MapDataException();
-//					}
-						
-					links.add(link);
+					loadMaplink(mapHeightPixels, to, props);
 				}
-				else if(type != null && type.equals("player_start"))
+				
+				else if(type != null && type.equals("door"))
 				{
-					playerStartPos = MapUtil.tilespacePos(to);
+					//the door object checks its own propertes for maplink capabilities.
+					//door objects need to be loaded as maplinks so they will be visible as a destination.
+					//since the door will sit on top of the maplink, it should never be touched.
+					//
+					//if a door is chosen as a destination link, the player will clear the maplink rectangle, again 
+					//not touching it and not colliding with door.
+					loadMaplink(mapHeightPixels, to, props);
+					//make sure door object still gets instantiated.
+					mapObjects.add(new TilespaceRectMapObject((RectangleMapObject) to, mapHeightPixels));
 				}
+
+				//TODO can tell its a polymile map object. or can tell based on object layer. really could be doing more by layer instead of types.
 				else if(type != null && type.equals("path"))
 				{
-					PolylineMapObject mo = (PolylineMapObject) to;
-					boolean loop = to.getProperties().containsKey("loop") && to.getProperties().get("loop", String.class).equals("true");
-					
-					Vector2 origin = new Vector2();
-					origin.x = to.getProperties().get("x", Float.class);
-					origin.y = to.getProperties().get("y", Float.class);
-					
-					paths.put(mo.getName(), new Path(mo.getPolyline().getVertices(), loop, origin));
-					
-					//TODO check if coords are tile units
-					//TODO check if coords are relative to origin
-					
+					loadPath((PolylineMapObject) to);
 				}
 				else
 				{
@@ -150,6 +104,60 @@ public abstract class Area
 				}
 			}
 		}		
+	}
+	
+	private void loadPath(PolylineMapObject mo)
+	{
+		boolean loop = mo.getProperties().containsKey("loop") && mo.getProperties().get("loop", String.class).equals("true");
+		
+		Vector2 origin = new Vector2();
+		origin.x = mo.getProperties().get("x", Float.class);
+		origin.y = mo.getProperties().get("y", Float.class);
+		
+		paths.put(mo.getName(), new Path(mo.getPolyline().getVertices(), loop, origin));					
+
+	}
+	
+	private void loadMaplink(int mapHeightPixels, MapObject to,
+			MapProperties props) {
+		//add as MapLink
+		MapLink link = new MapLink();
+		
+		link.name = to.getName();
+		link.location = MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels);
+		
+		
+		if(props.containsKey("entrance_dir"))
+			link.entranceDir = PrimaryDirection.valueOf(props.get("entrance_dir", String.class));
+		
+		if(props.containsKey("dest_link"))
+			link.destLink = props.get("dest_link", String.class);
+		else link.destLink = "";
+		
+		if(props.containsKey("dest_map"))
+			link.destMap = props.get("dest_map", String.class);
+		else link.destMap = "";
+		
+		links.add(link);
+	}
+	private void loadRoom(int mapHeightPixels, MapObject to) {
+		//a room objects location is a list of rectangles. room objects with the same name will be merged into a single room object.
+		
+		if(!rooms.containsKey(to.getName()))
+		{
+			//create new room object and add it to map
+			
+			Room r = new Room();
+			r.location.add(MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels));
+			r.name = to.getName();
+			rooms.put(to.getName(), r);
+		}
+		else
+		{
+			//update exiting room object 
+			
+			rooms.get(to.getName()).location.add(MapUtil.tilespaceRect((RectangleMapObject) to, mapHeightPixels));
+		}
 	}
 	
 	/**
@@ -162,8 +170,9 @@ public abstract class Area
 			Game.inst.gameObjectSystem.addObject(MapUtil.instantiate(mo));
 			Vector2 pos = mo.rect.getCenter(new Vector2());
 			
-			Gdx.app.log(Game.TAG, String.format("\tname: %s, type: %s, position: %f,%f", mo.name, mo.type, pos.x, pos.y));
-		}
+			Game.log(String.format("\tname: %s, type: %s, position: %f,%f", mo.name, mo.type, pos.x, pos.y));
+		}		
+		
 		Game.inst.gameObjectSystem.handleAdditions();
 	}
 
@@ -244,9 +253,7 @@ public abstract class Area
 		int height = wallLayer.getHeight();
 		
 		TreeMap<Vector2, DisjointNode> gridNodes = new TreeMap<Vector2, DisjointNode>();
-		
-////		Gdx.app.log(Game.TAG, String.format("cell at 0,0: %s; cell at 1,1: %s", wallLayer.getCell(0,0) == null ? "null" : "tile0", wallLayer.getCell(1,1) == null ? "null" : "tile1" ));
-		
+				
 		for(int i=0;i<height; ++i)
 		{
 			for(int j=0;j<width; ++j)
@@ -262,8 +269,7 @@ public abstract class Area
 		{
 			if(node.rect.width == 1)
 			{
-				//can expand rectangle upward
-				
+				//can expand rectangle upward				
 				while(true)
 				{
 					Vector2 joinPos = new Vector2(node.rect.x, node.rect.y + node.rect.height);

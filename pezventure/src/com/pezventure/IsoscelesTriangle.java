@@ -76,8 +76,6 @@ public class IsoscelesTriangle
 		float qz = bc.crs(bp).z;
 		float rz = ca.crs(cp).z;
 		
-//		Gdx.app.log(Game.TAG, String.format("%f %f %f", pz, qz, rz));
-		
 		return pz <= 0 && qz <= 0 && rz <= 0 ||
 			   pz >= 0 && qz >= 0 && rz >= 0;
 	}

@@ -93,10 +93,7 @@ public class Facer extends Enemy
 		//-1: directly behind
 		
 		Vector2 targetDisp = target.getCenterPos().sub(getCenterPos());
-		
-//		Gdx.app.log(Game.TAG, String.format("facing %s, target facing %s, target disp %f,%f, dot %f",
-//							facing.toString(), target.facing.toString(), targetDisp.x, targetDisp.y, facing.getUnitVector().dot(targetDisp)));
-		
+				
 		//generalize it so it works for 4dir facer vs 8dir player. if the dot product of of the facing vectors is 
 		//negative, they are facing. if < 1, they are diagonal.
 		

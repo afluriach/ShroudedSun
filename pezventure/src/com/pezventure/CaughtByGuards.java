@@ -1,9 +1,9 @@
 package com.pezventure;
 
-public class CaughtByGuards implements GameEvent
+public class CaughtByGuards implements Runnable
 {
-	public void execute()
+	public void run()
 	{
-		Game.inst.teleport("", "player_caught_teleport");
+		Game.inst.setTeleporDestination("", "player_caught_teleport");
 	}
 }

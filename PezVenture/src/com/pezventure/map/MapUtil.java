@@ -37,6 +37,18 @@ public class MapUtil
 		return mapLoader.load(filename, parameters);
 	}
 	
+	public static Rectangle toTilespaceRect(Rectangle pix)
+	{
+		Rectangle tile = new Rectangle();
+		
+		tile.x = pix.x * Game.TILES_PER_PIXEL;
+		tile.y = pix.y * Game.TILES_PER_PIXEL;
+		tile.height = pix.height * Game.TILES_PER_PIXEL;
+		tile.width = pix.width * Game.TILES_PER_PIXEL;
+		
+		return tile;
+	}
+	
 	/**
 	 * 
 	 * Convert y position based on +y pointing up, convert to tilespace units
@@ -47,18 +59,9 @@ public class MapUtil
 	 */
 	public static Rectangle tilespaceRect(RectangleMapObject to, int mapHeightPixels)
 	{
-		Rectangle r = ((RectangleMapObject)to).getRectangle();
+		Rectangle pixRect = ((RectangleMapObject)to).getRectangle();
 				
-		//convert y-down y coords to y-up
-		//tmx is now being loaded y-up
-		//r.y = mapHeightPixels - r.y - r.height;
-		
-		r.x *= Game.TILES_PER_PIXEL;
-		r.y *= Game.TILES_PER_PIXEL;
-		r.height *= Game.TILES_PER_PIXEL;
-		r.width *= Game.TILES_PER_PIXEL;
-
-		return r;
+		return toTilespaceRect(pixRect);
 	}
 	public static Vector2 tilespacePos(MapObject to)
 	{
@@ -77,7 +80,7 @@ public class MapUtil
 		}
 		catch(Exception ex)
 		{
-			Gdx.app.log(Game.TAG, "Error instantiating type: " + type + " no suitable constructor found");
+			Game.log("Error instantiating type: " + type + " no suitable constructor found");
 			throw new RuntimeException("Error instantiating type: " + type + " no suitable constructor found");
 		}
 		
@@ -87,7 +90,7 @@ public class MapUtil
 		}
 		catch (Exception e)
 		{
-			Gdx.app.log(Game.TAG,  "Error instantiating type: " + type + " constructor exception: " + e.getLocalizedMessage());
+			Game.log( "Error instantiating type: " + type + " constructor exception: " + e.getLocalizedMessage());
 			e.printStackTrace();
 			throw new RuntimeException("Error instantiating type: " + type + " constructor exception");
 		}
@@ -109,7 +112,7 @@ public class MapUtil
 		}
 		catch(Exception ex)
 		{
-			Gdx.app.log(Game.TAG, "Error instantiating type: " + type + " no suitable constructor found");
+			Game.log("Error instantiating type: " + type + " no suitable constructor found");
 		}
 		
 		try
@@ -118,7 +121,7 @@ public class MapUtil
 		}
 		catch (Exception e)
 		{
-			Gdx.app.log(Game.TAG,  String.format("Error instantiating GameObject, class: %s, name: %s", type, to.name));
+			Game.log( String.format("Error instantiating GameObject, class: %s, name: %s", type, to.name));
 			e.printStackTrace();
 			throw new RuntimeException("constructor exception");
 		}

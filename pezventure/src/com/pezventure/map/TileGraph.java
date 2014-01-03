@@ -145,7 +145,6 @@ public class TileGraph
 	public List<PathSegment> radiusSearch(Vector2 start, Vector2 target, float minDist, float maxDist, Rectangle crntRoom)
 	{
 		ArrayList<IVector2> destinations = new ArrayList<IVector2>();
-		Gdx.app.log(Game.TAG, String.format("radius search. start: %f,%f, target: %f,%f, min: %f, max: %f, room: %f,%f to %f,%f", start.x, start.y, target.x, target.y, minDist, maxDist, crntRoom.x, crntRoom.y, crntRoom.x+crntRoom.width, crntRoom.y+crntRoom.height));
 		
 		for(int y = (int) (start.y - maxDist); y < start.y + maxDist; ++y)
 		{
@@ -168,20 +167,16 @@ public class TileGraph
 		
 		if(destinations.isEmpty())
 		{
-			Gdx.app.log(Game.TAG, "Radius search, no path found.");
 			return null;
 		}
 		
 		IVector2 dest = destinations.get(Game.inst.random.nextInt(destinations.size()));
-		Gdx.app.log(Game.TAG, String.format("Radius search, path to %d,%d.", dest.x, dest.y));
 		
 		return dijkstras(new IVector2(start), dest);
 	}
 	
 	public List<PathSegment> getPath(Vector2 start, Vector2 end)
 	{
-		Gdx.app.log(Game.TAG, String.format("Get path from %f,%f to %f,%f.", start.x, start.y, end.x, end.y));
-		
 		
 		if(!tiles[(int) start.y][(int) start.x])
 			throw new RuntimeException(String.format("Start position %f,%f, tilepos %d,%d is unoccupiable on graph.", start.x, start.y, (int) start.x, (int) start.y));
@@ -220,7 +215,6 @@ public class TileGraph
 			
 			if(crnt.x < 0 || crnt.x >= width || crnt.y < 0 || crnt.y >= height)
 			{
-				Gdx.app.log(Game.TAG, String.format("Graph search. Invalid node %d,%d.", crnt.x, crnt.y));
 				continue;
 			}
 			

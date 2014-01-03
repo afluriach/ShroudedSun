@@ -111,7 +111,7 @@ public abstract class AI_FSM<AgentType extends GameObject>
 	
 	public void changeState(AI_State<? extends AgentType> newState)
 	{
-		Gdx.app.log(Game.TAG, String.format("agent %s changed state from to %s to %s.", agent.getName(), crntState.getClass().getSimpleName(), newState.getClass().getSimpleName()));
+		Game.log(String.format("agent %s changed state from to %s to %s.", agent.getName(), crntState.getClass().getSimpleName(), newState.getClass().getSimpleName()));
 		
 		prevState = crntState;
 		crntState.onExit();

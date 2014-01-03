@@ -48,10 +48,7 @@ public class RadarSensor extends GameObject
 		ArrayList<GameObject> detected = new ArrayList<GameObject>();
 		for (GameObject obj : objectsWithinRadius)
 		{
-
 			Vector2 disp = obj.getCenterPos().sub(getCenterPos()).nor();
-			
-//			Gdx.app.log(Game.TAG, String.format("facing: %f, target dir: %f", angleFacing, disp.angle()));			
 			
 			if(Util.ray(angleFacing, 1f).dot(disp) >= acos && Game.inst.physics.lineOfSight(getCenterPos(), obj))
 			{

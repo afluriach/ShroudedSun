@@ -56,8 +56,7 @@ public class NPC extends Entity
 	{
 		if(other instanceof NPC)
 		{
-//			say(String.format("Sorry for bumping into you, %s.", other.name));
-			Gdx.app.log(Game.TAG, String.format("%s: Sorry for bumping into you, %s.", name, other.name));
+			Game.log(String.format("%s: Sorry for bumping into you, %s.", name, other.name));
 		}
 	}
 
@@ -107,7 +106,7 @@ public class NPC extends Entity
 		
 		if(bestDist < minDistToMove)
 		{
-			Gdx.app.log(Game.TAG, String.format("%s: can't move more than %f. ", name, bestDist));
+			Game.log(String.format("%s: can't move more than %f. ", name, bestDist));
 			setDesiredVel(Vector2.Zero);
 		}
 		

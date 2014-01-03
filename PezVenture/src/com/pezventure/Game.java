@@ -61,7 +61,7 @@ public class Game implements ApplicationListener
 		
 	public static final int MAX_TOUCH_EVENTS = 5;
 	
-	public static final String TAG = "PezVenture";
+	public static final String TAG = "GensokyouAdventure";
 	
 	public static final int FRAMES_PER_SECOND = 60;
 	public static final float SECONDS_PER_FRAME = 1.0f / FRAMES_PER_SECOND;
@@ -111,7 +111,9 @@ public class Game implements ApplicationListener
 	public Dialog activeDialog;
 	float timeInDialog = 0f;
 	boolean paused = false;
-	public GameEvent onExitDialog;
+	public Runnable onExitDialog;
+	String teleportDestLink;
+	String teleportDestMap;
 	
 	//ability
 	Ability bEquipped;
@@ -329,7 +331,7 @@ public class Game implements ApplicationListener
 		initCamera();
 	}
 	
-	void handleMaplink()
+	void checkMaplinkCollision()
 	{
 		MapLink link = area.checkMaplinkCollision(player);
 		
@@ -337,19 +339,27 @@ public class Game implements ApplicationListener
 		//if destlink is empty then this link doesn't go anywhere
 		if(link == null || link.destLink.equals("")) return;
 		
-		if(!link.destMap.equals(""))
-		{
-			loadArea(link.destMap, link.destLink);
-			mapEntranceLink = link.name;
-		}
-		
-		MapLink dest = area.getMapLink(link.destLink);		
-		player.setPos(Util.clearRectangle(dest.location, dest.entranceDir, ENTRANCE_CLEAR_DISTANCE));
+		traverseLink(link.destMap, link.destLink);
 	}
 	
-	void teleport(String destMap, String destLink)
+	public void setTeleporDestination(String destMap, String destLink)
 	{
-		if(!destMap.equals(""))
+		teleportDestMap = destMap;
+		teleportDestLink = destLink;
+	}
+	
+	void checkTeleport()
+	{
+		if(teleportDestLink != null)
+		{
+			traverseLink(teleportDestMap, teleportDestLink);
+			teleportDestLink = null;
+		}
+	}
+		
+	void traverseLink(String destMap, String destLink)
+	{
+		if(destMap != null && !destMap.equals(""))
 		{
 			loadArea(destMap, destLink);
 			mapEntranceLink = destLink;
@@ -368,9 +378,9 @@ public class Game implements ApplicationListener
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(area.map);
 		
-		Gdx.app.log(Game.TAG, "loading map objects...");
+		Game.log("loading map objects...");
 		area.instantiateMapObjects();
-		Gdx.app.log(Game.TAG, "...done.");
+		Game.log("...done.");
 		
 		area.init();
 
@@ -426,8 +436,8 @@ public class Game implements ApplicationListener
 	@Override
 	public void render() {
 		checkPlayerDeath();
-		handleMaplink();
-
+		checkMaplinkCollision();
+		checkTeleport();
 		
 		//handle input
 		if(activeDialog == null)
@@ -522,7 +532,7 @@ public class Game implements ApplicationListener
 			timeInDialog = 0f;
 			
 			if(onExitDialog != null)
-				onExitDialog.execute();
+				onExitDialog.run();
 		}
 	}
 

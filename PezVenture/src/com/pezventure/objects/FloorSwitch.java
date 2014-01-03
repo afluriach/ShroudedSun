@@ -11,7 +11,7 @@ import com.pezventure.Game;
 import com.pezventure.graphics.Graphics;
 import com.pezventure.map.TilespaceRectMapObject;
 
-public class FloorSwitch extends GameObject
+public class FloorSwitch extends GameObject implements Switch
 {
 //	private static final float SWITCH_SIZE = 1.0f;
 //	private static final float BORDER_THICKNESS_PIXELS = 4;
@@ -69,6 +69,7 @@ public class FloorSwitch extends GameObject
 		if(to.prop.containsKey("activating_name"))
 		{
 			activatingObjectName = to.prop.get("activating_name", String.class);
+			activatingClass = null;
 		}
 		
 		renderLayer = RenderLayer.floor;
@@ -95,24 +96,14 @@ public class FloorSwitch extends GameObject
 	@Override
 	public void handleContact(GameObject other)
 	{
-		Gdx.app.log(Game.TAG, other.toString());
-		
 		//if an activating name is set, only check for objects with that
 		//name, otherwise filter based on class
 		
-		if(activatingObjectName != null)
+		if(activatingObjectName != null && other.name.equals(activatingObjectName) ||
+				activatingClass != null && activatingClass.isInstance(other))
 		{
-			if(other.name.equals(activatingObjectName))
-			{
 				activatingObjectsOnSwitch.add(other);
-			}
 		}
-		else if(activatingClass.isInstance(other))
-		{
-			Gdx.app.log(Game.TAG, other.getClass() + " on switch");
-			activatingObjectsOnSwitch.add(other);
-		}
-
 	}
 	
 	public boolean isActivated()
@@ -125,7 +116,7 @@ public class FloorSwitch extends GameObject
 	{
 		if(activatingObjectName != null && activatingObjectName.equals(other.name))
 			activatingObjectsOnSwitch.remove(other);
-		if(activatingClass.isInstance(other))
+		if(activatingClass != null && activatingClass.isInstance(other))
 			activatingObjectsOnSwitch.remove(other);		
 	}
 

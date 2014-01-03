@@ -16,11 +16,6 @@ public class Guard extends Enemy
 	RadarSensor radar;
 	float fovAngle = 45f;
 	
-	
-	//TODO state for following path.
-	//TODO state for rotating
-	//TODO loading facing, set direction
-
 	public Guard(TilespaceRectMapObject mo)
 	{
 		super(mo, "meiling", 1);

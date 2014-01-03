@@ -38,31 +38,31 @@ public class Level1 extends Area
 	@Override
 	public void init()
 	{
-		door1 = (Door) Game.inst.gameObjectSystem.getObjectByName("door1");
-		door2 = (Door) Game.inst.gameObjectSystem.getObjectByName("door2");
-		
-		switch1 = (FloorSwitch) Game.inst.gameObjectSystem.getObjectByName("switch1");
-		switch2 = (FloorSwitch) Game.inst.gameObjectSystem.getObjectByName("switch2");
-		
-		for(int i=1;i<=NUM_ENEMIES; ++i)
-		{
-			enemies.add(Game.inst.gameObjectSystem.getObjectByName(String.format("enemy%d", i)));
-		}
+//		door1 = (Door) Game.inst.gameObjectSystem.getObjectByName("door1");
+//		door2 = (Door) Game.inst.gameObjectSystem.getObjectByName("door2");
+//		
+//		switch1 = (FloorSwitch) Game.inst.gameObjectSystem.getObjectByName("switch1");
+//		switch2 = (FloorSwitch) Game.inst.gameObjectSystem.getObjectByName("switch2");
+//		
+//		for(int i=1;i<=NUM_ENEMIES; ++i)
+//		{
+//			enemies.add(Game.inst.gameObjectSystem.getObjectByName(String.format("enemy%d", i)));
+//		}
 	}
 
 	@Override
 	public void update()
 	{
-		if(!switchRoomSolved && switch1.isActivated() && switch2.isActivated())
-		{
-			door1.unlock();
-			switchRoomSolved = true;
-		}
-		if(!enemyRoomSolved && GameObject.allExpired(enemies))
-		{
-			door2.unlock();
-			enemyRoomSolved = true;
-		}
+//		if(!switchRoomSolved && switch1.isActivated() && switch2.isActivated())
+//		{
+//			door1.unlock();
+//			switchRoomSolved = true;
+//		}
+//		if(!enemyRoomSolved && GameObject.allExpired(enemies))
+//		{
+//			door2.unlock();
+//			enemyRoomSolved = true;
+//		}
 	}
 
 	@Override

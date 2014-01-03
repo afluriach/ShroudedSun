@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.pezventure.objects.FloorSwitch;
+import com.pezventure.objects.Switch;
 import com.pezventure.physics.PrimaryDirection;
 
 public class Util
@@ -86,9 +87,9 @@ public class Util
 		return false;
 	}
 	
-	public static boolean allActivated(FloorSwitch [] arr)
+	public static boolean allActivated(Iterable<Switch> iter)
 	{
-		for(FloorSwitch sw : arr)
+		for(Switch sw : iter)
 		{
 			if(!sw.isActivated()) return false;
 		}

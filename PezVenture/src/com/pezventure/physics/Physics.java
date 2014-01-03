@@ -84,7 +84,7 @@ public class Physics
 		//floor object
 		filter = new Filter();
 		filter.categoryBits = onFloorCategory;
-		filter.maskBits = playerCategory | enemyCategory | onFloorCategory | sensorCategory;
+		filter.maskBits = playerCategory | enemyCategory | onFloorCategory | sensorCategory | environmentCateogry;
 		collisionFilters.put("floor", filter);
 		
 		//environmental object
@@ -157,11 +157,11 @@ public class Physics
 	
 	public void clear()
 	{
-		Gdx.app.log(Game.TAG, "clearing physics");
+		Game.log("clearing physics");
 		world.dispose();
 		world = new World(new Vector2(0,0), true);
 		world.setContactListener(contactHandler);
-		Gdx.app.log(Game.TAG,  "new world");
+		Game.log( "new world");
 	}
 	
 	public void update()
@@ -187,9 +187,7 @@ public class Physics
 			GameObject objB = (GameObject) bodyB.getUserData();
 			
 			objA.handleContact(objB);
-			objB.handleContact(objA);
-			
-//			Gdx.app.log(Game.TAG, "collision: " + objA.toString() + objB.toString());
+			objB.handleContact(objA);			
 		}
 	}
 	

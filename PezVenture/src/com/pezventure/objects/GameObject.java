@@ -42,10 +42,9 @@ public abstract class GameObject
 	{
 		addClass("wall", Wall.class);
 		addClass("door", Door.class);
+		addClass("barrier", Barrier.class);
 		addClass("block", Block.class);
-		addClass("switch", FloorSwitch.class);
 		addClass("floor_switch", FloorSwitch.class);
-		addClass("invisible_switch", InvisibleFloorSwitch.class);
 		addClass("invisible_floor_switch", InvisibleFloorSwitch.class);
 		addClass("blue_enemy", BlueEnemy.class);
 		addClass("jar", Jar.class);
@@ -55,6 +54,8 @@ public abstract class GameObject
 		addClass("torch", Torch.class);
 		addClass("torch_walker", TorchWalker.class);
 		addClass("guard", Guard.class);
+		
+		addClass("map_link", Door.class);
 	}
 	
 	public static Class<?> getObjectClass(String name)
@@ -85,12 +86,7 @@ public abstract class GameObject
 	
 	public GameObject(TilespaceRectMapObject mo)
 	{
-//		physicsBody = Physics.inst().addRectBody(mo.rect, this);
-		
 		name = mo.name;
-		
-//		Gdx.app.log(Game.TAG, String.format("GO name: %s, type: %s pos: %f,%f size: %f,%f", name, getClass().toString(), pos.x, pos.y, width, height));
-
 	}
 	
 	public GameObject(String name)
@@ -111,7 +107,16 @@ public abstract class GameObject
 		return expired;
 	}
 	
-	public static boolean allExpired(List<GameObject> list)
+	public static boolean allExpired(String[] names)
+	{
+		for(String name : names)
+		{
+			if (Game.inst.gameObjectSystem.hasObject(name)) return false;
+		}		
+		return true;
+	}
+	
+	public static boolean allExpired(Iterable<GameObject> list)
 	{
 		for(GameObject go : list)
 		{
@@ -272,11 +277,8 @@ public abstract class GameObject
 				
 		}
 		
-		//translate AABB based on the center of the GO
-		
+		//translate AABB based on the center of the GO		
 		box.setCenter(getCenterPos());
-		
-//		Gdx.app.log(Game.TAG, String.format("GO name: %s, AABB xy: %f,%f wh: %f,%f", name, box.x, box.y, box.width, box.height));
 		return box;
 		
 	}	

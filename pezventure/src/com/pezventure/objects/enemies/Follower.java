@@ -97,9 +97,6 @@ public class Follower extends Enemy
 		
 		Vector2 targetDisp = target.getCenterPos().sub(getCenterPos());
 		
-//		Gdx.app.log(Game.TAG, String.format("facing %s, target facing %s, target disp %f,%f, dot %f",
-//							facing.toString(), target.facing.toString(), targetDisp.x, targetDisp.y, facing.getUnitVector().dot(targetDisp)));
-		
 		Vector2 facingVector = Util.get8DirUnit(getDir());
 		Vector2 targetFacingVector = Util.get8DirUnit(target.getDir());
 		

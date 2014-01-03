@@ -68,9 +68,6 @@ public class Dialog
 		
 		batch.setColor(textColor);
 		font.drawWrapped(batch, msg, lineStartX, lineStartY, lineWidth);
-		//font.draw(batch, msg, lineStartX, lineStartY);
-		
-//		Gdx.app.log(Game.TAG, String.format("text %s at %d, %d", msg, lineStartX, lineStartY));
 		
 		batch.end();
 	}

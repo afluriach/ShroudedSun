@@ -185,7 +185,6 @@ public abstract class Entity extends GameObject
 			animation.incrementFrame();
 			stepDistAccumulated -= stepLength;
 		}
-//		Gdx.app.log(Game.TAG, String.format("step dist acc: %f, vel mag: %f", stepDistAccumulated, vel.len()));
 	}
 
 	//shoot a bullet. position the bullet such that its edge is some distance away from the edge of the entity's 

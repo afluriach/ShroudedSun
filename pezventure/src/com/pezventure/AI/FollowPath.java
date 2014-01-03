@@ -82,8 +82,6 @@ public class FollowPath extends AI_State<Entity>
 		//pop and set the first waypoint
 		if(path == null || path.isEmpty())
 		{
-			//ideally shouldn't happen.
-			Gdx.app.log(Game.TAG, "Warning, FollowPath started on an empty path.");
 			fsm.changeState(nextState);
 			return;
 		}
@@ -107,7 +105,6 @@ public class FollowPath extends AI_State<Entity>
 		Vector2 vel = crntWaypoint.cpy().sub(fsm.agent.getCenterPos()).nor().scl(speed);
 		fsm.agent.setDesiredVel(vel);
 		fsm.agent.setDesiredDir((int) (vel.angle()/45f));
-		//Gdx.app.log(Game.TAG, String.format("move towards waypoint. vel: %f, %f", vel.x, vel.y));
 	}
 
 }

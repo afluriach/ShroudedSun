@@ -43,7 +43,6 @@ public class FeelerRaycastCallback implements RayCastCallback
 			Vector2 normal, float fraction)
 	{
 		GameObject go = (GameObject) fixture.getBody().getUserData();
-		//Gdx.app.log(Game.TAG, String.format("feeler ray fraction: %f, gameobj: %s", fraction, go.toString()));
 		if(targetCls.isInstance(go))
 		{
 			//if this is the first or the closest

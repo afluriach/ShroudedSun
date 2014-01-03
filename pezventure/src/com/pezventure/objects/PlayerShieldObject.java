@@ -35,7 +35,6 @@ public class PlayerShieldObject extends GameObject
 	
 	public void setActive(boolean active)
 	{
-//		Gdx.app.log(Game.TAG, "shield active: " + active);
 		this.active = active;
 	}
 

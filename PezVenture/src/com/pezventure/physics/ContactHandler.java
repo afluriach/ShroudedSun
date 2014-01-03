@@ -15,8 +15,6 @@ public class ContactHandler implements ContactListener
 		GameObject a = (GameObject) contact.getFixtureA().getBody().getUserData();
 		GameObject b = (GameObject) contact.getFixtureB().getBody().getUserData();
 
-//		Gdx.app.log(Game.TAG, String.format("contact: %s,%s", a.toString(), b.toString()));
-
 		if(contact.isTouching())
 		{
 			a.handleContact(b);

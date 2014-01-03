@@ -13,7 +13,7 @@
  </layer>
  <layer name="walls" width="50" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+2aC2rDMBBEdbXQ1m3a9HP/0xQTDMHIK4+1stbxeyAIaLLasb3RJ76llN6M9lXoX9vUOH9JY6js9xqnVv8h9F/E2I+09qEQ2ceL0O/p45Jpll6Nb/VHvh9bfeSu59K1HSnVoZrXnO9k//59ivG8aHk/aijVYe24zzJ/4MN3nNb6n+Szvvp1zqtWvxf4iAU+YnF2H6+pz/7Va13nfT+OMm/uFQ8fd27p/oxb5y6WZpjprBpQ8iox14/7qnE/Z9WZpRkWPqvU+hjXhddkr+ssTRQftZzJx5r54wg+1Dgt9Eo8fMSaP9SzNysvVV87f9TkbuWl6mvnj0fWrKHfV+ZVwrs+1HPDJXr7iLJO3Ht8rzil83a1XSu/P9VL7/2gF72fKy/w0RZrLimtC9YQ4X7kcsBHP/CxXT9h/Veu6vGxXT/h6SO3ZzlifeTARyzwoeFZ5znwofEsPlqDj1jgIxb4iEXv90u8mvoeIAAAAAAAAAAAAAAAAACch39L89BhIE4AAA==
+   H4sIAAAAAAAAC+2ai2rDMAxF/WtlW7Zu3db//5phyqCkiWRF8iPNOWAo+FbWjeP4kVxSSm9C+VLqS4s1zjXZmJz1Ue149R+G+pMx9j21fVgY2ceLoT7Sx2mhSHprfKl+5P7Y6mPpeq5d24w2Dq15zflO8vPv0xgvipr94UEbh952n2X+wEdsO7X1PylmffUbnJdX3wp8jAU+xuLoPl5Tn/1r1Louuj/2Mm+2ioePG5d0u8elcxdJM8100hiw5KUx1+d9Vd7PSeNM0kwrv614feR14TnJ6zpJM4oPL0fyUTJ/7MGHNU4NvSUePsaaP6xnb1JeVr13/vDkLuVl1Xvnj3tK1tDvhXlpRI8P67nhGr19jLJObN1+VBztvN1azs7//4+X3vvBKHrfV1Hg4xFtPxdVtHWB10ervlpqBx/+WFvBR5leqpPelVv1+CjTS3uJPfloBT6262uAjzL9szyv8GHTsy4p0+PDnwM+Hon69kor2vs5r4+eHN1H1PclNe81AAAAAAAAAAAAAAAAAIDMHynY3tUgTgAA
   </data>
  </layer>
  <objectgroup name="enemy" width="50" height="100">
@@ -43,32 +43,32 @@
     <property name="dir" value="left"/>
    </properties>
   </object>
-  <object name="guard6" type="guard" x="832" y="960" width="32" height="32">
+  <object name="guard6" type="guard" x="785" y="978" width="32" height="32">
    <properties>
     <property name="dir" value="down"/>
    </properties>
   </object>
-  <object name="guard7" type="guard" x="960" y="960" width="32" height="32">
+  <object name="guard7" type="guard" x="695" y="656" width="32" height="32">
    <properties>
     <property name="follow_path" value="true"/>
    </properties>
   </object>
-  <object name="guard8" type="guard" x="606" y="1596" width="32" height="32">
+  <object name="guard8" type="guard" x="447" y="1425" width="32" height="32">
    <properties>
     <property name="follow_path" value="true"/>
    </properties>
   </object>
-  <object name="guard9" type="guard" x="662" y="1594" width="32" height="32">
+  <object name="guard9" type="guard" x="943" y="1466" width="32" height="32">
    <properties>
     <property name="follow_path" value="true"/>
    </properties>
   </object>
-  <object name="guard10" type="guard" x="625" y="1656" width="32" height="32">
+  <object name="guard10" type="guard" x="382" y="1753" width="32" height="32">
    <properties>
     <property name="follow_path" value="true"/>
    </properties>
   </object>
-  <object name="guard11" type="guard" x="685" y="1653" width="32" height="32">
+  <object name="guard11" type="guard" x="900" y="1822" width="32" height="32">
    <properties>
     <property name="follow_path" value="true"/>
    </properties>
@@ -90,8 +90,8 @@
   <object name="room1" type="room" x="0" y="0" width="288" height="256"/>
   <object name="room2" type="room" x="256" y="0" width="608" height="416"/>
   <object name="room3" type="room" x="832" y="0" width="416" height="640"/>
-  <object name="room3" type="room" x="0" y="224" width="288" height="416"/>
-  <object name="room3" type="room" x="288" y="384" width="544" height="256"/>
+  <object name="room8" type="room" x="0" y="224" width="288" height="416"/>
+  <object name="room7" type="room" x="288" y="384" width="544" height="256"/>
   <object name="room4" type="room" x="0" y="608" width="672" height="608"/>
   <object name="room5" type="room" x="640" y="608" width="608" height="608"/>
   <object name="room6" type="room" x="0" y="1184" width="1248" height="864"/>
@@ -112,7 +112,7 @@
     <property name="dest_map" value="level_select"/>
    </properties>
   </object>
-  <object name="player_caught_teleport" type="map_link" x="108" y="111" width="32" height="32">
+  <object name="player_caught_teleport" type="map_link" x="36" y="639" width="32" height="32">
    <properties>
     <property name="entrance_dir" value="right"/>
    </properties>
@@ -131,35 +131,32 @@
    </properties>
    <polyline points="0,0 947,1"/>
   </object>
-  <object name="guard7_path" type="path" x="1115" y="695">
-   <properties>
-    <property name="loop" value="false"/>
-   </properties>
-   <polyline points="0,0 -1,137 -219,135 -225,316 45,316 46,437"/>
+  <object name="guard7_path" type="path" x="704" y="672" width="32" height="32">
+   <polyline points="0,0 400,4 400,135 126,135 124,247 429,250 427,441"/>
   </object>
-  <object name="guard8_path" type="path" x="780" y="1443">
+  <object name="guard8_path" type="path" x="462" y="1438">
    <properties>
     <property name="loop" value="true"/>
    </properties>
-   <polyline points="0,0 204,4 207,168 -6,167"/>
+   <polyline points="0,0 115,1 109,173 -53,171 -43,-1"/>
   </object>
-  <object name="guard9_path" type="path" x="773" y="1677">
+  <object name="guard9_path" type="path" x="965" y="1481">
    <properties>
     <property name="loop" value="true"/>
    </properties>
-   <polyline points="0,0 213,-1 217,167 -4,164"/>
+   <polyline points="0,0 -5,118 -173,119 -161,-48 -2,-45"/>
   </object>
-  <object name="guard11_path" type="path" x="414" y="1439">
+  <object name="guard10_path" type="path" x="918" y="1841">
    <properties>
     <property name="loop" value="true"/>
    </properties>
-   <polyline points="0,0 -6,173 182,173 181,-10"/>
+   <polyline points="0,0 -127,-1 -120,-188 43,-185 48,0"/>
   </object>
-  <object name="guard10_path" type="path" x="597" y="1831">
+  <object name="guard11_path" type="path" x="402" y="1769">
    <properties>
     <property name="loop" value="true"/>
    </properties>
-   <polyline points="0,0 -237,3 -229,-171 1,-173"/>
+   <polyline points="0,0 5,-117 164,-114 163,62 -6,61"/>
   </object>
  </objectgroup>
 </map>

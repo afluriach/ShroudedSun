@@ -19,10 +19,6 @@ public class LightTorch extends AI_State<Entity>
 	@Override
 	public void update()
 	{
-		if(target.isActivated())
-		{
-			Gdx.app.log(Game.TAG, String.format("Agent %s tried to light torch %s, but it was alread lit.", fsm.agent.getName(), target.getName()));
-		}
 		target.light();
 		fsm.changeState(new LookingForTorch(fsm.agent, fsm));
 	}

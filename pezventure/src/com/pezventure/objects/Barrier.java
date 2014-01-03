@@ -8,63 +8,48 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.pezventure.Game;
 import com.pezventure.Util;
 import com.pezventure.graphics.Graphics;
-import com.pezventure.map.MapLink;
 import com.pezventure.map.TilespaceRectMapObject;
 
-//IDEA: door is a static collider when locked. change to a Dynamic sensor
-//when unlocked, this will make transitions between rooms easier to detect
+//barrier is a static collider when locked. change to a Dynamic sensor
+//when unlocked
 
-public class Door extends GameObject implements Switch
+public class Barrier extends GameObject
 {
-	private Texture lockedTexture;
-	private Texture unlockedTexture;
+	private Texture texture;
 	private boolean isLocked = true;
 	
 	ArrayList<Switch> switches;
 	String[] switchNames;
+	String[]  targetNames;
 	
-	//a door may operate like a maplink. if destlink is not set, then opening the door
-	//will simply involve moving through it to the other side.
-	String destMap;
-	String destLink;
-	
-	public Door(TilespaceRectMapObject to)
+	public Barrier(TilespaceRectMapObject to)
 	{
 		super(to);
 		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody, "environmental_floor");
-		lockedTexture = Game.inst.spriteLoader.getTexture("barred_door");
-		unlockedTexture = Game.inst.spriteLoader.getTexture("door");
+		texture = Game.inst.spriteLoader.getTexture("barrier");
 		
 		if(to.prop.containsKey("switch"))
+		{
 			switchNames = to.prop.get("switch", String.class).split("\\s+");
+		}
 		
-		if(to.prop.containsKey("dest_map"))
-			destMap = to.prop.get("dest_map", String.class);
-		
-		if(to.prop.containsKey("dest_link"))
-			destLink = to.prop.get("dest_link", String.class);
-		
-		if(to.prop.containsKey("open"))
-			isLocked = false;
-
-	}
-	
+		if(to.prop.containsKey("cleared"))
+		{
+			targetNames = to.prop.get("cleared", String.class).split("\\s+");
+		}
+	}		
 	public boolean isLocked()
 	{
 		return isLocked;
 	}
-	
-	//for the switch interface, an unlocked door will mean activated;
-	public boolean isActivated()
-	{
-		return !isLocked;
-	}
-
 
 	@Override
 	public void render(SpriteBatch sb)
 	{
-		Graphics.drawTexture(isLocked ? lockedTexture : unlockedTexture, getCenterPos(), sb);
+		if(isLocked)
+		{
+			Graphics.drawTexture(texture, getCenterPos(), sb);
+		}
 	}
 
 	@Override
@@ -73,6 +58,11 @@ public class Door extends GameObject implements Switch
 		if(switches != null)
 		{
 			isLocked = !Util.allActivated(switches);
+			setSensor(!isLocked);
+		}
+		if(targetNames != null)
+		{
+			isLocked = !GameObject.allExpired(targetNames);
 			setSensor(!isLocked);
 		}
 	}
@@ -112,8 +102,12 @@ public class Door extends GameObject implements Switch
 			
 			for(int i=0;i<switchNames.length; ++i)
 			{
-				switches.add( (Switch) Game.inst.gameObjectSystem.getObjectByName(switchNames[i]));
+				switches.add((Switch) Game.inst.gameObjectSystem.getObjectByName(switchNames[i]));
 			}
 		}
+
+		
 	}
+
+	
 }

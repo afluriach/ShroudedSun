@@ -37,11 +37,10 @@ public class LookingForTorch extends AI_State<Entity>
 			
 			if(path == null)
 			{
-				Gdx.app.log(Game.TAG, String.format("Found target %s at %f,%f but it is not reachable.", unlit.getName(), unlit.getCenterPos().x, unlit.getCenterPos().y));
+				Game.log(String.format("Found target %s at %f,%f but it is not reachable.", unlit.getName(), unlit.getCenterPos().x, unlit.getCenterPos().y));
 			}
 			else
 			{
-				Gdx.app.log(Game.TAG, "Found target");
 				fsm.changeState(new FollowPath(fsm, path, fsm.agent.getSpeed(), new LightTorch(fsm, unlit)));
 			}			
 		}

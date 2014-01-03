@@ -108,6 +108,16 @@ public class GameObjectSystem
 		}
 	}
 	
+	//check if the object is still in existence and not expired
+	public boolean hasObject(String name)
+	{
+		if(!nameMap.containsKey(name))
+			return false;
+		
+		return !nameMap.get(name).isExpired();
+	}
+
+	
 	public GameObject getObjectByName(String name)
 	{
 		if(!nameMap.containsKey(name))

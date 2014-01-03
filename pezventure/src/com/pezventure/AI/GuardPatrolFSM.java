@@ -14,8 +14,6 @@ public class GuardPatrolFSM extends AI_FSM<Entity>
 		super(agent);
 		this.pathName = path;
 		this.speed = speed;
-		
-		Game.log(String.format("guard patrol for agent %s, pathname %s.", agent.getName(), path));
 	}
 
 	@Override
