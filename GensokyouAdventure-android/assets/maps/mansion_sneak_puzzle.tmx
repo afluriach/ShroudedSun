@@ -11,12 +11,12 @@
  </tileset>
  <layer name="background" width="50" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3XSwrCMABF0W7FDSi4/8VJB840/SXkJT0X3qyoh9iKyzJPr8LW3hW29jiwlo4rptaOkuG7ERx7LC0cv/K9Ou/Yqofj6Gc6u9aOrdcb5bnLwdHDUavWjmfg7uyo9ftQcxxZu7tjhmo/Z2Z47nLUdezxla5Z/ly39b7pjlnOY4b7Y3ZHq5wHR2vHHl/pmhkdV8+1p+PMZ0m/P3qeB0d/R1r+n+eNI2scWePIGkfWOLLGkTWOrHFkjSNrHFnjyNudHZIkSZIkSZIkSZI0Sh/6e+DVIE4AAA==
+   H4sIAAAAAAAAC+3XUQqDMBBF0XQp3UAL3f/iih8FP0pMxpnMS3IvvN/qwapYyjq9Kzv6OOzo2bFIxx1TtKNm+G0GR4slwvEv/ld2x1UZjkfnOVk3wlH7vVmeuzhwZDi8GuF4iW13h9c7wms4tLa7Y4U8n1fF8Xd6DTh0HedajlFzXBXxHoxyjLoeqzo874/VHVFxPXBEO861HGMHx93rmumwnIv6/ZF5PXBoOJSyftdmf4t7fZ9nnzMOHDhw4MgfDq3h0BoOreHQGg6t4dAaDq2t4rBYss/X00FERERERERERERERERENEtfmKlr0iBOAAA=
   </data>
  </layer>
  <layer name="walls" width="50" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+2ai2rDMAxF/WtlW7Zu3db//5phyqCkiWRF8iPNOWAo+FbWjeP4kVxSSm9C+VLqS4s1zjXZmJz1Ue149R+G+pMx9j21fVgY2ceLoT7Sx2mhSHprfKl+5P7Y6mPpeq5d24w2Dq15zflO8vPv0xgvipr94UEbh952n2X+wEdsO7X1PylmffUbnJdX3wp8jAU+xuLoPl5Tn/1r1Louuj/2Mm+2ioePG5d0u8elcxdJM8100hiw5KUx1+d9Vd7PSeNM0kwrv614feR14TnJ6zpJM4oPL0fyUTJ/7MGHNU4NvSUePsaaP6xnb1JeVr13/vDkLuVl1Xvnj3tK1tDvhXlpRI8P67nhGr19jLJObN1+VBztvN1azs7//4+X3vvBKHrfV1Hg4xFtPxdVtHWB10ervlpqBx/+WFvBR5leqpPelVv1+CjTS3uJPfloBT6262uAjzL9szyv8GHTsy4p0+PDnwM+Hon69kor2vs5r4+eHN1H1PclNe81AAAAAAAAAAAAAAAAAIDMHynY3tUgTgAA
+   H4sIAAAAAAAAC+2agU7DIBRF+bVFnU6n7v+/xjTOZOnKg8t7pcyek5Au4fbBbUd50J5TSi9G+SjU1xY1ziVpHJ31Ue149W9C/UGMfcvaPhRG9vEk1Ef6OCwUS6/Gt+pHvh+tPpauZ+7aTpTGodqvOZ/XY+759y7Gi6L1fuTOi3pulMaht91ePnqND3xo7aytz533lWLyq+/Gfqn6NfOAFvAxFvgYi737eL4ee69fo/K66Pux9byJD1/7UXHmPs7p9z9u7btYmuNMZ42Bmn7VMvcxraum9Zw1zizNMfNbxetjygtPyc7rLM0oPrzsyUfN/PEIPtQ4ih4f+fa39BE5f6h7b7k4ij5q/vD0falfqj5q/rhlyqFLz6XXQr9qiR4f6r5hjq19jJIn9m4/Kk5pv10tJ+f5f+OldT04GiO9T/SAj3tK67moUsoLvD563auldvDhj9UKPur0Vp31rlzV46NOb60lHslHL/DRrl8DfNTp/8vzCh+anrykTo8Pfx/wcU/Ut1elUno/5/WxJXv3UbM33rOo3wECAAAAAAAAAAAAAAAAwH74ATrPpKcgTgAA
   </data>
  </layer>
  <objectgroup name="enemy" width="50" height="100">
@@ -35,7 +35,7 @@
     <property name="follow_path" value="true"/>
    </properties>
   </object>
-  <object name="guard4" type="guard" x="288" y="896" width="32" height="32">
+  <object name="guard4" type="guard" x="304" y="896" width="32" height="32">
    <properties>
     <property name="rotate" value="clockwise"/>
     <property name="rotate_speed" value="1"/>
@@ -88,16 +88,33 @@
     <property name="msg" value="Note to all guards on duty: Make sure to wear only approved headgear, unapproved gear may affect your field of view. Security is your #1 priority."/>
    </properties>
   </object>
+  <object name="door1" type="door" x="32" y="224" width="32" height="32">
+   <properties>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+  <object name="door2" type="door" x="32" y="1184" width="32" height="32">
+   <properties>
+    <property name="switch" value="switch1"/>
+   </properties>
+  </object>
+  <object name="switch1" type="floor_switch" x="64" y="1280" width="32" height="32">
+   <properties>
+    <property name="permanent" value="true"/>
+    <property name="sticky" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
- <objectgroup name="rooms" width="50" height="100">
+ <objectgroup name="rooms" width="50" height="100" visible="0">
   <object name="room1" type="room" x="0" y="0" width="288" height="256"/>
   <object name="room2" type="room" x="256" y="0" width="608" height="416"/>
   <object name="room3" type="room" x="832" y="0" width="416" height="640"/>
-  <object name="room8" type="room" x="0" y="224" width="288" height="416"/>
+  <object name="room8" type="room" x="64" y="224" width="224" height="416"/>
   <object name="room7" type="room" x="288" y="384" width="544" height="256"/>
-  <object name="room4" type="room" x="0" y="608" width="672" height="608"/>
+  <object name="room4" type="room" x="64" y="608" width="608" height="608"/>
   <object name="room5" type="room" x="640" y="608" width="608" height="608"/>
   <object name="room6" type="room" x="0" y="1184" width="1248" height="864"/>
+  <object x="0" y="224" width="96" height="992"/>
  </objectgroup>
  <objectgroup name="floor_objects" width="50" height="100"/>
  <objectgroup name="map_links" width="50" height="100">
