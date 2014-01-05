@@ -1,5 +1,6 @@
 package com.gensokyouadventure;
 
+
 public class CaughtByGuards implements Runnable
 {
 	public void run()

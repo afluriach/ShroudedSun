@@ -23,9 +23,9 @@ public class OpenDoor implements ItemInteraction
 		}
 		else
 		{
-			if(door.destLink != null)
+			if(door.getDestLink() != null)
 			{
-				Game.inst.setTeleporDestination(door.destMap, door.destLink);
+				Game.inst.setTeleporDestination(door.getDestMap(), door.getDestLink());
 			}
 			else
 			{

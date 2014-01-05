@@ -2,12 +2,15 @@ package com.gensokyouadventure.map;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -16,7 +19,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader.Parameters;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Game;
+import com.gensokyouadventure.graphics.SpriteLoader;
 import com.gensokyouadventure.objects.GameObject;
+import com.gensokyouadventure.objects.RandomWalkNPC;
 import com.gensokyouadventure.objects.Wall;
 import com.gensokyouadventure.physics.PixelVector;
 
@@ -125,5 +130,66 @@ public class MapUtil
 			e.printStackTrace();
 			throw new RuntimeException("constructor exception");
 		}
+	}
+	
+	//taken from the init method for the NPC meeting room. 
+	public static void loadNPCs()
+	{
+		int spriteNameRow=0;
+		int spriteNameCol=0;
+		
+		for(int i=0;i<6;++i)
+		{
+			for(int j=0;j<6;++j)
+			{
+				Vector2 pos = new Vector2(4+i*6, 4+j*6);
+				String name = SpriteLoader.spriteSheetNames[spriteNameRow][spriteNameCol++];
+								
+				Game.inst.gameObjectSystem.addObject(new RandomWalkNPC(pos, name, 2, name));
+				
+				if(spriteNameCol >= 3)
+				{
+					spriteNameCol -= 3;
+					spriteNameRow += 1;
+				}
+			}
+		}
+	}
+	
+	public static List<TilespaceRectMapObject> generateNpcMapObjects()
+	{
+		List<TilespaceRectMapObject> mapObjects = new ArrayList<TilespaceRectMapObject>();
+		
+		int spriteNameRow=0;
+		int spriteNameCol=0;
+		
+		for(int i=0;i<6;++i)
+		{
+			for(int j=0;j<6;++j)
+			{
+				Vector2 pos = new Vector2(4+i*6, 4+j*6);
+				Rectangle rect = new Rectangle();
+				rect.setCenter(pos);
+				rect.setHeight(1);
+				rect.setWidth(1);
+				
+				String name = SpriteLoader.spriteSheetNames[spriteNameRow][spriteNameCol++];
+
+				//in this case, the name of the entity is also the name of the sprite to use.
+				//need to put this in MapProperties so the NPC constructor can load it.
+				MapProperties prop = new MapProperties();
+				prop.put("sprite", name);
+				
+				mapObjects.add(new TilespaceRectMapObject(name, "random_walk_npc", rect, prop));
+				
+				if(spriteNameCol >= 3)
+				{
+					spriteNameCol -= 3;
+					spriteNameRow += 1;
+				}
+			}
+		}
+		
+		return mapObjects;
 	}
 }

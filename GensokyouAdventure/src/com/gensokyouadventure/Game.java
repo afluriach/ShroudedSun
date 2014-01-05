@@ -84,6 +84,9 @@ public class Game implements ApplicationListener
 	private ShapeRenderer shapeRenderer;
 	public SpriteLoader spriteLoader;
 
+	//audio
+	public AudioHandler soundLoader;
+	
 	//map
 	Area area;
 	String areaName = startingLevel;
@@ -240,13 +243,29 @@ public class Game implements ApplicationListener
 		}
 	}
 	
+	void pauseGame()
+	{
+		soundLoader.pauseMusic();
+		paused = true;
+	}
+	
+	void resumeGame()
+	{
+		soundLoader.resumeMusic();
+		paused = false;
+	}
+	
 	void handleInput()
 	{
 		controls.update();
 		
 		if(controls.pause && !pauseHeld)
 		{
-			paused = !paused;
+			if(paused)
+				resumeGame();
+			else
+				pauseGame();
+			
 			pauseHeld = true;
 		}
 		else
@@ -316,6 +335,7 @@ public class Game implements ApplicationListener
 		
 		physics = new Physics();
 		spriteLoader = new SpriteLoader();
+		soundLoader = new AudioHandler();
 		gameObjectSystem = new GameObjectSystem();
 		areaLoader = new AreaLoader();
 		
@@ -371,10 +391,26 @@ public class Game implements ApplicationListener
 		
 	void loadArea(String areaName, String mapLink)
 	{
+		Area oldArea = area;
+		
 		gameObjectSystem.clear();
 		physics.clear();
 
 		area = areaLoader.loadArea(areaName);
+		
+		//stop the music that is currently playing if the last area had music and it is a 
+		//different track from the current area. which also means stop if this area doesn't
+		//have music
+		if(oldArea != null && oldArea.musicTitle != null)
+		{
+			if(area.musicTitle == null || !oldArea.musicTitle.equals(area.musicTitle))
+			{
+				soundLoader.stopMusic();
+			}
+		}
+		
+		if(area.musicTitle != null)
+			soundLoader.playMusic(area.musicTitle, false);
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(area.map);
 		
@@ -382,7 +418,7 @@ public class Game implements ApplicationListener
 		area.instantiateMapObjects();
 		Game.log("...done.");
 		
-		area.init();
+//		area.init();
 
 		loadPlayer(mapLink);
 		gameObjectSystem.initAll();
@@ -403,7 +439,7 @@ public class Game implements ApplicationListener
 	
 	void update()
 	{
-		area.update();
+//		area.update();
 		gameObjectSystem.handleAdditions();
 		gameObjectSystem.updateAll();
 		gameObjectSystem.removeExpired();
@@ -600,10 +636,12 @@ public class Game implements ApplicationListener
 
 	@Override
 	public void pause() {
+		pauseGame();
 	}
 
 	@Override
 	public void resume() {
+		//do not auto-resume game.
 	}
 	
 	public Matrix4 getCameraComb()

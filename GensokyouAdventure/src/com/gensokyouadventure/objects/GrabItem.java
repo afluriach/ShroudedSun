@@ -1,5 +1,6 @@
 package com.gensokyouadventure.objects;
 
+
 public class GrabItem implements ItemInteraction
 {
 	public boolean canInteract(GameObject obj, Player player)

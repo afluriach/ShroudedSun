@@ -21,7 +21,7 @@ import com.gensokyouadventure.objects.Player;
 import com.gensokyouadventure.objects.Wall;
 import com.gensokyouadventure.physics.PrimaryDirection;
 
-public abstract class Area
+public class Area
 {
 	
 	/**
@@ -34,15 +34,20 @@ public abstract class Area
 	ArrayList<MapLink> links = new ArrayList<MapLink>();
 	ArrayList<TilespaceRectMapObject> mapObjects = new ArrayList<TilespaceRectMapObject>();
 	TreeMap<String, Path> paths = new TreeMap<String, Path>();
+	public String musicTitle;
+		
+	public void load(JsonValue val)
+	{
+		
+	}
 	
-	public abstract void init();
-	public abstract void update();
-	public abstract void exit();
-	
-	public abstract void load(JsonValue val);
-	public abstract JsonValue save();
+	public JsonValue save()
+	{
+		return null;
+	}
 	
 	public TiledMap map;
+	int mapHeightPixels;
 	
 	public Path getPath(String name)
 	{
@@ -51,13 +56,28 @@ public abstract class Area
 		return paths.get(name);
 	}
 	
+	void handleMapProperties()
+	{
+		MapProperties prop = map.getProperties();
+		
+		mapHeightPixels = prop.get("height", Integer.class)*Game.PIXELS_PER_TILE;
+
+		if(prop.containsKey("music"))
+			musicTitle = prop.get("music", String.class);
+		
+		//currently just used for the NPC meeting room. one way of handling per map initialization logic
+		//is to set a key
+		if(prop.containsKey("load_npcs"))
+			mapObjects.addAll(MapUtil.generateNpcMapObjects());
+	}
+	
 	public Area(TiledMap map)
 	{
 		this.map = map;
 		
 		construct1x1Walls();
 		
-		int mapHeightPixels = map.getProperties().get("height", Integer.class)*Game.PIXELS_PER_TILE;
+		handleMapProperties();
 		
 		for(MapLayer group : map.getLayers())
 		{

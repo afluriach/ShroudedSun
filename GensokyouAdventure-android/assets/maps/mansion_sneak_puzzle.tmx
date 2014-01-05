@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="100" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="music" value="gymnopedie_no1_guitar"/>
+ </properties>
  <tileset firstgid="1" name="wood_floor" tilewidth="32" tileheight="32">
   <image source="../textures/wood_floor256.png" width="256" height="256"/>
  </tileset>

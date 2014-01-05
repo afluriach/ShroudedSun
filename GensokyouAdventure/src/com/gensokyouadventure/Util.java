@@ -15,6 +15,8 @@ import com.gensokyouadventure.physics.PrimaryDirection;
 
 public class Util
 {
+	public static final Vector2 ihat = new Vector2(1,0);
+	
 	public static FileHandle getInternalFile(String path)
 	{
 //		if(Gdx.app.getType() == ApplicationType.Desktop)
@@ -162,5 +164,10 @@ public class Util
 	{
 		return     (switchListener == null || switchListener.isActivated()) &&
 				   (clearListener == null || clearListener.isActivated());
+	}
+		
+	public static Vector2 displacement(Vector2 start, Vector2 end)
+	{
+		return end.cpy().sub(start);
 	}
 }

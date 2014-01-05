@@ -55,6 +55,7 @@ public abstract class GameObject
 		addClass("torch_walker", TorchWalker.class);
 		addClass("guard", Guard.class);
 		addClass("stationary_npc", StationaryNPC.class);
+		addClass("random_walk_npc", RandomWalkNPC.class);
 		
 		addClass("map_link", Door.class);
 	}
@@ -83,7 +84,7 @@ public abstract class GameObject
 	
 	String name;
 	boolean expired = false;
-	RenderLayer renderLayer = RenderLayer.groundLevel;
+	protected RenderLayer renderLayer = RenderLayer.groundLevel;
 	
 	public GameObject(TilespaceRectMapObject mo)
 	{

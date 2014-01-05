@@ -21,4 +21,15 @@ public class TilespaceRectMapObject
 		name = mo.getName();
 		type = prop.get("type", String.class);
 	}
+	
+	public TilespaceRectMapObject(String name, String type, Rectangle pos, MapProperties prop)
+	{
+		this.name = name;
+		this.type = type;
+		
+		rect = pos;
+		
+		if(prop == null) this.prop = new MapProperties();
+		else 			 this.prop = prop;
+	}
 }

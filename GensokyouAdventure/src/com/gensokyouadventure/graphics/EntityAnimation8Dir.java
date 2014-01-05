@@ -19,7 +19,7 @@ public class EntityAnimation8Dir
 	private int crntDirection;
 	private int crntFrame = STANDING_FRAME;
 	private int crntForm = 0;
-	
+		
 	public EntityAnimation8Dir(EntitySpriteSet8Dir s, int startingDir)
 	{
 		crntDirection = startingDir;
@@ -28,8 +28,13 @@ public class EntityAnimation8Dir
 		spriteSet = s;
 	}
 	
-	public void incrementFrame()
+	public int getFrame()
 	{
+		return crntFrame;
+	}
+	
+	public void incrementFrame()
+	{		
 		crntFrame++;
 		if(crntFrame == spriteSet.animationLen) crntFrame = 0;
 	}

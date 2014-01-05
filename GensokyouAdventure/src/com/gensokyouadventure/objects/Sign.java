@@ -25,6 +25,11 @@ public class Sign extends GameObject
 		texture = Game.inst.spriteLoader.getTexture("sign");
 	}
 
+	public String getMsg()
+	{
+		return msg;
+	}
+	
 	@Override
 	public void update() {
 	}

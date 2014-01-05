@@ -1,29 +1,36 @@
 package com.gensokyouadventure.map;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TreeMap;
+
+import com.badlogic.gdx.files.FileHandle;
+import com.gensokyouadventure.Util;
 
 public class AreaLoader
 {
-	private TreeMap<String, Class<?>> areas;
+	private Set<String> areas;
 	
 	public AreaLoader()
 	{
-		areas = new TreeMap<String, Class<?>>();
+		areas = new HashSet<String>();
 		
-		areas.put("level1", Level1.class);
-		areas.put("puzzle_room", PuzzleRoom.class);
-		areas.put("facer_floor", FacerFloor.class);
-		areas.put("meeting_room", MeetingRoom.class);
-		areas.put("level_select", LevelSelect.class);
-		areas.put("torch_puzzle", TorchPuzzle.class);
-		areas.put("mansion_sneak_floor", MansionSneakPuzzle.class);
+		FileHandle dir = Util.getInternalDirectory("maps/");
+		
+		for(FileHandle fh : dir.list())
+		{
+			if(fh.extension().equals("tmx"))
+			{
+				areas.add(fh.nameWithoutExtension());
+			}
+		}		
 	}
 	
 	public Area loadArea(String name)
 	{
-		if(!areas.containsKey(name))
+		if(!areas.contains(name))
 			throw new RuntimeException(String.format("area %s not found", name));
 		
-		return MapUtil.instantiate(areas.get(name));
+		return new Area(MapUtil.loadMap(String.format("maps/%s.tmx", name)));
 	}
 }

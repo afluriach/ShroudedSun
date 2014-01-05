@@ -27,10 +27,8 @@ public class Controls
 	public static final int buttonRadius = 40;
 	public static final int buttonTrimThickness = 5;
 	
-	public static final int dpadLength = 240;
-	public static final int dpadThickness = 60;
-	public static final int dpadSectionLength = dpadLength/2 - dpadThickness/2;
-	public static final int dpadSectionOffset = dpadLength/2 + dpadThickness/2;
+	public static final int controlpadDiameter = 320;
+	public static final int controlpadDeadzone = 40;
 	
 	static final ButtonColorScheme colors = ButtonColorScheme.scheme;
 	
@@ -52,16 +50,14 @@ public class Controls
 	
 	boolean pause = false;
 	
-	//GUI elements
-	
-	IsoscelesTriangle [] dpadTriangles = new IsoscelesTriangle[16];
-	
+	//GUI elements	
 	Circle buttonA;
 	Circle buttonB;
 	Circle buttonX;
 	Circle buttonY;
 	
 	Circle buttonPause;
+	Circle controlPad;
 		
 	public Controls(int width, int height, boolean touch, boolean keys)
 	{
@@ -84,32 +80,9 @@ public class Controls
 	
 	public void createShapes()
 	{
-		Vector2 dpadCenter = new Vector2(margin+dpadLength/2, margin+dpadLength/2);
-		float triangleBase = (float) (dpadLength/2 / (2/Math.sqrt(2) +1));
-		
-		for(int i=0;i<16; i++)
-		{
-			float angle = i*360f/16 - 11.25f;
-			
-			Vector2 triangleRay = Util.getUnit(angle).scl(dpadLength/2);
-			dpadTriangles[i] = new IsoscelesTriangle(triangleRay, dpadCenter, triangleBase);
-			
-//			float angle1 = i*45f - 22.5f;
-//			if(angle1 < 0) angle1 += 360;
-//			
-//			float angle2 = i*45f + 22.5f;
-//			if(angle2 >= 360) angle2 -= 360;
-//			
-//			dpadTriangles[2*i] = new IsoscelesTriangle(Util.getUnit(angle1).scl(dpadLength/2), dpadCenter, triangleBase);
-//			dpadTriangles[2*i+1] = new IsoscelesTriangle(Util.getUnit(angle2).scl(dpadLength/2), dpadCenter, triangleBase);
-			
-		}
-		
-//		dpadUp = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin+dpadLength/2+dpadThickness/2, dpadThickness, dpadLength/2 - dpadThickness/2);
-//		dpadDown = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin, dpadThickness, dpadLength/2 - dpadThickness/2);
-//		dpadLeft = new Rectangle(margin, margin+dpadLength/2-dpadThickness/2, dpadLength/2 - dpadThickness/2, dpadThickness);
-//		dpadRight = new Rectangle(margin+dpadLength/2 + dpadThickness/2, margin+dpadLength/2-dpadThickness/2, dpadLength/2 - dpadThickness/2, dpadThickness);
-//		dpadCenter = new Rectangle(margin+dpadLength/2-dpadThickness/2, margin+dpadLength/2-dpadThickness/2, dpadThickness, dpadThickness);
+		Vector2 controlpadCenter = new Vector2(margin+controlpadDiameter/2, margin+controlpadDiameter/2);
+
+		controlPad = new Circle(controlpadCenter.x, controlpadCenter.y, controlpadDiameter/2);
 		
 		buttonA = new Circle(width-margin-3*buttonRadius, margin+buttonRadius, buttonRadius);
 		buttonB = new Circle(width-margin-buttonRadius, margin + 3*buttonRadius, buttonRadius);
@@ -167,19 +140,9 @@ public class Controls
 			drawButtonOuter(shapeRenderer, colors.dpadlight, buttonPause);
 			drawButtonInner(shapeRenderer, pause, colors.dpadlight, colors.dpaddark, buttonPause);
 
-			for(int i=0;i<8;++i)
-			{
-				drawDpadTriangle(shapeRenderer, i == controlPad8Dir, dpadTriangles[2*i]);
-				drawDpadTriangle(shapeRenderer, i == controlPad8Dir, dpadTriangles[2*i+1]);
-			}
+			drawButtonOuter(shapeRenderer, colors.dpadlight, controlPad);
+			drawButtonInner(shapeRenderer, false, colors.dpadlight, colors.dpaddark, controlPad);
 		}
-//		drawDpadSegment(shapeRenderer, up, dpadUp);
-//		drawDpadSegment(shapeRenderer, right, dpadRight);
-//		drawDpadSegment(shapeRenderer, down, dpadDown);
-//		drawDpadSegment(shapeRenderer, left, dpadLeft);
-
-//		shapeRenderer.setColor(colors.dpaddark);
-//		shapeRenderer.rect(dpadCenter.x, dpadCenter.y, dpadCenter.width, dpadCenter.height);
 		
 		shapeRenderer.end();
 		
@@ -188,7 +151,7 @@ public class Controls
 		if(Game.inst.player.holdingItem != null)
 			batch.setColor(1f, 1f, 1f, 0.3f);
 		
-		//TODO indicate active toggle ability. 
+		//TODO do not draw other buttons if paused
 		//TODO draw icon transparent if not available
 		
 		if(Game.inst.bEquipped != null)
@@ -253,11 +216,14 @@ public class Controls
 		if(buttonPause.contains(x,y)) pause = true;
 		
 		Vector2 point = new Vector2(x,y);
-		for(int i=0;i<8;++i)
+		
+		if(controlPad.contains(point))
 		{
-			if(dpadTriangles[2*i].contains(point) || dpadTriangles[2*i+1].contains(point))
+			Vector2 posOnPad = point.sub(new Vector2(controlPad.x, controlPad.y));
+			
+			if(posOnPad.len2() >= controlpadDeadzone*controlpadDeadzone)
 			{
-				controlPad8Dir = i;
+				controlPad8Dir = Util.getNearestDir(posOnPad.angle());
 			}
 		}
 	}

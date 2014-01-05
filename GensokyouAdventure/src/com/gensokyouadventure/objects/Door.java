@@ -28,6 +28,14 @@ public class Door extends GameObject implements Switch
 	String destMap;
 	String destLink;
 	
+	public String getDestLink() {
+		return destLink;
+	}
+	public String getDestMap() {
+		return destMap;
+	}
+
+
 	public Door(TilespaceRectMapObject to)
 	{
 		super(to);

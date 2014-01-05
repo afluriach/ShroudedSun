@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="30" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="music" value="impromptu_opus_schubert"/>
+ </properties>
  <tileset firstgid="1" name="dark_indigo_cobblestone" tilewidth="32" tileheight="32">
   <image source="../textures/dark_indigo_cobblestone.png" width="32" height="32"/>
  </tileset>
@@ -50,6 +53,11 @@
     <property name="color" value="red"/>
    </properties>
   </object>
+  <object name="door1" type="door" x="288" y="224" width="32" height="32">
+   <properties>
+    <property name="open" value=""/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="rooms" width="20" height="30" visible="0">
   <object name="room1" type="room" x="0" y="672" width="640" height="288"/>
@@ -65,7 +73,7 @@
     <property name="switch" value="switch3 switch4"/>
    </properties>
   </object>
-  <object name="player_start" type="map_link" x="51" y="874" width="32" height="32">
+  <object name="player_start" type="map_link" x="288" y="864" width="32" height="32">
    <properties>
     <property name="entrance_dir" value="up"/>
    </properties>
@@ -105,7 +113,7 @@
   </object>
   <object name="barrier1" type="barrier" x="288" y="672" width="32" height="32">
    <properties>
-    <property name="switch" value="switch1 switch2"/>
+    <property name="switch" value="switch1 switch2 switch5"/>
    </properties>
   </object>
   <object name="barrier2" type="barrier" x="288" y="448" width="32" height="32">
@@ -123,23 +131,28 @@
     <property name="activating_class" value="jar"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup name="npc" width="20" height="30">
-  <object name="alice" type="stationary_npc" x="32" y="640" width="32" height="32">
+  <object name="switch5" type="switch" x="480" y="800" width="32" height="32">
    <properties>
-    <property name="cleared" value="enemy1 enemy2 enemy3"/>
-    <property name="dir" value="right"/>
-    <property name="msg1" value="Ugh, these monsters are so mean. What am I going to do?"/>
-    <property name="msg2" value="Wow, you're pretty strong. Maybe it pays to be tough. Looks like that door finally opened too. I was wondering about that."/>
-    <property name="sprite" value="alice"/>
+    <property name="sticky" value="true"/>
    </properties>
   </object>
-  <object name="rumia" type="stationary_npc" x="32" y="160" width="32" height="32">
+ </objectgroup>
+ <objectgroup name="npc" width="20" height="30">
+  <object name="patchy" type="stationary_npc" x="352" y="608" width="32" height="32">
+   <properties>
+    <property name="cleared" value="enemy1 enemy2 enemy3"/>
+    <property name="dir" value="left"/>
+    <property name="msg1" value="These guard maids have very good aim. Make sure not to stand still. You can use your shield to block bullets, but it will use MP."/>
+    <property name="msg2" value="Good job. Now solve a simple puzzle to get out of here."/>
+    <property name="sprite" value="patchouli"/>
+   </properties>
+  </object>
+  <object name="flandre" type="stationary_npc" x="32" y="160" width="32" height="32">
    <properties>
     <property name="dir" value="right"/>
     <property name="msg1" value="I just want to open the door but I can't figure out how. I'm not very good at puzzles. I don't want to get stuck here."/>
     <property name="msg2" value="Who cares how you opened it, the important thing is that I'm free!"/>
-    <property name="sprite" value="tewi"/>
+    <property name="sprite" value="flandre"/>
     <property name="switch" value="to_puzzle_room"/>
    </properties>
   </object>
@@ -152,12 +165,12 @@
     <property name="switch" value="to_puzzle_room"/>
    </properties>
   </object>
-  <object name="tewi" type="stationary_npc" x="32" y="704" width="32" height="32">
+  <object name="cirno" type="stationary_npc" x="224" y="736" width="32" height="32">
    <properties>
     <property name="dir" value="down"/>
     <property name="msg1" value="Some of these blocks are pretty heavy. I wish I was stong enough to move them."/>
     <property name="msg2" value="How did you do that!? I can't believe you're smarter and stronger than I am..."/>
-    <property name="sprite" value="tewi"/>
+    <property name="sprite" value="cirno"/>
     <property name="switch" value="barrier1"/>
    </properties>
   </object>

@@ -15,8 +15,6 @@ import com.gensokyouadventure.physics.PrimaryDirection;
 
 public abstract class Entity extends GameObject
 {
-	private static final float pathNodeArrivalMargin = 0.1f;
-	//cycle through animation (show a step), every time the entity covers distance equal to one step
 	static final float stepLength = 0.25f;
 	static final float MASS = 50.0f;
 	static final float HIT_CIRCLE_RADIUS = 0.35f;
@@ -24,15 +22,17 @@ public abstract class Entity extends GameObject
 	static final float maxAcceleration = 4.5f;
 	static final float defaultSpeed = 1f;
 	
-	//entities may flicker to show temporary invulnerbility after being attacked or when about to expire. 
+	//entities may flicker after being attacked 
 	boolean isFlickering = false;
 	boolean showingSprite = true;
 	float flickertotalTimeRemaining = 0;
 	float flickerIntervalLength = 0;
 	float flickerIntervalTimeRemaining = 0;
 	
+	//cycle through animation (show a step), every time the entity covers distance equal to one step.
 	float stepDistAccumulated=0;
-	
+	String leftFoot = "footstep_low_soft";
+	String rightFoot = "footstep_high_soft";
 	EntityAnimation8Dir animation;
 	
 	private int crntDir = defaultFacing;
@@ -43,7 +43,7 @@ public abstract class Entity extends GameObject
 	private int desiredDir = defaultFacing;
 	private Vector2 desiredVel;	
 	protected float speed;	
-	
+		
 	public Entity(TilespaceRectMapObject to, String animation, String filter, boolean stationary)
 	{
 		super(to);
@@ -172,8 +172,6 @@ public abstract class Entity extends GameObject
 			
 			flickerIntervalTimeRemaining -= Game.SECONDS_PER_FRAME;
 			flickertotalTimeRemaining -= Game.SECONDS_PER_FRAME;
-			
-			
 		}
 		
 		updateDirection();
@@ -184,6 +182,12 @@ public abstract class Entity extends GameObject
 		{
 			animation.incrementFrame();
 			stepDistAccumulated -= stepLength;
+			
+			if(animation.getFrame() == 0)
+				Game.inst.soundLoader.playSound(leftFoot, getCenterPos());
+			else if(animation.getFrame() == 2)
+				Game.inst.soundLoader.playSound(rightFoot, getCenterPos());
+
 		}
 	}
 

@@ -33,7 +33,7 @@ public abstract class Bullet extends GameObject
 	@Override
 	public void handleContact(GameObject other)
 	{
-		if(other.renderLayer== RenderLayer.groundLevel &&
+		if(other.getRenderLayer()== RenderLayer.groundLevel &&
 		   other.getClass() != RadarSensor.class && 
 		   other.getClass() != PlayerShieldObject.class)
 			expire();

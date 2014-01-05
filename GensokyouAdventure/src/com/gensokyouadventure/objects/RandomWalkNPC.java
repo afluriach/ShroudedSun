@@ -18,7 +18,7 @@ public class RandomWalkNPC extends NPC
 
 	Vector2 targetPos;
 	
-	public RandomWalkNPC(TilespaceRectMapObject to, String animation) {
+	public RandomWalkNPC(TilespaceRectMapObject to) {
 		super(to);
 
 		//speed is a propety of entity and the speed key is already checked.
@@ -52,7 +52,7 @@ public class RandomWalkNPC extends NPC
 	{
 		if(other instanceof RandomWalkNPC)
 		{
-			Game.log(String.format("%s: Sorry for bumping into you, %s.", name, other.name));
+			Game.log(String.format("%s: Sorry for bumping into you, %s.", getName(), other.getName()));
 		}
 	}
 	/**
@@ -96,7 +96,7 @@ public class RandomWalkNPC extends NPC
 		
 		if(bestDist < minDistToMove)
 		{
-			Game.log(String.format("%s: can't move more than %f. ", name, bestDist));
+			Game.log(String.format("%s: can't move more than %f. ", getName(), bestDist));
 			setDesiredVel(Vector2.Zero);
 		}
 		
@@ -111,7 +111,7 @@ public class RandomWalkNPC extends NPC
 	@Override
 	public void onExpire()
 	{
-		say(String.format("%s: It's the end for me!", name));
+		say(String.format("%s: It's the end for me!", getName()));
 	}
 
 	@Override
