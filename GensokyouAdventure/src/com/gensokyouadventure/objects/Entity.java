@@ -22,6 +22,23 @@ public abstract class Entity extends GameObject
 	static final float maxAcceleration = 4.5f;
 	static final float defaultSpeed = 1f;
 	
+	public static final String[] entityNames = 
+		{
+			"reimu", "marisa", "cirno",
+			"meiling", "patchouli", "sakuya",
+			"remilia", "remilia_bat", "flandre",
+			"flandre_bat", "chen", "alice",
+			"shanghai", "youmu", "yuyuko",
+			"ran", "yukari", "keine",
+			"tewi", "reisen", "eiren",
+			"kaguya", "mokou", "aya",
+			"melancholy", "yuuka", "komachi",
+			"yamaxanadu", "aki", "hina",
+			"nitori", "sanae", "kanako",
+			"suwako", "suika", "mini_suika"
+		};
+
+	
 	//entities may flicker after being attacked 
 	boolean isFlickering = false;
 	boolean showingSprite = true;

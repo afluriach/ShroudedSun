@@ -10,52 +10,30 @@ public class EntitySpriteSet8Dir
 	public static final int BLUE_GLOW = 2;
 	
 	
-	TextureRegion[][][] sprites;
+	TextureRegion[][] sprites;
 	public final int spriteSize;
 	public final int animationLen;
 	
-	public EntitySpriteSet8Dir(Texture texture, int tileX, int tileY, int spriteSize, int animationLen)
+	public EntitySpriteSet8Dir(Texture texture, int spriteSize, int animationLen)
 	{
 		this.spriteSize = spriteSize;
 		this.animationLen = animationLen;
 		
-		sprites = new TextureRegion[3][5][animationLen];
+		sprites = new TextureRegion[5][3];
 		
-		loadCharacter(tileX, tileY, animationLen, texture);
-	}
-	
-	void loadCharacter(int gridX, int gridY, int animationLen, Texture texture)
-	{
-		//measured from the sprite sheet
-		int charStartingY = 10+196*gridY;
-		int charStartingX = 1+333*gridX;
-		
-		for(int i=0;i<3; ++i)
+		for(int dir=0;dir < 4; ++dir)
 		{
-			//load each of the 3 forms. no glow, red glow, and blue glow
-			
-			//forms are arranged horizontally, but use the same starting Y
-			int formStartingX = charStartingX+37*3*i;
-			
-			for(int j=0;j<5; j++)
+			for(int frame = 0; frame < 3; ++frame)
 			{
-				//load each of the 5 directions
-				
-				//directions are arranged vertically, but use the same starting X
-				int dirStartingY = charStartingY + 37*j;
-				
-				for(int k=0;k<animationLen; ++k)
-				{
-					//for a given form and direction, load each animation frame
-					//animation frames are arranged horizontally
-					
-					int frameStartingX = formStartingX + 37*k;
-					
-					sprites[i][j][k] = new TextureRegion(texture, frameStartingX, dirStartingY, 36, 36);
-				}
-				
+				sprites[dir][frame] = new TextureRegion(texture, spriteSize*frame, spriteSize*dir, spriteSize, spriteSize);
 			}
 		}
-	}
-	
+		
+		//dir4 is the last column, going down
+		
+		for(int frame=0; frame < 3; ++frame)
+		{
+			sprites[4][frame] = new TextureRegion(texture, 3*spriteSize, frame*spriteSize, spriteSize, spriteSize);
+		}
+	}	
 }

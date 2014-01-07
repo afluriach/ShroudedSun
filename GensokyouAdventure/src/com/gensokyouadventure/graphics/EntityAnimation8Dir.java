@@ -18,7 +18,6 @@ public class EntityAnimation8Dir
 	 */
 	private int crntDirection;
 	private int crntFrame = STANDING_FRAME;
-	private int crntForm = 0;
 		
 	public EntityAnimation8Dir(EntitySpriteSet8Dir s, int startingDir)
 	{
@@ -48,7 +47,7 @@ public class EntityAnimation8Dir
 		int y = centerPixY - spriteSet.spriteSize/2;
 		
 		boolean flip = crntDirection >= 3 && crntDirection <= 5;
-		TextureRegion region = spriteSet.sprites[crntForm][getSpriteRow()][crntFrame];
+		TextureRegion region = spriteSet.sprites[getSpriteRow()][crntFrame];
 		
 		if(flip) region.flip(true, false);	
 		batch.draw(region, x, y);
@@ -67,29 +66,19 @@ public class EntityAnimation8Dir
 		default:		throw new IllegalStateException();
 		}
 		
-//		if(crntDirection <= 4)
-//			return Math.abs(crntDirection - 2);	
-//		else
-//			return Math.abs(crntDirection - 4);
 	}
 	
 	public void setDirection(int newDir)
 	{
 		crntDirection = newDir;
-//		crntFrame = STANDING_FRAME;
 		//when changing direction, stay at the same point in the animation sequence.
+		//crntFrame = STANDING_FRAME;
+		//doesn't work well if the entity is moving, better to keep the same animation frame to
+		//make walking look more natural
 	}
 	
 	public void resetAnimation()
 	{
 		crntFrame = STANDING_FRAME;
-	}
-	
-	public void setForm(int form)
-	{
-		if(form < 0 || form >= spriteSet.sprites.length)
-			throw new IllegalArgumentException("form number out of bounds: " + form);
-		
-		crntForm = form;
-	}
+	}	
 }

@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.gensokyouadventure.Game;
 import com.gensokyouadventure.Util;
 import com.gensokyouadventure.physics.PrimaryDirection;
 
@@ -16,29 +17,11 @@ public class SpriteLoader
 	private static final int numPortraitFrames = 9;
 	
 	private Map<String, Texture> textures = new TreeMap<String, Texture>();
-	private Map<String, EntitySpriteSet4Dir> entitySpriteSets4Dir = new TreeMap<String, EntitySpriteSet4Dir>();
 	private Map<String, EntitySpriteSet8Dir> entitySpriteSets8Dir = new TreeMap<String, EntitySpriteSet8Dir>();
 	private Map<String, AnimationSpriteSet> animationSpriteSet = new TreeMap<String, AnimationSpriteSet>();
 	private Map<String, Portrait> portraits = new TreeMap<String, Portrait>();
 	private ArrayList<Texture> spriteSheetsLoaded = new ArrayList<Texture>();
-	
-	//the characters spatial layout in the sprite sheet
-	public static final String[][] spriteSheetNames = 
-		{
-			{"reimu", "marisa", "cirno"},
-			{"meiling", "patchouli", "sakuya"},
-			{"remilia", "remilia_bat", "flandre"},
-			{"flandre_bat", "chen", "alice"},
-			{"shanghai", "youmu", "yuyuko"},
-			{"ran", "yukari", "keine"},
-			{"tewi", "reisen", "eiren"},
-			{"kaguya", "mokou", "aya"},
-			{"melancholy", "yuuka", "komachi"},
-			{"yamaxanadu", "aki", "hina"},
-			{"nitori", "sanae", "kanako"},
-			{"suwako", "suika", "mini_suika"}
-		};
-	
+		
 	public static final String[] portraitNames = 
 		{
 			"alice", "aya", "cirno", "iku", "komachi", "marisa", "meiling",
@@ -49,7 +32,6 @@ public class SpriteLoader
 	public SpriteLoader()
 	{
 		loadTexturesInFolder();
-		load4DirEntitySprites();
 		load8DirTouhouSprites();
 		loadAnimations();
 		loadPortraits();
@@ -64,27 +46,17 @@ public class SpriteLoader
 	{
 		return new Texture(fh);
 	}
-	
-	private void load4DirEntitySprites()
-	{		
-		linkSpritesheet();
-	}
-	
+		
 	private void load8DirTouhouSprites()
 	{
-		//starts at 3,10
+		FileHandle entityDir = Util.getInternalDirectory("entities/");
 		
-		Texture spriteSheet = new Texture(Util.getInternalFile("spritesheets/touhou-5dir-sheet.png"));
-		spriteSheetsLoaded.add(spriteSheet);
-		
-		for(int i=0;i<spriteSheetNames.length; ++i)
+		for(FileHandle entitySheet : entityDir.list())
 		{
-			for(int j=0;j<spriteSheetNames[i].length; ++j)
-			{
-				EntitySpriteSet8Dir spriteSet = new EntitySpriteSet8Dir(spriteSheet, j, i, 36, 3);
-				
-				entitySpriteSets8Dir.put(spriteSheetNames[i][j], spriteSet);
-			}
+			Texture entityTexture = new Texture(entitySheet);
+			EntitySpriteSet8Dir spriteSet = new EntitySpriteSet8Dir(entityTexture, 32, 3);
+			entitySpriteSets8Dir.put(entitySheet.nameWithoutExtension(), spriteSet);
+			spriteSheetsLoaded.add(entityTexture);
 		}
 	}
 	
@@ -94,23 +66,6 @@ public class SpriteLoader
 			throw new NoSuchElementException(name + " not found");
 		
 		return new Animation(animationSpriteSet.get(name), frameInterval, dir);
-	}
-
-	private void linkSpritesheet() {
-		int linkSpriteSize = 32;
-		Texture linkSpriteSheet = new Texture(Util.getInternalFile("spritesheets/link_sprites.png"));
-        TextureRegion [][] linkSprites = TextureRegion.split(linkSpriteSheet, linkSpriteSize, linkSpriteSize);
-        spriteSheetsLoaded.add(linkSpriteSheet);
-		
-        entitySpriteSets4Dir.put("link_green", new EntitySpriteSet4Dir(linkSprites, 0,0,linkSpriteSize, 3));
-        entitySpriteSets4Dir.put("link_green_hat", new EntitySpriteSet4Dir(linkSprites, 3,0,linkSpriteSize, 3));
-        entitySpriteSets4Dir.put("link_red", new EntitySpriteSet4Dir(linkSprites, 6,0,linkSpriteSize, 3));
-        entitySpriteSets4Dir.put("link_red_hat", new EntitySpriteSet4Dir(linkSprites, 9,0,linkSpriteSize, 3));
-        
-        entitySpriteSets4Dir.put("link_blue", new EntitySpriteSet4Dir(linkSprites, 0,4,linkSpriteSize, 3));
-        entitySpriteSets4Dir.put("link_blue_hat", new EntitySpriteSet4Dir(linkSprites, 3,4,linkSpriteSize, 3));
-        entitySpriteSets4Dir.put("link_dark", new EntitySpriteSet4Dir(linkSprites, 6,4,linkSpriteSize, 3));
-        entitySpriteSets4Dir.put("link_dark_hat", new EntitySpriteSet4Dir(linkSprites, 9,4,linkSpriteSize, 3));
 	}
 	
 	private void loadPortraits()
@@ -189,16 +144,7 @@ public class SpriteLoader
 		
 		return new EntityAnimation8Dir(entitySpriteSets8Dir.get(name), startingDir);
 	}
-	
-	public EntityAnimation4Dir getSpriteAnimation(String name, PrimaryDirection startingDir)
-	{
-		if(!entitySpriteSets4Dir.containsKey(name))
-		{
-			throw new NoSuchElementException(String.format("Sprite %s not found", name));
-		}
-		return new EntityAnimation4Dir(entitySpriteSets4Dir.get(name), startingDir);
-	}
-	
+		
 	public Texture getTexture(String name)
 	{
 		if(!textures.containsKey(name))

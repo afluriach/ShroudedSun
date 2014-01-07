@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.graphics.SpriteLoader;
+import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RandomWalkNPC;
 import com.gensokyouadventure.objects.Wall;
@@ -135,23 +136,16 @@ public class MapUtil
 	//taken from the init method for the NPC meeting room. 
 	public static void loadNPCs()
 	{
-		int spriteNameRow=0;
-		int spriteNameCol=0;
+		int entityIdx=0;
 		
 		for(int i=0;i<6;++i)
 		{
-			for(int j=0;j<6;++j)
+			for(int j=0;j<6;++j, ++entityIdx)
 			{
 				Vector2 pos = new Vector2(4+i*6, 4+j*6);
-				String name = SpriteLoader.spriteSheetNames[spriteNameRow][spriteNameCol++];
+				String name = Entity.entityNames[entityIdx];
 								
 				Game.inst.gameObjectSystem.addObject(new RandomWalkNPC(pos, name, 2, name));
-				
-				if(spriteNameCol >= 3)
-				{
-					spriteNameCol -= 3;
-					spriteNameRow += 1;
-				}
 			}
 		}
 	}
@@ -160,12 +154,11 @@ public class MapUtil
 	{
 		List<TilespaceRectMapObject> mapObjects = new ArrayList<TilespaceRectMapObject>();
 		
-		int spriteNameRow=0;
-		int spriteNameCol=0;
+		int entityIdx = 0;
 		
 		for(int i=0;i<6;++i)
 		{
-			for(int j=0;j<6;++j)
+			for(int j=0;j<6;++j, ++entityIdx)
 			{
 				Vector2 pos = new Vector2(4+i*6, 4+j*6);
 				Rectangle rect = new Rectangle();
@@ -173,20 +166,14 @@ public class MapUtil
 				rect.setHeight(1);
 				rect.setWidth(1);
 				
-				String name = SpriteLoader.spriteSheetNames[spriteNameRow][spriteNameCol++];
+				String name = Entity.entityNames[entityIdx];
 
 				//in this case, the name of the entity is also the name of the sprite to use.
 				//need to put this in MapProperties so the NPC constructor can load it.
 				MapProperties prop = new MapProperties();
 				prop.put("sprite", name);
 				
-				mapObjects.add(new TilespaceRectMapObject(name, "random_walk_npc", rect, prop));
-				
-				if(spriteNameCol >= 3)
-				{
-					spriteNameCol -= 3;
-					spriteNameRow += 1;
-				}
+				mapObjects.add(new TilespaceRectMapObject(name, "random_walk_npc", rect, prop));				
 			}
 		}
 		
