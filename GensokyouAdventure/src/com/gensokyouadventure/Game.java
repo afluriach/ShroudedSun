@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.GdxNativesLoader;
+import com.gensokyouadventure.graphics.Graphics;
 import com.gensokyouadventure.graphics.SpriteLoader;
 import com.gensokyouadventure.map.Area;
 import com.gensokyouadventure.map.AreaLoader;
@@ -50,6 +51,9 @@ public class Game implements ApplicationListener
 	public static final int MAGIC_BAR_OUTLINE = 4;
 	
 	public static final Rectangle dialogPos = new Rectangle(350, 50, 500, 400);
+	
+	public static final Color HEALTH_BAR_COLOR = Graphics.hsva(350f, 0.8f, 0.8f, 1f);
+	public static final Color MAGIC_BAR_COLOR = Graphics.hsva(135f, 0.7f, 0.7f, 1f);
 
 	//control constants
 	public static final boolean keyControls = true;
@@ -197,7 +201,7 @@ public class Game implements ApplicationListener
 						   HEALTH_BAR_LENGTH+2*HEALTH_BAR_OUTLINE,
 						   HEALTH_BAR_THICKNESS+2*HEALTH_BAR_OUTLINE);
 		
-		shapeRenderer.setColor(1,0,0,1);
+		shapeRenderer.setColor(HEALTH_BAR_COLOR);
 		shapeRenderer.rect(GUI_EDGE_MARGIN + HEALTH_BAR_OUTLINE,
 						   screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
 						   healthBarLen,
@@ -216,7 +220,7 @@ public class Game implements ApplicationListener
 						   MAGIC_BAR_LENGTH+2*MAGIC_BAR_OUTLINE,
 						   MAGIC_BAR_THICKNESS+2*MAGIC_BAR_OUTLINE);
 		
-		shapeRenderer.setColor(0f,0.8f,0.1f,1f);
+		shapeRenderer.setColor(MAGIC_BAR_COLOR);
 		shapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE,
 				           screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
 				           magicBarLen,
