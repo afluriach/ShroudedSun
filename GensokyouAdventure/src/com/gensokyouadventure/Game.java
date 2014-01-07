@@ -57,7 +57,7 @@ public class Game implements ApplicationListener
 	public static final int MAGIC_BAR_OUTLINE = 4;
 	
 	public static final Rectangle dialogPos = new Rectangle(350, 50, 500, 400);
-	public static final float minDialogChangeTime = 0.25f;
+	public static final float minDialogChangeTime = 1f;
 		
 	public static final int MAX_TOUCH_EVENTS = 5;
 	
@@ -80,7 +80,7 @@ public class Game implements ApplicationListener
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private SpriteBatch guiBatch;
-	private BitmapFont font;
+	public BitmapFont font;
 	private ShapeRenderer shapeRenderer;
 	public SpriteLoader spriteLoader;
 
@@ -112,6 +112,9 @@ public class Game implements ApplicationListener
 	public GameObjectSystem gameObjectSystem;
 	public Random random = new Random();
 	public Dialog activeDialog;
+	Conversation crntConversation;
+	int crntConvsersationFrame;
+	//time since the dialog or current frame of the conversation appeared
 	float timeInDialog = 0f;
 	boolean paused = false;
 	public Runnable onExitDialog;
@@ -226,11 +229,18 @@ public class Game implements ApplicationListener
 		
 		shapeRenderer.end();		
 		
-		if(activeDialog == null)
-			controls.render(shapeRenderer, guiBatch, font);
+		if(crntConversation != null)
+		{
+			//switched to gui bach
+			crntConversation.render(guiBatch, shapeRenderer, crntConvsersationFrame);
+		}
+		else if(activeDialog != null)
+		{
+			activeDialog.render(guiBatch, shapeRenderer);			
+		}
 		else
 		{
-			activeDialog.render(batch, shapeRenderer);
+			controls.render(shapeRenderer, guiBatch, font);			
 		}
 		
 		if(paused)
@@ -377,16 +387,18 @@ public class Game implements ApplicationListener
 		}
 	}
 		
-	void traverseLink(String destMap, String destLink)
+	public void traverseLink(String destMap, String destLink)
 	{
 		if(destMap != null && !destMap.equals(""))
 		{
 			loadArea(destMap, destLink);
 			mapEntranceLink = destLink;
+			areaName = destMap;
 		}
 		
 		MapLink dest = area.getMapLink(destLink);		
 		player.setPos(Util.clearRectangle(dest.location, dest.entranceDir, ENTRANCE_CLEAR_DISTANCE));
+		player.setVel(Vector2.Zero);
 	}
 		
 	void loadArea(String areaName, String mapLink)
@@ -463,6 +475,7 @@ public class Game implements ApplicationListener
 	public void dispose()
 	{
 		batch.dispose();
+		guiBatch.dispose();
 		spriteLoader.unloadTextures();
 		font.dispose();
 		shapeRenderer.dispose();
@@ -476,16 +489,24 @@ public class Game implements ApplicationListener
 		checkTeleport();
 		
 		//handle input
-		if(activeDialog == null)
-			handleInput();
-		else
+		if(crntConversation != null)
+		{
+			timeInDialog += Game.SECONDS_PER_FRAME;
+			handleConversationControls();
+		}
+		else if(activeDialog != null)
 		{
 			timeInDialog += Game.SECONDS_PER_FRAME;
 			handleDialogControls();
 		}
+		else
+		{
+			//normal gameplay input
+			handleInput();			
+		}
 		
 		//update logic
-		if(activeDialog == null && !paused)
+		if(activeDialog == null && crntConversation == null && !paused)
 		{
 			updateTimeAccumulated += Gdx.graphics.getDeltaTime();
 			while(updateTimeAccumulated >= SECONDS_PER_FRAME)
@@ -532,7 +553,58 @@ public class Game implements ApplicationListener
 		drawGUI();		
 	}
 
+	void handleConversationControls()
+	{
+		boolean pressed = false;
+		
+		//ignore any button presses before the minimum elapsed time
+		if(timeInDialog < minDialogChangeTime) return;
 
+		//any touch on the dialog box to continue;
+		if(touchControls)
+		{
+			Rectangle conversationDialogPos = Conversation.getDialogPos();
+
+			for(int i=0; i< MAX_TOUCH_EVENTS; ++i)
+			{
+				if(Gdx.input.isTouched(i))
+				{
+					if(conversationDialogPos.contains(Gdx.input.getX(i), screenHeight - Gdx.input.getY(i)))
+					{
+						pressed = true;
+						break;
+					}
+				}
+				else break;
+			}
+		}
+
+		if(keyControls)
+		{
+			if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+				pressed = true;
+		}
+		
+		if(pressed)
+		{
+			++crntConvsersationFrame;
+			timeInDialog = 0f;
+
+			if(crntConvsersationFrame >= crntConversation.frames.length)
+			{
+				crntConversation = null;
+				timeInDialog = 0f;
+
+				if(onExitDialog != null)
+				{
+					onExitDialog.run();
+					onExitDialog = null;
+				}
+
+			}
+		}
+	}
+	
 	private void handleDialogControls()
 	{
 		boolean pressed = false;
@@ -614,6 +686,13 @@ public class Game implements ApplicationListener
 										   scissor);
 			ScissorStack.pushScissors(scissor);
 		}
+	}
+	
+	public void setConversation(String name)
+	{
+		crntConversation = new Conversation(name);
+		timeInDialog = 0f;
+		crntConvsersationFrame = 0;
 	}
 
 	public void setDialogMsg(String msg)

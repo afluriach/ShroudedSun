@@ -11,7 +11,7 @@
  </tileset>
  <layer name="background" width="50" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3XUQqDMBBF0XQp3UAL3f/iih8FP0pMxpnMS3IvvN/qwapYyjq9Kzv6OOzo2bFIxx1TtKNm+G0GR4slwvEv/ld2x1UZjkfnOVk3wlH7vVmeuzhwZDi8GuF4iW13h9c7wms4tLa7Y4U8n1fF8Xd6DTh0HedajlFzXBXxHoxyjLoeqzo874/VHVFxPXBEO861HGMHx93rmumwnIv6/ZF5PXBoOJSyftdmf4t7fZ9nnzMOHDhw4MgfDq3h0BoOreHQGg6t4dAaDq2t4rBYss/X00FERERERERERERERERENEtfmKlr0iBOAAA=
+   H4sIAAAAAAAAC+3XwQ3CMBBEUVMCJdAASPRfXOQDUg7IsZ1d79j+X5ojIU8hQUlpnT6F5b4Gy70a5um4Y/J2lAy/zeCosXg4/sXvqt9xVYTj0XhOvRvhKB1vlucuDhwRDqtGON5i291h9R9hNRxa292Re3Z+XiXL51UyPE6rAYeu41zNd5QcV3n8D3o5Rl2PVR2W98fqDq+4Hji8HedqvmMHx93rGunoORf1+yPyeuDQcCjV+14b/S5u9X4efc44cODAgSN+OLSGQ2s4tIZDazi0hkNrOLS2iqPHEn2+lg4iIiIiIiIiIiIiIiIiolk6APROXYcgTgAA
   </data>
  </layer>
  <layer name="walls" width="50" height="100">
@@ -105,7 +105,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="rooms" width="50" height="100" visible="0">
+ <objectgroup name="rooms" width="50" height="100">
   <object name="room1" type="room" x="0" y="0" width="288" height="256"/>
   <object name="room2" type="room" x="256" y="0" width="608" height="416"/>
   <object name="room3" type="room" x="832" y="0" width="416" height="640"/>
@@ -114,7 +114,7 @@
   <object name="room4" type="room" x="64" y="608" width="608" height="608"/>
   <object name="room5" type="room" x="640" y="608" width="608" height="608"/>
   <object name="room6" type="room" x="0" y="1184" width="1248" height="864"/>
-  <object x="0" y="224" width="96" height="992"/>
+  <object name="room9" type="room" x="0" y="224" width="96" height="992"/>
  </objectgroup>
  <objectgroup name="floor_objects" width="50" height="100"/>
  <objectgroup name="map_links" width="50" height="100">

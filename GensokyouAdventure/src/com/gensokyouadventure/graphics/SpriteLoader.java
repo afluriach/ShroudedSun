@@ -13,12 +13,14 @@ import com.gensokyouadventure.physics.PrimaryDirection;
 
 public class SpriteLoader
 {
+	private static final int numPortraitFrames = 9;
+	
 	private Map<String, Texture> textures = new TreeMap<String, Texture>();
 	private Map<String, EntitySpriteSet4Dir> entitySpriteSets4Dir = new TreeMap<String, EntitySpriteSet4Dir>();
 	private Map<String, EntitySpriteSet8Dir> entitySpriteSets8Dir = new TreeMap<String, EntitySpriteSet8Dir>();
 	private Map<String, AnimationSpriteSet> animationSpriteSet = new TreeMap<String, AnimationSpriteSet>();
+	private Map<String, Portrait> portraits = new TreeMap<String, Portrait>();
 	private ArrayList<Texture> spriteSheetsLoaded = new ArrayList<Texture>();
-	
 	
 	//the characters spatial layout in the sprite sheet
 	public static final String[][] spriteSheetNames = 
@@ -37,12 +39,20 @@ public class SpriteLoader
 			{"suwako", "suika", "mini_suika"}
 		};
 	
+	public static final String[] portraitNames = 
+		{
+			"alice", "aya", "cirno", "iku", "komachi", "marisa", "meiling",
+			"patchouli", "reimu", "reisen", "remilia", "sakuya", "sanae",
+			"suika", "suwako", "tenshi", "utsuho", "youmu", "yukari", "yuyuko"
+		};
+	
 	public SpriteLoader()
 	{
 		loadTexturesInFolder();
 		load4DirEntitySprites();
 		load8DirTouhouSprites();
 		loadAnimations();
+		loadPortraits();
 	}
 		
 	private Texture loadTexture(String internalName)
@@ -103,6 +113,16 @@ public class SpriteLoader
         entitySpriteSets4Dir.put("link_dark_hat", new EntitySpriteSet4Dir(linkSprites, 9,4,linkSpriteSize, 3));
 	}
 	
+	private void loadPortraits()
+	{
+		for(String name : portraitNames)
+		{
+			portraits.put(name, new Portrait(name, numPortraitFrames));
+		}
+		
+		portraits.put("fairy_maid", new Portrait("fairy_maid", 1));
+	}
+	
 	private void loadTexturesInFolder()
 	{
 		FileHandle handle = Util.getInternalDirectory("sprites/");
@@ -140,7 +160,6 @@ public class SpriteLoader
 		loadAnimation(loadTexture("animations/flame64.png"), 64, 8, "flame64", PrimaryDirection.up);
 		loadAnimation(loadTexture("animations/flame32.png"), 32, 8, "flame32", PrimaryDirection.up);
 		loadAnimation(loadTexture("animations/cirno_bullet_aa.png"), 128, 15, "cirno_bullet_aa", PrimaryDirection.up);
-
 	}
 	
 	public void unloadTextures()
@@ -152,6 +171,14 @@ public class SpriteLoader
 		for(Texture t : textures.values())
 		{
 			t.dispose();
+		}
+		
+		for(Portrait p : portraits.values())
+		{
+			for(Texture t : p.frames)
+			{
+				t.dispose();
+			}
 		}
 	}
 	
@@ -177,5 +204,12 @@ public class SpriteLoader
 		if(!textures.containsKey(name))
 			throw new NoSuchElementException(String.format("Texture %s not found", name));
 		return textures.get(name);
+	}
+	
+	public Portrait getPortrait(String name)
+	{
+		if(!portraits.containsKey(name))
+			throw new NoSuchElementException(String.format("Portrait %s not found", name));
+		return portraits.get(name);
 	}
 }

@@ -89,21 +89,27 @@ public class Area
 				//add all layer properties to properties of each object in layer
 				props.putAll(group.getProperties());
 				
-				if(type != null && type.equals("room"))
+				if(type == null)
+				{
+					Game.log("object: " + to.getName() + " has null type.");
+					continue;
+				}
+				
+				if(type.equals("room"))
 				{
 					loadRoom(mapHeightPixels, to);					
 				}
 				
 				//
-				else if(type != null && type.equals("map_link"))
+				else if(type.equals("map_link"))
 				{
 					loadMaplink(mapHeightPixels, to, props);
 				}
 				
-				else if(type != null && type.equals("door"))
+				else if(type.equals("door"))
 				{
 					//the door object checks its own propertes for maplink capabilities.
-					//door objects need to be loaded as maplinks so they will be visible as a destination.
+					//door objects need to be loaded as a maplink so it will be visible as a destination.
 					//since the door will sit on top of the maplink, it should never be touched.
 					//
 					//if a door is chosen as a destination link, the player will clear the maplink rectangle, again 
@@ -114,7 +120,7 @@ public class Area
 				}
 
 				//TODO can tell its a polymile map object. or can tell based on object layer. really could be doing more by layer instead of types.
-				else if(type != null && type.equals("path"))
+				else if(type.equals("path"))
 				{
 					loadPath((PolylineMapObject) to);
 				}

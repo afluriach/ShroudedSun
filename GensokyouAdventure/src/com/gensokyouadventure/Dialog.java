@@ -43,32 +43,24 @@ public class Dialog
 	
 	public void render(SpriteBatch batch, ShapeRenderer sr)
 	{
-		batch.begin();
-		sr.begin(ShapeType.Line);
+		//draw background
+		sr.begin(ShapeType.Filled);		
+			sr.setColor(bgColor);	
+			sr.rect(pos.x + trimThickess, pos.y + trimThickess, pos.width - 2*trimThickess, pos.height - 2*trimThickess);
+		sr.end();
 		
 		//draw trim
-		sr.setColor(trimColor);
-		
-//		sr.rectLine(pos.x, pos.y, pos.x + pos.width, pos.y + pos.height, trimThickess);
-		sr.rectLine(pos.x, pos.y, pos.x+pos.width, pos.y, trimThickess);
-		sr.rectLine(pos.x+pos.width, pos.y, pos.x+pos.width, pos.y+pos.height, trimThickess);
-		sr.rectLine(pos.x+pos.width, pos.y+pos.height, pos.x, pos.y+pos.height, trimThickess);
-		sr.rectLine(pos.x, pos.y+pos.height, pos.x, pos.y, trimThickess);
-		
+		sr.begin(ShapeType.Line);		
+			sr.setColor(trimColor);
+			sr.rectLine(pos.x, pos.y, pos.x+pos.width, pos.y, trimThickess);
+			sr.rectLine(pos.x+pos.width, pos.y, pos.x+pos.width, pos.y+pos.height, trimThickess);
+			sr.rectLine(pos.x+pos.width, pos.y+pos.height, pos.x, pos.y+pos.height, trimThickess);
+			sr.rectLine(pos.x, pos.y+pos.height, pos.x, pos.y, trimThickess);		
 		sr.end();
-		
-		sr.begin(ShapeType.Filled);
-		//draw background
-		sr.setColor(bgColor);
-		
-		sr.rect(pos.x + trimThickess, pos.y + trimThickess, pos.width - 2*trimThickess, pos.height - 2*trimThickess);
-		
-		sr.end();
-		
-		
+
+		batch.begin();
 		batch.setColor(textColor);
 		font.drawWrapped(batch, msg, lineStartX, lineStartY, lineWidth);
-		
 		batch.end();
 	}
 }
