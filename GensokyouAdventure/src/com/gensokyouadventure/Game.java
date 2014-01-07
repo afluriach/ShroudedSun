@@ -35,15 +35,8 @@ public class Game implements ApplicationListener
 {
 	public static Game inst;
 	
-	//constants
-	public static final boolean physicsDebugRender = false;
-	public static final boolean keyControls = true;
-	
-	public static final int DEFAULT_SCREEN_WIDTH = 1280;
-	public static final int DEFAULT_SCREEN_HEIGHT = 720;
-	
+	//gui constants
 	public static final int GUI_EDGE_MARGIN = 20;
-	
 	public static final int BUTTON_RADIUS = 35;
 	
 	public static final int HEALTH_BAR_THICKNESS = 30;
@@ -57,24 +50,32 @@ public class Game implements ApplicationListener
 	public static final int MAGIC_BAR_OUTLINE = 4;
 	
 	public static final Rectangle dialogPos = new Rectangle(350, 50, 500, 400);
+
+	//control constants
+	public static final boolean keyControls = true;
 	public static final float minDialogChangeTime = 1f;
-		
+	private static final float abilityWaitInterval = 0.7f;	
 	public static final int MAX_TOUCH_EVENTS = 5;
 	
-	public static final String TAG = "GensokyouAdventure";
+	//graphic constants
+	public static final boolean physicsDebugRender = false;
+	
+	public static final int DEFAULT_SCREEN_WIDTH = 1280;
+	public static final int DEFAULT_SCREEN_HEIGHT = 720;	
 	
 	public static final int FRAMES_PER_SECOND = 60;
 	public static final float SECONDS_PER_FRAME = 1.0f / FRAMES_PER_SECOND;
 	
 	public static final int PIXELS_PER_TILE = 32;
 	public static final float TILES_PER_PIXEL = 1.0f / PIXELS_PER_TILE;
-	
+
+	//game logic
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
 	public static final String startingLevel = "level_select";
 	public static final String startingLink = "entrance";
+	public static final String TAG = "GensokyouAdventure";
 	
-	private static final float abilityWaitInterval = 0.7f;
 	
 	//graphics
 	private OrthographicCamera camera;
