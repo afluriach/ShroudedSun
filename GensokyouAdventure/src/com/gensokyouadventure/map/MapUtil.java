@@ -20,10 +20,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.graphics.SpriteLoader;
-import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.RandomWalkNPC;
-import com.gensokyouadventure.objects.Wall;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.entity.RandomWalkNPC;
+import com.gensokyouadventure.objects.environment.Wall;
 import com.gensokyouadventure.physics.PixelVector;
 
 public class MapUtil

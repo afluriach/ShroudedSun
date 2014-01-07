@@ -5,11 +5,11 @@ import java.util.List;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.PathSegment;
 import com.gensokyouadventure.Util;
-import com.gensokyouadventure.objects.EnemyBullet;
-import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.PlayerBullet;
 import com.gensokyouadventure.objects.RadarSensor;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.projectile.EnemyBullet;
+import com.gensokyouadventure.objects.projectile.PlayerBullet;
 
 public class FollowPathAndShoot extends FollowPath
 {

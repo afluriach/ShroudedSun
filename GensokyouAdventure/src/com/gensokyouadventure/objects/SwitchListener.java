@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.Util;
+import com.gensokyouadventure.objects.environment.Switch;
 
 //monitor a set of switch objects in game (given by name) and check for activation
 public class SwitchListener

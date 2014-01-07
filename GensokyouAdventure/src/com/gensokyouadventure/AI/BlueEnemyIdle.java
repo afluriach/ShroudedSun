@@ -2,10 +2,10 @@ package com.gensokyouadventure.AI;
 
 import java.util.List;
 
-import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.Player;
 import com.gensokyouadventure.objects.RadarSensor;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.entity.Player;
 
 //this state represents an enemy waiting for the player. 
 public class BlueEnemyIdle extends AI_State<Entity>

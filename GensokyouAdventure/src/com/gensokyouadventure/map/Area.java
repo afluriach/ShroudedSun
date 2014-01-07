@@ -16,9 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import com.gensokyouadventure.DisjointNode;
 import com.gensokyouadventure.Game;
-import com.gensokyouadventure.objects.Door;
-import com.gensokyouadventure.objects.Player;
-import com.gensokyouadventure.objects.Wall;
+import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.environment.Door;
+import com.gensokyouadventure.objects.environment.Wall;
 import com.gensokyouadventure.physics.PrimaryDirection;
 
 public class Area

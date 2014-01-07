@@ -6,9 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.PathSegment;
-import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.enemies.TorchWalker;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.entity.enemies.TorchWalker;
 
 /**
  * Given a valid path, follow it to the end.

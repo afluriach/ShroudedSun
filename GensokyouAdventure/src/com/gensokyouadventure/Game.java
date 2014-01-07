@@ -20,6 +20,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.GdxNativesLoader;
+import com.gensokyouadventure.ability.Ability;
+import com.gensokyouadventure.ability.ActionAbility;
+import com.gensokyouadventure.ability.IceBullet;
+import com.gensokyouadventure.ability.Shield;
+import com.gensokyouadventure.ability.ToggleAbility;
 import com.gensokyouadventure.graphics.Graphics;
 import com.gensokyouadventure.graphics.SpriteLoader;
 import com.gensokyouadventure.map.Area;
@@ -28,8 +33,8 @@ import com.gensokyouadventure.map.MapLink;
 import com.gensokyouadventure.map.Room;
 import com.gensokyouadventure.map.TileGraph;
 import com.gensokyouadventure.objects.GameObjectSystem;
-import com.gensokyouadventure.objects.Player;
 import com.gensokyouadventure.objects.RenderLayer;
+import com.gensokyouadventure.objects.entity.Player;
 import com.gensokyouadventure.physics.Physics;
 
 public class Game implements ApplicationListener

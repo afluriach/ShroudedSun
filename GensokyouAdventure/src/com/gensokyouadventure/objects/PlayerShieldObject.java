@@ -6,7 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.graphics.Graphics;
-import com.gensokyouadventure.objects.enemies.Enemy;
+import com.gensokyouadventure.objects.entity.enemies.Enemy;
+import com.gensokyouadventure.objects.projectile.EnemyBullet;
 
 public class PlayerShieldObject extends GameObject
 {

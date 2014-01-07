@@ -1,7 +1,7 @@
 package com.gensokyouadventure.AI;
 
 import com.gensokyouadventure.Game;
-import com.gensokyouadventure.objects.Entity;
+import com.gensokyouadventure.objects.entity.Entity;
 
 public class LookingAround extends AI_State<Entity>
 {

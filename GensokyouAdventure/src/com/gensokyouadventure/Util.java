@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.gensokyouadventure.objects.ClearListener;
-import com.gensokyouadventure.objects.FloorSwitch;
-import com.gensokyouadventure.objects.Switch;
 import com.gensokyouadventure.objects.SwitchListener;
+import com.gensokyouadventure.objects.environment.FloorSwitch;
+import com.gensokyouadventure.objects.environment.Switch;
 import com.gensokyouadventure.physics.PrimaryDirection;
 
 public class Util

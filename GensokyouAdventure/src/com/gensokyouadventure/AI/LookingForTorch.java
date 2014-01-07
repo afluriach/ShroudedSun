@@ -7,9 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.PathSegment;
-import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.Torch;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.environment.Torch;
 
 /**
  * the state the Torch Walker is in when it is looking for a torch to light. It will exit when it has found one. 

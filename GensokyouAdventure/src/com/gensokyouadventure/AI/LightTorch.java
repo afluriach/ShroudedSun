@@ -2,8 +2,8 @@ package com.gensokyouadventure.AI;
 
 import com.badlogic.gdx.Gdx;
 import com.gensokyouadventure.Game;
-import com.gensokyouadventure.objects.Entity;
-import com.gensokyouadventure.objects.Torch;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.environment.Torch;
 
 //this state will be entered when the torch walker finishes the path.
 //light the target torch and then loop back to looking for torch

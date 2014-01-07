@@ -1,6 +1,6 @@
 package com.gensokyouadventure.AI;
 
-import com.gensokyouadventure.objects.Entity;
+import com.gensokyouadventure.objects.entity.Entity;
 
 public class AI_Util
 {

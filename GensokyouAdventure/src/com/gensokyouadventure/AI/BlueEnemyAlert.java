@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.PathSegment;
-import com.gensokyouadventure.objects.EnemyBullet;
-import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.projectile.EnemyBullet;
 
 //in this state, the enemy is on alert to the presence of its target.
 //the enemy will 

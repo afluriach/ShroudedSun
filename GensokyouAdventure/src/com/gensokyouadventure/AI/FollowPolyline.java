@@ -3,8 +3,8 @@ package com.gensokyouadventure.AI;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Util;
 import com.gensokyouadventure.map.Path;
-import com.gensokyouadventure.objects.Entity;
 import com.gensokyouadventure.objects.GameObject;
+import com.gensokyouadventure.objects.entity.Entity;
 
 public class FollowPolyline extends AI_State<Entity>
 {

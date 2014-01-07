@@ -1,7 +1,7 @@
 package com.gensokyouadventure.AI;
 
-import com.gensokyouadventure.objects.Entity;
-import com.gensokyouadventure.objects.enemies.TorchWalker;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.entity.enemies.TorchWalker;
 
 public class TorchWalkerFSM extends AI_FSM<Entity>
 {
