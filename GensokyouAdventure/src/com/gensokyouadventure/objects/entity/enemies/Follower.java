@@ -101,7 +101,7 @@ public class Follower extends Enemy
 		Vector2 targetFacingVector = Util.get8DirUnit(target.getDir());
 		
 		boolean facingBack = facingVector.dot(targetFacingVector) > 0;
-		boolean visible = facingVector.dot(targetDisp) > 0;
+		boolean visible = facingVector.dot(targetDisp) > 0 && Game.inst.physics.lineOfSight(getCenterPos(), target);
 
 		
 		return (facingBack && visible);

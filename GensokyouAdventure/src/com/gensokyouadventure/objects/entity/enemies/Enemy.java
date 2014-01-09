@@ -15,9 +15,10 @@ public class Enemy extends Entity
 	int hp;
 	float invulnerableTimeRemaining = 0;
 	int touchDamage = 0;
+	boolean playerTouching;
 
 	//ai
-	AI_FSM fsm;
+	AI_FSM<Entity> fsm;
 	
 	public Enemy(TilespaceRectMapObject mo, String animation, int hp)
 	{
@@ -40,6 +41,11 @@ public class Enemy extends Entity
 	{
 		if(hp <= 0) expire();
 		
+		if(playerTouching)
+		{
+			Game.inst.player.hit(touchDamage);
+		}
+		
 		invulnerableTimeRemaining -= Game.SECONDS_PER_FRAME;
 		if(invulnerableTimeRemaining < 0)
 		{
@@ -61,9 +67,12 @@ public class Enemy extends Entity
 	@Override
 	public void handleContact(GameObject other)
 	{
+		//track if player is remaining in contact with enemy.
+		//since this only gets called once per contact.
 		if(other instanceof Player && touchDamage > 0)
 		{
 			((Player)other).hit(touchDamage);
+			playerTouching = true;
 		}
 
 	}
@@ -71,6 +80,11 @@ public class Enemy extends Entity
 	@Override
 	public void handleEndContact(GameObject other)
 	{
+
+		if(other instanceof Player)
+		{
+			playerTouching = false;
+		}
 	}
 
 

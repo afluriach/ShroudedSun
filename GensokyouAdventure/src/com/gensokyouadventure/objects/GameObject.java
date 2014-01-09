@@ -51,7 +51,7 @@ public abstract class GameObject
 	}
 	
 	public static void addTypes()
-	{
+	{	
 		addClass("wall", Wall.class);
 		addClass("door", Door.class);
 		addClass("barrier", Barrier.class);

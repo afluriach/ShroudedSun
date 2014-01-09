@@ -36,9 +36,9 @@ public class Guard extends Enemy
 	
 	void catchPlayer()
 	{
-		Game.log("caught by gaurd: " + getName());
+		Game.log("caught by guard: " + getName());
 //		Game.inst.setDialogMsg("Ha ha ha! Not so fast. Get out of here.");
-		Game.inst.setConversation("caught2");
+		Game.inst.setDialog("guards.caught2", "meiling");
 		Game.inst.onExitDialog = new CaughtByGuards();
 	}
 	

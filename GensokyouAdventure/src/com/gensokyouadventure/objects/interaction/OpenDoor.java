@@ -22,7 +22,7 @@ public class OpenDoor implements ItemInteraction
 		
 		if(door.isLocked())
 		{
-			Game.inst.setDialogMsg("The door is currently barred shut.");
+			Game.inst.showTextBox("The door is currently barred shut.");
 		}
 		else
 		{

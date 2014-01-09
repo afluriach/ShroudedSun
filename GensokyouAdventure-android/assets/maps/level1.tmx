@@ -3,26 +3,26 @@
  <properties>
   <property name="music" value="impromptu_opus_schubert"/>
  </properties>
- <tileset firstgid="1" name="dark_indigo_cobblestone" tilewidth="32" tileheight="32">
-  <image source="../textures/dark_indigo_cobblestone.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="2" name="dark_indigo_2" tilewidth="32" tileheight="32">
-  <image source="../textures/dark_indigo_cobblestone2.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="3" name="dark_indigo_3" tilewidth="32" tileheight="32">
-  <image source="../textures/dark_indigo_cobblestone3.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="4" name="block_wall" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="block_wall" tilewidth="32" tileheight="32">
   <image source="../textures/block_wall.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="17" name="dirt1_grey" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_grey.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="81" name="dirt1_blue" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_blue.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="145" name="dirt1_red" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_red.png" width="256" height="256"/>
  </tileset>
  <layer name="background" width="20" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC72U2w6AMAhDN/v//6wPLiG1MNgWHxpvcEIZiNYaHl2OQOqvxvfxjAmH89Q7y7pEPMcpzVhRbpWFAjPLOuHRY0Vnmem9jbX5Xm2ZujxexaM6Y7SvhywLxAHxepHFPPbJ+zNjqblb8ejxdllqhnZY3g6vslT/dlhqXnZYzPNYlX8Zz5vaxxVZ1imt+OI8xUIQH7FOSXms9MXr/8nec43Vev5UxntlJuyOILhX/eHccb0BT2lz+2AJAAA=
+   H4sIAAAAAAAAC+3SRQpDQRRE0d5C3N3d3d1lIVlglpf7ZuHzITQEQqALzuhOSymlCiiihDIqqKKGumaXNdBEC2100EUPfc0uG2CIEcaYYIoZ5ppdtsASK6yxwRY77DW77IAjHjjjgituuL/1k01/WrrMASdccMMDL3zwa3ZZAEGEEEYEUcQQ1+yyBJJIIY0Mssghr9ll5n/mf+Z///8/u399+p+1y8z/zP9++b9v7gWIbNutYAkAAA==
   </data>
  </layer>
  <layer name="walls" width="20" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+NnYGDgwIG5GCCAHY8aZCwMxJwM1AOco+YNOvMEGPCnAVLSDC8N3Ddq3uAybzS9jJpHinmj6WXUvIE0T5CBuLYOMVgIiAF+oGlOYAkAAA==
+   H4sIAAAAAAAAC+NhYGBgxYPZGSAAnxoYFgBiNgbqAbZR8wadebwMxKUXFgLqQJiLBu4bNW9wmTeaXkbNI8W80fQyat5AmsfHQFxbhxjMD8QAeOBrL2AJAAA=
   </data>
  </layer>
  <objectgroup name="enemy" width="20" height="30">
@@ -55,7 +55,17 @@
   </object>
   <object name="door1" type="door" x="288" y="224" width="32" height="32">
    <properties>
-    <property name="open" value=""/>
+    <property name="switch" value="switch3 switch4"/>
+   </properties>
+  </object>
+  <object name="blueJar" type="jar" x="416" y="128" width="32" height="32">
+   <properties>
+    <property name="color" value="blue"/>
+   </properties>
+  </object>
+  <object name="redJar" type="jar" x="192" y="128" width="32" height="32">
+   <properties>
+    <property name="color" value="red"/>
    </properties>
   </object>
  </objectgroup>
@@ -63,15 +73,16 @@
   <object name="room1" type="room" x="0" y="672" width="640" height="288"/>
   <object name="room2" type="room" x="0" y="448" width="640" height="256"/>
   <object name="room3" type="room" x="0" y="224" width="640" height="256"/>
+  <object name="room4" type="room" x="0" y="0" width="640" height="256"/>
  </objectgroup>
  <objectgroup name="map_links" width="20" height="30">
-  <object name="to_puzzle_room" type="door" x="256" y="0" width="32" height="32">
+  <object name="to_puzzle_room" type="door" x="288" y="0" width="32" height="32">
    <properties>
     <property name="dest_link" value="entrance"/>
-    <property name="dest_map" value="puzzle_room"/>
+    <property name="dest_map" value="level2"/>
     <property name="entrance_dir" value="down"/>
     <property name="permanent" value=""/>
-    <property name="switch" value="switch3 switch4"/>
+    <property name="switch" value="red_switch blue_switch"/>
    </properties>
   </object>
   <object name="player_start" type="map_link" x="288" y="864" width="32" height="32">
@@ -104,6 +115,8 @@
   <object name="block" type="block" x="256" y="320" width="32" height="32"/>
   <object name="block" type="block" x="352" y="320" width="32" height="32"/>
   <object name="block" type="block" x="448" y="320" width="32" height="32"/>
+  <object name="block" type="block" x="32" y="800" width="32" height="32"/>
+  <object name="block" type="block" x="544" y="800" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="logic" width="20" height="30">
   <object name="switch2" type="floor_switch" x="352" y="800" width="32" height="32">
@@ -142,40 +155,32 @@
     <property name="sticky" value="true"/>
    </properties>
   </object>
+  <object name="blue_switch" type="invisible_floor_switch" x="96" y="128" width="32" height="32">
+   <properties>
+    <property name="activating_object" value="blueJar"/>
+   </properties>
+  </object>
+  <object name="red_switch" type="invisible_floor_switch" x="512" y="128" width="32" height="32">
+   <properties>
+    <property name="activating_object" value="redJar"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="npc" width="20" height="30">
   <object name="patchy" type="stationary_npc" x="352" y="608" width="32" height="32">
    <properties>
     <property name="cleared" value="enemy1 enemy2 enemy3"/>
+    <property name="dialog1" value="patchy1"/>
+    <property name="dialog2" value="patchy2"/>
     <property name="dir" value="left"/>
-    <property name="msg1" value="These guard maids have very good aim. Make sure not to stand still. You can use your shield to block bullets, but it will use MP."/>
-    <property name="msg2" value="Good job. Now solve a simple puzzle to get out of here."/>
     <property name="sprite" value="patchouli"/>
-   </properties>
-  </object>
-  <object name="flandre" type="stationary_npc" x="32" y="160" width="32" height="32">
-   <properties>
-    <property name="dir" value="right"/>
-    <property name="msg1" value="I just want to open the door but I can't figure out how. I'm not very good at puzzles. I don't want to get stuck here."/>
-    <property name="msg2" value="Who cares how you opened it, the important thing is that I'm free!"/>
-    <property name="sprite" value="flandre"/>
-    <property name="switch" value="to_puzzle_room"/>
-   </properties>
-  </object>
-  <object name="flandre" type="stationary_npc" x="576" y="160" width="32" height="32">
-   <properties>
-    <property name="dir" value="left"/>
-    <property name="msg1" value="I've been stuck here for so long. I'm starting to think this door's never going to open."/>
-    <property name="msg2" value="How did the door open like that? I tried stepping on the switches but it wouldn't open for me. Maybe I broke it too?"/>
-    <property name="sprite" value="flandre"/>
-    <property name="switch" value="to_puzzle_room"/>
    </properties>
   </object>
   <object name="cirno" type="stationary_npc" x="224" y="736" width="32" height="32">
    <properties>
+    <property name="dialog1" value="cirno1"/>
+    <property name="dialog2" value="cirno2"/>
     <property name="dir" value="down"/>
-    <property name="msg1" value="Some of these blocks are pretty heavy. I wish I was stong enough to move them."/>
-    <property name="msg2" value="How did you do that!? I can't believe you're smarter and stronger than I am..."/>
     <property name="sprite" value="cirno"/>
     <property name="switch" value="barrier1"/>
    </properties>

@@ -4,14 +4,14 @@
   <property name="music" value="gymnopedie_no1_guitar"/>
  </properties>
  <tileset firstgid="1" name="wood_floor" tilewidth="32" tileheight="32">
-  <image source="../textures/wood_floor256.png" width="256" height="256"/>
+  <image source="../textures/wood_floor.png" width="256" height="256"/>
  </tileset>
  <tileset firstgid="65" name="wall" tilewidth="32" tileheight="32">
   <image source="../textures/masion_wall.png" width="128" height="128"/>
  </tileset>
  <layer name="background" width="50" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3XwQ3CMBBEUVMCJdAASPRfXOQDUg7IsZ1d79j+X5ojIU8hQUlpnT6F5b4Gy70a5um4Y/J2lAy/zeCosXg4/sXvqt9xVYTj0XhOvRvhKB1vlucuDhwRDqtGON5i291h9R9hNRxa292Re3Z+XiXL51UyPE6rAYeu41zNd5QcV3n8D3o5Rl2PVR2W98fqDq+4Hji8HedqvmMHx93rGunoORf1+yPyeuDQcCjV+14b/S5u9X4efc44cODAgSN+OLSGQ2s4tIZDazi0hkNrOLS2iqPHEn2+lg4iIiIiIiIiIiIiIiIiolk6APROXYcgTgAA
+   H4sIAAAAAAAAC+2XV27DMBAFqXSnO93pTne6051+/1Pl8QAm8yhRWShvgPlaYgn9aMDCOTcCR+EYHIcTcBJOwRachjNwFs7BebgAFyuYh84wxO5pwyW4DFfgKlyD63CjgnnoDEPsng7chFtwG+7AXbgH9yuYh84wxO7pwgN4CI/gMTyBp/CsgnnoDEPsnh48hxfwEl7Ba3gDbyuYh84wxO7pwzt4Dx/gI3yCz/ClgnnoDEPsngF8hW/wHX7AT/gFvyuYh84wFC783/3LOUPuPpSZM+TuQ5k5Q+4+lJkz5O5DmTlD7j6UmTPk7kOZOUPuPpSZs1htCIvVhrBYbQiL1YawWG0Ii9WGMPh/hdWGsN9htSHsd1hsh94fttqh94etduj9Yasd//X9oX6oH+rHcNQP9UP9GE7h7DaEoeXsNoSh7ew2hKHj7DaEoevsNoSh5+w2hKHv7DaEYeDsNoSlCf3wNKEfnib0w9OEfnia0A9PE/rhaUI/POrH7+cpO1jq6EPKDpY6+pCyg6WOPqTsYKmjDyk7WOroQ8oOljr6kLKDpY4+pOxgif3bhRBCCCGEEEIIIYQQQgghhBDCEj+ogrLLIE4AAA==
   </data>
  </layer>
  <layer name="walls" width="50" height="100">

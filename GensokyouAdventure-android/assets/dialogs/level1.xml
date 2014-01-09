@@ -1,0 +1,33 @@
+<level1>
+	<cirno1>
+		<f focus="right" lp ="3" rp="4">
+			Some of these blocks are pretty heavy. I seem to be having trouble moving them.
+		</f>
+	</cirno1>
+	
+	<cirno2>
+		<f focus="right" lp="0" rp="5">
+			How did you do that!?
+		</f>
+	</cirno2>
+	
+	<patchy1>
+		<f focus="right" lp ="3" rp="0">
+			These blue enemies have good aim.
+		</f>
+		
+		<f focus="left" lp="2" rp="2">
+			Well then, I'll just shoot them.
+		</f>
+		
+		<f focus="right" lp="5" rp="2">
+			You can use your shield to block bullets, but it will use MP.
+		</f>
+	</patchy1>
+	
+	<patchy2>
+		<f focus="right" lp ="3" rp="4">
+			Good job. Now solve a simple puzzle to get out of here.
+		</f>
+	</patchy2>	
+</level1>

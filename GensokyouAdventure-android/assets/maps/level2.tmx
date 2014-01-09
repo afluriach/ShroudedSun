@@ -1,46 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="80" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="dirt" tilewidth="32" tileheight="32">
-  <image source="../textures/cobblestone.png" width="32" height="32"/>
-  <terraintypes>
-   <terrain name="New Terrain" tile="-1"/>
-  </terraintypes>
- </tileset>
- <tileset firstgid="2" name="dark_indigo_cobblestone" tilewidth="32" tileheight="32">
-  <image source="../textures/dark_indigo_cobblestone.png" width="32" height="32"/>
-  <terraintypes>
-   <terrain name="New Terrain" tile="-1"/>
-  </terraintypes>
- </tileset>
- <tileset firstgid="3" name="dark_indigo_2" tilewidth="32" tileheight="32">
-  <image source="../textures/dark_indigo_cobblestone2.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="4" name="dark_indigo_3" tilewidth="32" tileheight="32">
-  <image source="../textures/dark_indigo_cobblestone3.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="5" name="red_cobblestone" tilewidth="32" tileheight="32">
-  <image source="../textures/red_cobblestone.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="6" name="yellow_cobblestone" tilewidth="32" tileheight="32">
-  <image source="../textures/yellow_cobblestone.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="7" name="blue_cobblestone" tilewidth="32" tileheight="32">
-  <image source="../textures/blue_cobblestone.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="8" name="green_cobblestone" tilewidth="32" tileheight="32">
-  <image source="../textures/green_cobblestone.png" width="32" height="32"/>
- </tileset>
- <tileset firstgid="9" name="block_wall" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="block_wall" tilewidth="32" tileheight="32">
   <image source="../textures/block_wall.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="17" name="dirt1_grey" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_grey.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="81" name="dirt1_purple" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_purple.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="145" name="dirt1_red" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_red.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="209" name="dirt1_gold" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_gold.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="273" name="dirt1_blue" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_blue.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="337" name="dirt1_green" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_green.png" width="256" height="256"/>
  </tileset>
  <layer name="background" width="20" height="80">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+2UjQ7DIAiELbKf93/irclMyA0UK01s6iWXzU6/gQU4pcRfZ8MMpp/L72XNDQ6e055JVlb2y31bxTUWKa6xijUWK0w8U1trLLwLT2ySX2NxJ0+79yxYvfFpcXl41nNZoxYvd+bKwMPa99Yf9g7GRek/Xqu+tD7Eumv1UI2FvFGW1r8jLHnmCvLm6M3HYmmzzCNrTmjuYXnsiVHLy7JHsva070d5UfFdUSO5nfV+F28OnvUfV9F2YH+UC+8hvK+fwvv6Jbyv38IWj4BHwCPgUYMXGV/0/c3Ma6m3/mZXxJ0gT86kEV45Q/A5yoyKT8YYdX930xn9GcU7Y4bMnO8dFf2O5T5rXnl5GguZvTMxMj7krTpcWlqK0gdPMRjWABkAAA==
+   H4sIAAAAAAAAC+2Yx3LUQBRFW59gm2RMcABMxmSTTc7BNmkYkm1yzjnnHFcUK2DLzwArihWw5SM4XepX0yN6Wuopr5i5VadG8h11tcbvvbqSUv2vTuiCbtgMW2ArbIPtcDzy+3K9KAc7IA87YRfUQC3UwQAYCINgsPF3wx7Ya10v6oFe6IN90Aj1MBQaYBgMhxEw0ngH4CAcsq533W8rjIUm87cWGAWjzXmr8ZrhMByBo3BM/y6O+50CbTAOxsMEmAiTYLLxxTsNZ+AsnIPzjvudDe0wFabBdJgBM2GW8cW7DFfgKlyD62Y9ve8/Zt+LoAPmwFyYB/NhASw0vni34Y7eO///e3zeN+vZ+14Jq2AxLIGl8BSWwwrji/cYnhj/GTw369n71sebYDWsgbWwDtbDBthoPPseb8BNuGXWk33ftY599SfflXt8AA/hkVnP3rfrHl7AS3iVwdey6891/Fn5+0z6UGTXX6lj6UNXn4lfqUqbf6V+91Lq7989Of/2K/d8Ez9Nrjl2Ak7CKYefJtccuwAX4ZLDT5Nrjtk9nvTTZM8DV48n/aqKFdIfWRTSH1kU0h9ZFNIfWRTSH1kU0h9ZFNIf/4N82bExwBfpfPga3sBbFWfHL/AVvhm/hgxVC3VR7HfqTA3dUSFfinQ+fKfiOnmv4uz43Zz/MH59FJ83RLGfM+f5qJAvRToffoCP8EnF2fEn/ILfxm/iumZoiWK/h89e6IsK+VLky44dAb7Izo7LVHF2TGZLny/yZce0bGn7lSpfVh5Sxnq6X+x5n+ynUOl+0fNcP6vpea/7aYwqPMuFSveLPe/tZ7W2MtbzPau1l7FepSmt/mw/i0LmfRbJvLbfFdj1Z/tZ5HtXkHyXkEVp9Wf7Vf2rkPoT3ye7vnROdtVflyquT5+kvnRO1vWn56pdfznj51WhPn2y60vPVVf99ari+vQppP7Er6qqqqpK019nOnzbABkAAA==
   </data>
  </layer>
  <layer name="walls" width="20" height="80">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+1Y0QrCMAwM6ps6fRi6//9SJ1Ioo80la1pbloO8rNlRklx2bCai+yYe9MNN+DzEssZEdpgq8D0N+Sy5Aq7GXN6PMhytH9Z8L9LtEO78bXi3gDlzj1wsgE9bP5RvzafVSA1NcdDqDeX33o+tPlDU0ACHlD44jY6uD+cry0/Nc+udzgHte/R9Gs3vOl9ffGjfx/OHZvBffgjt+BiS+mlqLPEjrT1LDIl/0Xgc6/pJ/EbrnRyjdz/u/rksf0S/K/33lcLe70fuPecr48vNH+pvqzmsMX+nHcH143t+VoSU7yIIDZ/l/azq1/v8HQ0f6WCooQAZAAA=
+   H4sIAAAAAAAAC+1Y0QqDMAwMOHUPMv3/r91ACkXaXGLT2rIc5EXjUZJcergR0XyJlU68hM9DHL9YyA5LBb63IZ8lV8BkzOX9KMO/9cOa70O6HcK93w3PFrBlzpGLA/Bp64fyrfm0GqmhKQ5avaH83vtx1QeKGhrgkNIHp9HR9eF8ZfmpeW690zmgfY/up9H8rvP1xYf2fTx/aAaf8kNox8eQ1E9TY4kfae1ZYkj8i8bjWNdP4jda7+QYvftx989l+SP6Xem/rxTu3h+575yvjC83f6i/T+5Eh8NRB1/gKztFABkAAA==
   </data>
  </layer>
  <objectgroup name="environment" width="20" height="80">
@@ -78,27 +66,29 @@
   <object name="jar" type="jar" x="288" y="31" width="32" height="32">
    <properties>
     <property name="activation" value="top"/>
+    <property name="color" value="green"/>
    </properties>
   </object>
-  <object name="left_jar" type="jar" x="49" y="204" width="32" height="32"/>
-  <object name="right_jar" type="jar" x="563" y="201" width="32" height="32">
+  <object name="left_jar" type="jar" x="64" y="224" width="32" height="32">
+   <properties>
+    <property name="color" value="yellow"/>
+   </properties>
+  </object>
+  <object name="right_jar" type="jar" x="544" y="224" width="32" height="32">
    <properties>
     <property name="activation" value="right"/>
+    <property name="color" value="blue"/>
    </properties>
   </object>
-  <object name="bottom_jar" type="jar" x="292" y="415" width="32" height="32">
+  <object name="bottom_jar" type="jar" x="288" y="384" width="32" height="32">
    <properties>
     <property name="activation" value="bottom"/>
+    <property name="color" value="red"/>
    </properties>
   </object>
   <object name="jar" type="jar" x="192" y="1536" width="32" height="32"/>
-  <object name="sign" type="sign" x="48" y="368" width="32" height="32">
-   <properties>
-    <property name="msg" value="Sometimes the answer is staring you in the face."/>
-   </properties>
-  </object>
  </objectgroup>
- <objectgroup name="rooms" width="20" height="80" visible="0">
+ <objectgroup name="rooms" width="20" height="80">
   <object name="main_room" type="room" x="1" y="2" width="640" height="480">
    <properties>
     <property name="id" value="3"/>

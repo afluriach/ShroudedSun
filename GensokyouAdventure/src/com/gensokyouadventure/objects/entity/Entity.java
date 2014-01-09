@@ -17,7 +17,6 @@ import com.gensokyouadventure.physics.PrimaryDirection;
 
 public abstract class Entity extends GameObject
 {
-	static final float stepLength = 0.25f;
 	static final float MASS = 50.0f;
 	static final float HIT_CIRCLE_RADIUS = 0.35f;
 	static final int defaultFacing = 2;
@@ -48,11 +47,8 @@ public abstract class Entity extends GameObject
 	float flickerIntervalLength = 0;
 	float flickerIntervalTimeRemaining = 0;
 	
-	//cycle through animation (show a step), every time the entity covers distance equal to one step.
-	float stepDistAccumulated=0;
-	String leftFoot = "footstep_low_soft";
-	String rightFoot = "footstep_high_soft";
 	EntityAnimation8Dir animation;
+	String character;
 	
 	private int crntDir = defaultFacing;
 		
@@ -63,11 +59,11 @@ public abstract class Entity extends GameObject
 	private Vector2 desiredVel;	
 	protected float speed;	
 		
-	public Entity(TilespaceRectMapObject to, String animation, String filter, boolean stationary)
+	public Entity(TilespaceRectMapObject to, String character, String filter, boolean stationary)
 	{
 		super(to);
-		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
-		//physicsBody = Physics.inst().addRectBody(to.rect, this, BodyType.DynamicBody, MASS, false);
+		this.character = character;
+		this.animation = Game.inst.spriteLoader.getSpriteAnimation(character, 2);
 		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, stationary ? BodyType.StaticBody : BodyType.DynamicBody, this, MASS, false, filter);
 		
 		if(to.prop.containsKey("dir"))
@@ -78,13 +74,13 @@ public abstract class Entity extends GameObject
 			}
 			catch(IllegalArgumentException e)
 			{
-				//the given dir is not a string representing a primary direction.
+				//the given direction is not a string representing a primary direction.
 				//the direction may also be an 8dir angle
 				
 				crntDir = desiredDir = to.prop.get("dir", Integer.class);
 				
 				if(crntDir < 0 || crntDir >= 8)
-					throw new MapDataException(String.format("invalid dir %d in entity %s", crntDir, to.name));
+					throw new MapDataException(String.format("invalid direction %s in entity %s", to.prop.get("dir", String.class), to.name));
 			}
 		}
 		
@@ -99,11 +95,17 @@ public abstract class Entity extends GameObject
 		
 		this.animation.setDirection(crntDir);
 	}
+	
+	public String getCharacter()
+	{
+		return character;
+	}
 		
-	public Entity(Vector2 pos, String animation, int startingDir, String name, String filter, boolean stationary)
+	public Entity(Vector2 pos, String character, int startingDir, String name, String filter, boolean stationary)
 	{
 		super(name);
-		this.animation = Game.inst.spriteLoader.getSpriteAnimation(animation, 2);
+		this.animation = Game.inst.spriteLoader.getSpriteAnimation(character, 2);
+		this.character = character;
 		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, stationary ? BodyType.StaticBody : BodyType.DynamicBody, this, MASS, false, filter);
 	}
 
@@ -135,8 +137,7 @@ public abstract class Entity extends GameObject
 		if(getVel().len2() == 0f)
 		{
 			//stop walking animation
-			animation.resetAnimation();
-			stepDistAccumulated = 0;
+			animation.stopAnimation();
 		}
 	}
 	
@@ -196,18 +197,8 @@ public abstract class Entity extends GameObject
 		updateDirection();
 		updateVel();
 		
-		stepDistAccumulated += getVel().len()*Game.SECONDS_PER_FRAME;
-		if(stepDistAccumulated >= stepLength)
-		{
-			animation.incrementFrame();
-			stepDistAccumulated -= stepLength;
-			
-			if(animation.getFrame() == 0)
-				Game.inst.soundLoader.playSound(leftFoot, getCenterPos());
-			else if(animation.getFrame() == 2)
-				Game.inst.soundLoader.playSound(rightFoot, getCenterPos());
-
-		}
+		animation.accumulateDistance(getVel().len()*Game.SECONDS_PER_FRAME);
+		animation.checkSound(getCenterPos());
 	}
 
 	//shoot a bullet. position the bullet such that its edge is some distance away from the edge of the entity's 

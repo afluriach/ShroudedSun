@@ -3,6 +3,8 @@ package com.gensokyouadventure;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -170,4 +172,30 @@ public class Util
 	{
 		return end.cpy().sub(start);
 	}
+	
+	public static boolean touchWithinRect(Rectangle rect, int touchCount, int screenHeight)
+	{
+		for(int i=0; i< touchCount; ++i)
+		{
+			if(Gdx.input.isTouched(i))
+			{
+				if(rect.contains(Gdx.input.getX(i), screenHeight - Gdx.input.getY(i)))
+				{
+					return true;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public static float getLineLength(BitmapFont font, String line)
+	{
+		return font.getBounds(line).width;
+	}
 }
+
+

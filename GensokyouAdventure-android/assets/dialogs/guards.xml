@@ -1,0 +1,46 @@
+<guards>
+	<caught1 left="cirno" right="meiling">
+		<frame focus="right" lp="1" rp="1">
+		A-ha, found you!
+		</frame>
+
+		<frame focus="left" lp="3" rp="0">
+		Umm, don't mind me, I'm just passing through.
+		</frame>
+
+		<frame focus="right" lp="3" rp="7">
+		Nice try. What is your business with the mistress?
+		</frame>
+
+		<frame focus="left" lp="3" rp="7">
+		I'm here to visit a friend.
+		</frame>
+
+		<frame focus="right" lp="3" rp="7">
+		No one is allowed in here without permission.
+		</frame>
+	</caught1>
+
+	<caught2 left="cirno" right="meiling">
+
+		<frame lp="4" rp="4" focus="right">
+		So who is this friend of yours?
+		</frame>
+
+		<frame lp="0" rp="4" focus="left">
+		Aya. 
+		</frame>
+
+		<frame lp="4" rp="0" focus="right">
+		That meddling photographer has been imprisoned as per her mistress's orders.
+		</frame>
+
+		<frame lp="5" rp="6" focus="left">
+		This is important business. I have to see her.
+		</frame>
+
+		<frame lp="4" rp="6" focus="right">
+		No one is allowed to see the tengu. Furthermore, you are not allowed in this mansion.
+		</frame>
+	</caught2>
+</guards>

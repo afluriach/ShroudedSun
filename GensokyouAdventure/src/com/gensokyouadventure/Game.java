@@ -121,8 +121,8 @@ public class Game implements ApplicationListener
 	public Physics physics;
 	public GameObjectSystem gameObjectSystem;
 	public Random random = new Random();
-	public Dialog activeDialog;
-	Conversation crntConversation;
+	public TextBox activeTextBox;
+	Dialog crntDialog;
 	int crntConvsersationFrame;
 	//time since the dialog or current frame of the conversation appeared
 	float timeInDialog = 0f;
@@ -130,6 +130,7 @@ public class Game implements ApplicationListener
 	public Runnable onExitDialog;
 	String teleportDestLink;
 	String teleportDestMap;
+	public DialogLoader dialogLoader;
 	
 	//ability
 	Ability bEquipped;
@@ -239,14 +240,14 @@ public class Game implements ApplicationListener
 		
 		shapeRenderer.end();		
 		
-		if(crntConversation != null)
+		if(crntDialog != null)
 		{
 			//switched to gui bach
-			crntConversation.render(guiBatch, shapeRenderer, crntConvsersationFrame);
+			crntDialog.render(guiBatch, shapeRenderer, crntConvsersationFrame);
 		}
-		else if(activeDialog != null)
+		else if(activeTextBox != null)
 		{
-			activeDialog.render(guiBatch, shapeRenderer);			
+			activeTextBox.render(guiBatch, shapeRenderer);			
 		}
 		else
 		{
@@ -256,10 +257,7 @@ public class Game implements ApplicationListener
 		if(paused)
 		{
 			//TODO draw box/background for the pause message, similar to a dialog box
-			guiBatch.begin();
-			batch.setColor(Color.WHITE);
-			font.draw(guiBatch, "-PAUSED-", screenWidth/2, screenHeight/2);
-			guiBatch.end();
+			Graphics.drawTextCentered(Controls.buttonTextColor, "-PAUSED-", guiBatch, font, screenWidth/2, screenHeight/2);
 		}
 	}
 	
@@ -304,21 +302,16 @@ public class Game implements ApplicationListener
 		//else, change direction to one whose component is closest to current direction
 		//e.g. if facing right and down-left is pressed, face down
 		
-		player.setDesiredVel(Util.get8DirUnit(controls.controlPad8Dir).scl(Player.SPEED));
+		player.setDesiredVel(controls.controlPadPos.scl(Player.SPEED));
 		
 		//determine desired dir for the player
 		//TODO add strafe lock 
 		
-		if(controls.controlPad8Dir == -1)
+		if(controls.controlPadPos.len2() > 0)
 		{
-			//no direction chosen, no change
+			player.setDesiredDir(Util.getNearestDir(controls.controlPadPos.angle()));
 		}
-		
-		else
-		{
-			player.setDesiredDir(controls.controlPad8Dir);
-		}
-				
+						
 		if(controls.a && !interactHeld)
 		{
 			player.setInteract();
@@ -356,6 +349,7 @@ public class Game implements ApplicationListener
 		physics = new Physics();
 		spriteLoader = new SpriteLoader();
 		soundLoader = new AudioHandler();
+		dialogLoader = new DialogLoader();
 		gameObjectSystem = new GameObjectSystem();
 		areaLoader = new AreaLoader();
 		
@@ -439,8 +433,6 @@ public class Game implements ApplicationListener
 		Game.log("loading map objects...");
 		area.instantiateMapObjects();
 		Game.log("...done.");
-		
-//		area.init();
 
 		loadPlayer(mapLink);
 		gameObjectSystem.initAll();
@@ -450,8 +442,6 @@ public class Game implements ApplicationListener
 	
 	void initCamera()
 	{
-//		camera.translate(-300, -300);
-//		camera.setToOrtho(true);
 		camera.position.set(screenWidth/2, screenHeight/2, 0);
 		mapRenderer.setView(camera);
 		
@@ -498,13 +488,14 @@ public class Game implements ApplicationListener
 		checkMaplinkCollision();
 		checkTeleport();
 		
+		controls.update();
 		//handle input
-		if(crntConversation != null)
+		if(crntDialog != null)
 		{
 			timeInDialog += Game.SECONDS_PER_FRAME;
 			handleConversationControls();
 		}
-		else if(activeDialog != null)
+		else if(activeTextBox != null)
 		{
 			timeInDialog += Game.SECONDS_PER_FRAME;
 			handleDialogControls();
@@ -516,7 +507,7 @@ public class Game implements ApplicationListener
 		}
 		
 		//update logic
-		if(activeDialog == null && crntConversation == null && !paused)
+		if(activeTextBox == null && crntDialog == null && !paused)
 		{
 			updateTimeAccumulated += Gdx.graphics.getDeltaTime();
 			while(updateTimeAccumulated >= SECONDS_PER_FRAME)
@@ -573,26 +564,13 @@ public class Game implements ApplicationListener
 		//any touch on the dialog box to continue;
 		if(touchControls)
 		{
-			Rectangle conversationDialogPos = Conversation.getDialogPos();
-
-			for(int i=0; i< MAX_TOUCH_EVENTS; ++i)
-			{
-				if(Gdx.input.isTouched(i))
-				{
-					if(conversationDialogPos.contains(Gdx.input.getX(i), screenHeight - Gdx.input.getY(i)))
-					{
-						pressed = true;
-						break;
-					}
-				}
-				else break;
-			}
+			Rectangle conversationDialogPos = Dialog.getDialogPos();
+			if(Util.touchWithinRect(conversationDialogPos, MAX_TOUCH_EVENTS, screenHeight)) pressed = true;			
 		}
 
 		if(keyControls)
 		{
-			if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
-				pressed = true;
+			if(controls.a) pressed = true;
 		}
 		
 		if(pressed)
@@ -600,9 +578,9 @@ public class Game implements ApplicationListener
 			++crntConvsersationFrame;
 			timeInDialog = 0f;
 
-			if(crntConvsersationFrame >= crntConversation.frames.length)
+			if(crntConvsersationFrame >= crntDialog.frames.length)
 			{
-				crntConversation = null;
+				crntDialog = null;
 				timeInDialog = 0f;
 
 				if(onExitDialog != null)
@@ -625,30 +603,16 @@ public class Game implements ApplicationListener
 		//any touch on the dialog box to continue;
 		if(touchControls)
 		{
-			for(int i=0; i< MAX_TOUCH_EVENTS; ++i)
-			{
-				if(Gdx.input.isTouched(i))
-				{
-					if(dialogPos.contains(Gdx.input.getX(i), screenHeight - Gdx.input.getY(i)))
-					{
-						pressed = true;
-						break;
-					}
-				}
-				else break;
-			}
-
-		}
-		
+			if(Util.touchWithinRect(dialogPos, MAX_TOUCH_EVENTS, screenHeight)) pressed = true;	
+		}		
 		if(keyControls)
 		{
-			if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
-				pressed = true;
+			if(controls.a) pressed = true;
 		}
 		
 		if(pressed)
 		{
-			activeDialog = null;
+			activeTextBox = null;
 			timeInDialog = 0f;
 			
 			if(onExitDialog != null)
@@ -698,21 +662,43 @@ public class Game implements ApplicationListener
 		}
 	}
 	
-	public void setConversation(String name)
+	/**
+	 * 
+	 * @param name the name of the dialog to play
+	 * @param rightCharacter the character that the player is talking to.
+	 */
+	public void setDialog(String name, String rightCharacter)
 	{
-		crntConversation = new Conversation(name);
+		//if the name contains a period, search in that collection.
+		if(name.contains("."))
+		{
+			String[] split = name.split("\\.");
+			crntDialog = dialogLoader.getDialog(split[0], split[1]);
+		}
+		//search in namespace of the current level
+		else
+		{
+			crntDialog = dialogLoader.getDialog(areaName, name);
+		}
+		
+		if(rightCharacter != null)
+		{
+			crntDialog.rightCharacter = rightCharacter;
+		}
+		crntDialog.leftCharacter = player.getCharacter();
+		
 		timeInDialog = 0f;
 		crntConvsersationFrame = 0;
 	}
 
-	public void setDialogMsg(String msg)
+	public void showTextBox(String msg)
 	{
-		activeDialog = new Dialog(dialogPos, font, msg);
+		activeTextBox = new TextBox(dialogPos, font, msg);
 	}
 	
 	public void exitDialog()
 	{
-		activeDialog = null;
+		activeTextBox = null;
 	}
 	
 	@Override
@@ -742,9 +728,6 @@ public class Game implements ApplicationListener
 	{
 		if(player.getHP() <= 0)
 		{
-			gameObjectSystem.clear();
-			physics.clear();
-			
 			//reload current area
 			loadArea(areaName,mapEntranceLink);
 			initCamera();

@@ -140,6 +140,11 @@ public class Player extends Entity {
 			enableFlicker(invulerabilityLength, invulerabilityFlickerInterval);
 		}
 	}
+	
+	public boolean isInvulnerable()
+	{
+		return invulnerableTimeRemaining == 0;
+	}
 
 	/**
 	 * ignore invulerability effect

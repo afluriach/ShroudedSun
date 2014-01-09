@@ -144,7 +144,7 @@ public class RandomWalkNPC extends NPC
 	{
 		//capitalize the first letter of the name
 		String properName = Character.toUpperCase(getName().charAt(0)) + getName().substring(1);
-		Game.inst.setDialogMsg("Hi, my name is " + properName + ".");
+		Game.inst.showTextBox("Hi, my name is " + properName + ".");
 	}
 
 	@Override

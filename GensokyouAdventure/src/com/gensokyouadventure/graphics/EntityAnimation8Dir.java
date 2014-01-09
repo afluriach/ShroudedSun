@@ -7,9 +7,11 @@ import com.gensokyouadventure.Game;
 
 public class EntityAnimation8Dir
 {
-	//the frame in the animation where the character is standing on two legs
-	//i.e. the frame to draw when the entity is not moving
-	private static final int STANDING_FRAME = 1;
+	//animation frame 0 represents with right foot forward, frame 2 is left, farme 1 mid-step
+	static final int STANDING_FRAME = 1;
+	static final float stepLength = 1f;
+	static final String leftFoot = "footstep_high_soft";
+	static final String rightFoot = "footstep_low_soft";
 	
 	private EntitySpriteSet8Dir spriteSet;
 	
@@ -18,6 +20,14 @@ public class EntityAnimation8Dir
 	 */
 	private int crntDirection;
 	private int crntFrame = STANDING_FRAME;
+	private boolean leftStep = true;
+	private boolean walking = false;
+	
+	private boolean leftSound = false;
+	private boolean rightSound = false;
+	
+	//cycle through animation (show a step), every time the entity covers distance equal to one step.
+	float stepDistAccumulated=0;
 		
 	public EntityAnimation8Dir(EntitySpriteSet8Dir s, int startingDir)
 	{
@@ -32,10 +42,32 @@ public class EntityAnimation8Dir
 		return crntFrame;
 	}
 	
+	//called every time the entity has accumulate a half-step distance.
 	public void incrementFrame()
-	{		
-		crntFrame++;
-		if(crntFrame == spriteSet.animationLen) crntFrame = 0;
+	{
+		//if entity was standing still, take a half step, then switch to walking animation
+		if(!walking)
+		{
+			crntFrame = 2;
+			leftStep = false;
+			walking = true;
+			leftSound = true;
+		}
+		else
+		{
+			if(leftStep)
+			{
+				++crntFrame;	
+				if(crntFrame == 2) leftStep = false;
+				leftSound = true;
+			}
+			else
+			{
+				--crntFrame;
+				if(crntFrame == 0) leftStep = true;
+				rightSound = true;
+			}					
+		}
 	}
 	
 	public void render(SpriteBatch batch, Vector2 centerPos)
@@ -52,6 +84,18 @@ public class EntityAnimation8Dir
 		if(flip) region.flip(true, false);	
 		batch.draw(region, x, y);
 		if(flip) region.flip(true, false);
+	}
+	
+	public void checkSound(Vector2 pos)
+	{
+		if(leftSound)
+			Game.inst.soundLoader.playSound(leftFoot, pos);
+		else if(rightSound)
+			Game.inst.soundLoader.playSound(rightFoot, pos);
+		
+		leftSound = false;
+		rightSound = false;
+			
 	}
 	
 	public int getSpriteRow()
@@ -77,8 +121,22 @@ public class EntityAnimation8Dir
 		//make walking look more natural
 	}
 	
-	public void resetAnimation()
+	public void stopAnimation()
 	{
 		crntFrame = STANDING_FRAME;
+		stepDistAccumulated = 0;
+		walking = false;
 	}	
+	
+	public void accumulateDistance(float dist)
+	{
+		stepDistAccumulated += dist;
+		
+		if(stepDistAccumulated >= stepLength/2)
+		{
+			incrementFrame();
+			stepDistAccumulated -= stepLength/2;
+		}
+
+	}
 }

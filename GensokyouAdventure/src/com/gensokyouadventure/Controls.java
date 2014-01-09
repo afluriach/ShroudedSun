@@ -2,6 +2,10 @@ package com.gensokyouadventure;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.controllers.mappings.Ouya;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -21,6 +25,8 @@ import com.gensokyouadventure.graphics.Graphics;
 public class Controls
 {
 	//constants
+	public static final boolean gamepad = true;
+	
 	public static final int maxPressEvents = 5;
 	
 	public static final int margin = 20;
@@ -30,7 +36,10 @@ public class Controls
 	public static final int controlpadDiameter = 320;
 	public static final int controlpadDeadzone = 40;
 	
+	public static final float gamepadDeadzone = 0.3f;
+	
 	static final ButtonColorScheme colors = ButtonColorScheme.scheme;
+	static final Color buttonTextColor = Graphics.hsva(0f, 0f, 0.05f, 1f);
 	
 	//touch
 	boolean touchControls;
@@ -41,7 +50,9 @@ public class Controls
 	int height;
 	
 	//control state
-	int controlPad8Dir = -1;
+	
+	//normalized vector
+	Vector2 controlPadPos = Vector2.Zero;
 	
 	boolean a = false;
 	boolean b = false;
@@ -175,28 +186,18 @@ public class Controls
 
 	private void drawPauseMessage(SpriteBatch batch, BitmapFont font) {
 		String pauseMsg = Game.inst.paused ? "resume" : "pause";
-		
-		drawTextCentered(pauseMsg, batch, font, buttonPause.x-buttonA.radius+10, buttonPause.y, 0.75f);
+				
+		Graphics.drawTextCentered(buttonTextColor, pauseMsg, batch, font, buttonPause.x, buttonPause.y, buttonPause.radius*2 - 10);
 	}
 
 	private void drawInteractMessage(SpriteBatch batch, BitmapFont font) {
 		String interactMsg = Game.inst.player.interactMessage;
 				
-		drawTextCentered(interactMsg, batch, font, buttonA.x-buttonA.radius+10, buttonA.y, 1f);
+		Graphics.drawTextCentered(buttonTextColor, interactMsg, batch, font, buttonA.x, buttonA.y, buttonA.radius*2 - 10);
 	}
 	
-	void drawTextCentered(String msg, SpriteBatch batch, BitmapFont font, float x, float y, float scale)
-	{
-		font.setScale(scale);
-		
-		batch.begin();
-		font.draw(batch, msg, x, y+font.getLineHeight()/2);
-		batch.end();
-		
-		font.setScale(1f);
-	}
 	
-	private void handleTouchEvents()
+	private void handleTouchControls()
 	{
 		for(int i=0; i< maxPressEvents; ++i)
 		{
@@ -206,6 +207,8 @@ public class Controls
 		}
 	}
 	
+	//TODO if there are multiple presses on pad, use the one that is closest to the control pad
+	//position in the previous frame
 	private void checkTouchPress(int x, int y)
 	{		
 		if(buttonA.contains(x,y)) a = true;
@@ -223,12 +226,12 @@ public class Controls
 			
 			if(posOnPad.len2() >= controlpadDeadzone*controlpadDeadzone)
 			{
-				controlPad8Dir = Util.getNearestDir(posOnPad.angle());
+				controlPadPos = posOnPad.div(controlPad.radius);
 			}
 		}
 	}
 	
-	private void checkKeyPress()
+	private void handleKeyboardControls()
 	{
 		if(Gdx.input.isKeyPressed(Keys.DOWN)) a = true;
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)) b = true;
@@ -260,8 +263,8 @@ public class Controls
 		
 		//direction finding is not additive. this will blank any movement detected by
 		//a touch event, so keys have to be checked before touch
-		if(dir.len2() == 0f) controlPad8Dir = -1;
-		else controlPad8Dir = (int) (dir.angle()/45f);
+		
+		controlPadPos = dir.nor();
 	}
 	
 	private void resetControlState()
@@ -273,15 +276,84 @@ public class Controls
 		
 		pause = false;
 		
-		controlPad8Dir = -1;
+		controlPadPos = Vector2.Zero;
 	}
 	
+	void handleControllers()
+	{
+		for(Controller controller : Controllers.getControllers())
+		{
+//			if(controller.getButton(Ouya.BUTTON_O)) a = true;
+//			if(controller.getButton(Ouya.BUTTON_U)) x = true;
+//			if(controller.getButton(Ouya.BUTTON_Y)) y = true;
+//			if(controller.getButton(Ouya.BUTTON_A)) b = true;
+//			if(controller.getButton(Ouya.BUTTON_MENU)) pause = true;
+
+			if(controller.getButton(Xbox360Pad.BUTTON_A)) a = true;
+			if(controller.getButton(Xbox360Pad.BUTTON_B)) b = true;
+			if(controller.getButton(Xbox360Pad.BUTTON_X)) x = true;
+			if(controller.getButton(Xbox360Pad.BUTTON_Y)) y = true;
+			
+			if(controller.getButton(Xbox360Pad.BUTTON_START)) pause = true;
+			
+			Vector2 leftDisp = new Vector2(controller.getAxis(Ouya.AXIS_LEFT_Y), -controller.getAxis(Ouya.AXIS_LEFT_X));
+			
+			if(leftDisp.len2() > gamepadDeadzone*gamepadDeadzone)
+			{
+				controlPadPos = leftDisp.len2() > 1 ? leftDisp.nor() : leftDisp;
+			}
+		}
+	}
+		
 	public void update()
 	{
 		resetControlState();
+		
 		if(keyControls)
-			checkKeyPress();
+			handleKeyboardControls();
 		if(touchControls)
-			handleTouchEvents();
+			handleTouchControls();
+		if(gamepad)
+			handleControllers();
 	}
+}
+
+class Xbox360Pad
+{
+   /*
+    * It seems there are different versions of gamepads with different ID Strings.
+    * Therefore its IMO a better bet to check for:
+    * if (controller.getName().toLowerCase().contains("xbox") &&
+                  controller.getName().contains("360"))
+    * 
+    * Controller (Gamepad for Xbox 360)
+      Controller (XBOX 360 For Windows)
+      Controller (Xbox 360 Wireless Receiver for Windows)
+      Controller (Xbox wireless receiver for windows)
+      XBOX 360 For Windows (Controller)
+      Xbox 360 Wireless Receiver
+      Xbox Receiver for Windows (Wireless Controller)
+      Xbox wireless receiver for windows (Controller)
+    */
+   //public static final String ID = "XBOX 360 For Windows (Controller)";
+   public static final int BUTTON_X = 2;
+   public static final int BUTTON_Y = 3;
+   public static final int BUTTON_A = 0;
+   public static final int BUTTON_B = 1;
+   public static final int BUTTON_BACK = 6;
+   public static final int BUTTON_START = 7;
+   public static final PovDirection BUTTON_DPAD_UP = PovDirection.north;
+   public static final PovDirection BUTTON_DPAD_DOWN = PovDirection.south;
+   public static final PovDirection BUTTON_DPAD_RIGHT = PovDirection.east;
+   public static final PovDirection BUTTON_DPAD_LEFT = PovDirection.west;
+   public static final int BUTTON_LB = 4;
+   public static final int BUTTON_L3 = 8;
+   public static final int BUTTON_RB = 5;
+   public static final int BUTTON_R3 = 9;
+   public static final int AXIS_LEFT_X = 1; //-1 is left | +1 is right
+   public static final int AXIS_LEFT_Y = 0; //-1 is up | +1 is down
+   public static final int AXIS_LEFT_TRIGGER = 4; //value 0 to 1f
+   public static final int AXIS_RIGHT_X = 3; //-1 is left | +1 is right
+   public static final int AXIS_RIGHT_Y = 2; //-1 is up | +1 is down
+   public static final int AXIS_RIGHT_TRIGGER = 4; //value 0 to -1f
 }

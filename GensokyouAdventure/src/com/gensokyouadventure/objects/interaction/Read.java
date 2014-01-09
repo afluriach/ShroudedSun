@@ -15,7 +15,7 @@ public class Read implements ItemInteraction
 	@Override
 	public void interact(GameObject obj, Player player)
 	{
-		Game.inst.setDialogMsg( ((Sign)obj).getMsg() );
+		Game.inst.showTextBox( ((Sign)obj).getMsg() );
 	}
 
 	@Override

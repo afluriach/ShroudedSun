@@ -2,12 +2,14 @@ package com.gensokyouadventure.graphics;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Game;
+import com.gensokyouadventure.Util;
 
 public class Graphics 
 {
@@ -121,7 +123,7 @@ public class Graphics
 		return new Color(r1+m, g1+m, b1+m, a);
 	}
 	
-	TextureRegion[] textureRegionFramesFromSheet(Texture spriteSheet, int length, int startingX, int startingY, int spriteHeight, int spriteWidth, int spacing)
+	public static TextureRegion[] textureRegionFramesFromSheet(Texture spriteSheet, int length, int startingX, int startingY, int spriteHeight, int spriteWidth, int spacing)
 	{
 		TextureRegion[] frames = new TextureRegion[length];
 		
@@ -133,4 +135,51 @@ public class Graphics
 		return frames;
 		
 	}
+	
+	public static void drawTextCentered(Color color, String msg, SpriteBatch batch, BitmapFont font, float x, float y)
+	{
+		float lineWidth = Util.getLineLength(font, msg);
+
+		batch.begin();
+		font.setScale(1f);
+		font.draw(batch, msg, x-lineWidth/2, y+font.getCapHeight()/2);		
+		batch.end();
+	}
+
+	/**
+	 * with a width limit, font will be scaled down so the message fts within the width limit.
+	 * @param color
+	 * @param msg
+	 * @param batch
+	 * @param font
+	 * @param x
+	 * @param y
+	 * @param widthLimit maximum width allowed to draw
+	 */
+	public static void drawTextCentered(Color color, String msg, SpriteBatch batch, BitmapFont font, float x, float y, float widthLimit)
+	{
+		float baseLineWidth = Util.getLineLength(font, msg);
+		float scale = widthLimit/baseLineWidth;
+		
+		//do not scale up font to fill width, only scale down if needed.
+		//check to make sure the line width is not zero before using scale
+		batch.begin();
+
+		if(baseLineWidth != 0 && scale < 1)
+		{
+			//if scaled, message can be placed based on widthLimit
+			font.setScale(scale);
+			font.draw(batch, msg, x-widthLimit/2, y+font.getCapHeight()/2);
+			font.setScale(1f);
+		}
+		else
+		{
+			//font must be scaled based on actual line width
+			font.setScale(1f);
+			font.draw(batch, msg, x-baseLineWidth/2, y+font.getCapHeight()/2);
+		}
+		
+		batch.end();
+	}
+
 }

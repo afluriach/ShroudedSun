@@ -1,10 +1,12 @@
 package com.gensokyouadventure.graphics;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,20 +23,12 @@ public class SpriteLoader
 	private Map<String, AnimationSpriteSet> animationSpriteSet = new TreeMap<String, AnimationSpriteSet>();
 	private Map<String, Portrait> portraits = new TreeMap<String, Portrait>();
 	private ArrayList<Texture> spriteSheetsLoaded = new ArrayList<Texture>();
-		
-	public static final String[] portraitNames = 
-		{
-			"alice", "aya", "cirno", "iku", "komachi", "marisa", "meiling",
-			"patchouli", "reimu", "reisen", "remilia", "sakuya", "sanae",
-			"suika", "suwako", "tenshi", "utsuho", "youmu", "yukari", "yuyuko"
-		};
-	
+			
 	public SpriteLoader()
 	{
-		loadTexturesInFolder();
-		load8DirTouhouSprites();
+//		loadTexturesInFolder();
+		loadEntityAnimations();
 		loadAnimations();
-		loadPortraits();
 	}
 		
 	private Texture loadTexture(String internalName)
@@ -47,17 +41,21 @@ public class SpriteLoader
 		return new Texture(fh);
 	}
 		
-	private void load8DirTouhouSprites()
+	private void loadEntityAnimations()
 	{
 		FileHandle entityDir = Util.getInternalDirectory("entities/");
 		
 		for(FileHandle entitySheet : entityDir.list())
 		{
-			Texture entityTexture = new Texture(entitySheet);
-			EntitySpriteSet8Dir spriteSet = new EntitySpriteSet8Dir(entityTexture, 32, 3);
-			entitySpriteSets8Dir.put(entitySheet.nameWithoutExtension(), spriteSet);
-			spriteSheetsLoaded.add(entityTexture);
+			loadEntity(entitySheet);
 		}
+	}
+
+	private void loadEntity(FileHandle entitySheet) {
+		Texture entityTexture = new Texture(entitySheet);
+		EntitySpriteSet8Dir spriteSet = new EntitySpriteSet8Dir(entityTexture, 32, 3);
+		entitySpriteSets8Dir.put(entitySheet.nameWithoutExtension(), spriteSet);
+		spriteSheetsLoaded.add(entityTexture);
 	}
 	
 	public Animation loadAnimation(String name, float frameInterval, PrimaryDirection dir)
@@ -67,15 +65,28 @@ public class SpriteLoader
 		
 		return new Animation(animationSpriteSet.get(name), frameInterval, dir);
 	}
-	
-	private void loadPortraits()
+		
+	void loadPortrait(String name)
 	{
-		for(String name : portraitNames)
+		//first check to see if the first frame, index 0 exists.
+		//if so, iterate to see how many frames there are total, then
+		//create the portrait object.
+		FileHandle fh = Gdx.files.internal(String.format("portraits/%s0.png", name));
+		int count = 1;
+		
+		if(!fh.exists())
 		{
-			portraits.put(name, new Portrait(name, numPortraitFrames));
+			throw new NoSuchElementException(String.format("Portrait %s not found", name));
 		}
 		
-		portraits.put("fairy_maid", new Portrait("fairy_maid", 1));
+		for(;;++count)
+		{
+			fh = Gdx.files.internal(String.format("portraits/%s%d.png", name, count));
+			
+			if(!fh.exists()) break;
+		}
+		
+		portraits.put(name, new Portrait(name, count));
 	}
 	
 	private void loadTexturesInFolder()
@@ -144,18 +155,31 @@ public class SpriteLoader
 		
 		return new EntityAnimation8Dir(entitySpriteSets8Dir.get(name), startingDir);
 	}
+	
+	void loadTextureName(String name)
+	{
+		FileHandle fh = Gdx.files.internal("sprites/" + name + ".png");
+		textures.put(fh.nameWithoutExtension(), loadTexture(fh));
+	}
 		
 	public Texture getTexture(String name)
 	{
 		if(!textures.containsKey(name))
-			throw new NoSuchElementException(String.format("Texture %s not found", name));
+			loadTextureName(name);
+		
 		return textures.get(name);
 	}
 	
 	public Portrait getPortrait(String name)
 	{
 		if(!portraits.containsKey(name))
-			throw new NoSuchElementException(String.format("Portrait %s not found", name));
+			loadPortrait(name);
+
 		return portraits.get(name);
+	}
+	
+	public void unload()
+	{
+		//
 	}
 }
