@@ -1,5 +1,7 @@
 package com.gensokyouadventure;
 
+import java.util.LinkedList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controller;
@@ -25,8 +27,6 @@ import com.gensokyouadventure.graphics.Graphics;
 public class Controls
 {
 	//constants
-	public static final boolean gamepad = true;
-	
 	public static final int maxPressEvents = 5;
 	
 	public static final int margin = 20;
@@ -51,7 +51,7 @@ public class Controls
 	
 	//control state
 	
-	//normalized vector
+	//represents control pad or control stick state. length of 1 resents full movement in a given direction
 	Vector2 controlPadPos = Vector2.Zero;
 	
 	boolean a = false;
@@ -60,6 +60,11 @@ public class Controls
 	boolean y = false;
 	
 	boolean pause = false;
+	boolean strafe = false;
+	boolean target = false;
+	
+	//screen touches that did not touch a control GUI element
+	LinkedList<Vector2> screenTouches = new LinkedList<Vector2>();
 	
 	//GUI elements	
 	Circle buttonA;
@@ -68,6 +73,7 @@ public class Controls
 	Circle buttonY;
 	
 	Circle buttonPause;
+	Circle buttonStrafe;
 	Circle controlPad;
 		
 	public Controls(int width, int height, boolean touch, boolean keys)
@@ -101,6 +107,7 @@ public class Controls
 		buttonY = new Circle(width-margin-3*buttonRadius, margin+5*buttonRadius, buttonRadius);
 		
 		buttonPause = new Circle(width/2, margin+buttonRadius, buttonRadius);
+		buttonStrafe = new Circle(controlPad.x + margin + controlPad.radius, margin+buttonRadius, buttonRadius);
 	}
 	
 	//buttons will be drawn dark with a light trim, unless they
@@ -145,7 +152,11 @@ public class Controls
 		drawButtonInner(shapeRenderer,b, colors.blight, colors.bdark, buttonB);
 		drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
 		drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
-				
+
+		drawButtonOuter(shapeRenderer, colors.dpadlight, buttonStrafe);
+		drawButtonInner(shapeRenderer,  strafe, colors.dpadlight, colors.dpaddark, buttonStrafe);
+
+		
 		if(touchControls)
 		{
 			drawButtonOuter(shapeRenderer, colors.dpadlight, buttonPause);
@@ -179,13 +190,14 @@ public class Controls
 		batch.end();
 		
 		drawInteractMessage(batch, font);
+		drawStrafeMessage(batch, font);
 		
 		if(touchControls)
 			drawPauseMessage(batch, font);
 	}
 
 	private void drawPauseMessage(SpriteBatch batch, BitmapFont font) {
-		String pauseMsg = Game.inst.paused ? "resume" : "pause";
+		String pauseMsg = Game.inst.paused ? "Resume" : "Pause";
 				
 		Graphics.drawTextCentered(buttonTextColor, pauseMsg, batch, font, buttonPause.x, buttonPause.y, buttonPause.radius*2 - 10);
 	}
@@ -194,6 +206,13 @@ public class Controls
 		String interactMsg = Game.inst.player.interactMessage;
 				
 		Graphics.drawTextCentered(buttonTextColor, interactMsg, batch, font, buttonA.x, buttonA.y, buttonA.radius*2 - 10);
+	}
+	
+	private void drawStrafeMessage(SpriteBatch batch, BitmapFont font)
+	{
+		String strafeMsg = Game.inst.strafeEnabled ? "Walk" : "Strafe";
+		
+		Graphics.drawTextCentered(buttonTextColor, strafeMsg, batch, font, buttonStrafe.x, buttonStrafe.y, buttonStrafe.radius*2 - 10);
 	}
 	
 	
@@ -211,16 +230,18 @@ public class Controls
 	//position in the previous frame
 	private void checkTouchPress(int x, int y)
 	{		
-		if(buttonA.contains(x,y)) a = true;
-		if(buttonB.contains(x,y)) b = true;
-		if(buttonX.contains(x,y)) this.x = true;
-		if(buttonY.contains(x,y)) this.y = true;
-		
-		if(buttonPause.contains(x,y)) pause = true;
-		
 		Vector2 point = new Vector2(x,y);
+
+		if(buttonA.contains(x,y)) a = true;
+		else if(buttonB.contains(x,y)) b = true;
+		else if(buttonX.contains(x,y)) this.x = true;
+		else if(buttonY.contains(x,y)) this.y = true;
 		
-		if(controlPad.contains(point))
+		else if(buttonPause.contains(x,y)) pause = true;
+		
+		else if(buttonStrafe.contains(x,y)) strafe = true;		
+		
+		else if(controlPad.contains(point))
 		{
 			Vector2 posOnPad = point.sub(new Vector2(controlPad.x, controlPad.y));
 			
@@ -228,6 +249,10 @@ public class Controls
 			{
 				controlPadPos = posOnPad.div(controlPad.radius);
 			}
+		}
+		else
+		{
+			screenTouches.add(point);
 		}
 	}
 	
@@ -237,20 +262,17 @@ public class Controls
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)) b = true;
 		if(Gdx.input.isKeyPressed(Keys.UP)) y = true;
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) x = true;
-		
-		//convert WASD to 8dir style
-		boolean up = false;
-		boolean down = false;
-		boolean left = false;
-		boolean right = false;
-		Vector2 dir = new Vector2();
-		
-		if(Gdx.input.isKeyPressed(Keys.W)) up = true;
-		if(Gdx.input.isKeyPressed(Keys.A)) left = true;
-		if(Gdx.input.isKeyPressed(Keys.S)) down = true;
-		if(Gdx.input.isKeyPressed(Keys.D)) right = true;
-		
+
 		if(Gdx.input.isKeyPressed(Keys.ESCAPE)) pause = true;
+		if(Gdx.input.isKeyPressed(Keys.SLASH)) strafe = true;
+		if(Gdx.input.isKeyPressed(Keys.PERIOD)) target = true;
+		
+		//convert WASD to velocity vector
+		boolean up = Gdx.input.isKeyPressed(Keys.W);
+		boolean down = Gdx.input.isKeyPressed(Keys.S);
+		boolean left = Gdx.input.isKeyPressed(Keys.A);
+		boolean right = Gdx.input.isKeyPressed(Keys.D);
+		Vector2 dir = new Vector2();
 		
 		if(up && !down)
 			dir.y = 1;
@@ -275,8 +297,12 @@ public class Controls
 		y = false;
 		
 		pause = false;
+		strafe = false;
+		target = false;
 		
 		controlPadPos = Vector2.Zero;
+		
+		screenTouches.clear();
 	}
 	
 	void handleControllers()
@@ -296,6 +322,9 @@ public class Controls
 			
 			if(controller.getButton(Xbox360Pad.BUTTON_START)) pause = true;
 			
+			if(controller.getButton(Xbox360Pad.BUTTON_LB)) strafe = true;
+			if(controller.getButton(Xbox360Pad.BUTTON_RB)) target = true;
+			
 			Vector2 leftDisp = new Vector2(controller.getAxis(Ouya.AXIS_LEFT_Y), -controller.getAxis(Ouya.AXIS_LEFT_X));
 			
 			if(leftDisp.len2() > gamepadDeadzone*gamepadDeadzone)
@@ -310,11 +339,12 @@ public class Controls
 		resetControlState();
 		
 		if(keyControls)
+		{
 			handleKeyboardControls();
+			handleControllers();
+		}
 		if(touchControls)
 			handleTouchControls();
-		if(gamepad)
-			handleControllers();
 	}
 }
 

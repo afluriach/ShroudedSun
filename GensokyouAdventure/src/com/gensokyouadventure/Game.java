@@ -10,6 +10,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.gensokyouadventure.ability.Ability;
@@ -32,9 +34,11 @@ import com.gensokyouadventure.map.AreaLoader;
 import com.gensokyouadventure.map.MapLink;
 import com.gensokyouadventure.map.Room;
 import com.gensokyouadventure.map.TileGraph;
+import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.GameObjectSystem;
 import com.gensokyouadventure.objects.RenderLayer;
 import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.physics.Physics;
 
 public class Game implements ApplicationListener
@@ -108,9 +112,16 @@ public class Game implements ApplicationListener
 	
 	//control state
 	Controls controls;
-	//if the interact button has been held from the previous frame
+	//if the button has been held from the previous frame
 	boolean interactHeld = false;
 	boolean pauseHeld = false;
+	boolean strafeHeld = false;
+	boolean targetHeld = false;
+	
+	//toggle strafe
+	boolean strafeEnabled = false;
+	//if the player has a target selected, null otherwise.
+	public GameObject target = null;
 	boolean bHeld;
 	boolean xHeld;
 	boolean yHeld;
@@ -302,13 +313,51 @@ public class Game implements ApplicationListener
 		//else, change direction to one whose component is closest to current direction
 		//e.g. if facing right and down-left is pressed, face down
 		
-		player.setDesiredVel(controls.controlPadPos.scl(Player.SPEED));
-		
-		//determine desired dir for the player
-		//TODO add strafe lock 
-		
-		if(controls.controlPadPos.len2() > 0)
+		if(controls.strafe && !strafeHeld)
 		{
+			strafeEnabled = !strafeEnabled;
+			strafeHeld = true;
+		}
+		else
+		{
+			strafeHeld = controls.strafe;
+		}
+		
+		if(controls.target && !targetHeld)
+		{
+			targetHeld = true;
+			toggleTarget();
+		}
+		else if(!controls.screenTouches.isEmpty())
+		{
+			//allow player to target by touching targetable object
+			toggleTouchTarget();
+		}
+		else
+		{
+			targetHeld = controls.target;
+		}
+		
+		if(target != null && target.isExpired()) target = null;
+		
+		if(target != null)
+		{
+			Vector2 targetDir= target.getCenterPos().sub(player.getCenterPos()).nor(); 
+			float angleToTarget = targetDir.angle();
+
+			//face target
+			//TODO change player heading to support arbritary angles, bullets
+			//will aim at target better
+
+			player.setDesiredAngle(angleToTarget);
+		}
+
+		player.setDesiredVel(controls.controlPadPos.scl(Player.SPEED));	
+		
+		if(target == null && controls.controlPadPos.len2() > 0 && !strafeEnabled)
+		{
+			//determine desired direction for the player to face, based on desired velocity.
+			//do not change direction if strafe is enabled.
 			player.setDesiredDir(Util.getNearestDir(controls.controlPadPos.angle()));
 		}
 						
@@ -324,8 +373,76 @@ public class Game implements ApplicationListener
 		
 		checkUpdateAbility();
 	}
-		
 	
+	void toggleTouchTarget()
+	{
+		boolean targetTouchedThisFrame = false;
+		
+		for(Vector2 pixPoint : controls.screenTouches)
+		{
+			Vector3 gamePoint = new Vector3(pixPoint.x, pixPoint.y, 0f);
+			camera.unproject(gamePoint);
+			gamePoint.x *= TILES_PER_PIXEL;
+			gamePoint.y *= TILES_PER_PIXEL;
+			Game.log(String.format("screen touch: %f,%f; gamePos: %f,%f", pixPoint.x, pixPoint.y, gamePoint.x, gamePoint.y));
+			
+			GameObject touched = physics.getTargetableObjectAtPoint(new Vector2(gamePoint.x, gamePoint.y));
+			
+			if(!targetHeld)
+			{
+				if(target != null && touched == target)
+				{
+					//untarget the object by touching it again
+					target = null;
+					targetTouchedThisFrame = true;
+					break;
+				}
+				
+				else if(target == null && touched != null)
+				{
+					//target the touched object
+					target = touched;
+					targetTouchedThisFrame = true;
+					break;
+				}				
+			}
+		}
+		
+		targetHeld = targetTouchedThisFrame;
+	}
+
+
+	private void toggleTarget() {
+		//untarget if the player was targeting
+		if(target != null)
+			target = null;
+		else
+		{
+			//find the best target based on highest dot product, 
+			//i.e. closest to the center of the player's view
+			float bestDot = 0f;
+			GameObject bestObj = null; 
+			for(GameObject go : player.getTargetableObjects())
+			{
+				Vector2 disp = go.getCenterPos().sub(player.getCenterPos());
+				float dot = disp.nor().dot(Util.ray(player.getFacingAngle(), 1f));
+				
+				if(bestObj == null)
+				{
+					bestObj = go;
+					bestDot = dot;
+				}
+				else if(dot > bestDot)
+				{
+					bestObj = go;
+					bestDot = dot;
+				}
+			}
+			
+			if(bestObj != null) target = bestObj;
+		}
+	}
+			
 	@Override
 	public void create() {
 		inst = this;
@@ -542,6 +659,25 @@ public class Game implements ApplicationListener
 		gameObjectSystem.render(RenderLayer.floor, batch);
 		gameObjectSystem.render(RenderLayer.groundLevel, batch);
 		gameObjectSystem.render(RenderLayer.aboveGround, batch);
+		batch.end();
+		
+		
+		//draw targeting arrows
+		batch.begin();
+		if(target != null)
+		{
+			//use a dark arrow to indicate a selected target
+			Texture arrowTexture = spriteLoader.getTexture(target instanceof Enemy ? "dark_yellow_arrow" : "dark_blue_arrow");
+			Graphics.drawTexture(arrowTexture, target.getCenterPos().add(0f,0.5f), batch);
+		}
+		
+		for(GameObject targetableObj : player.getTargetableObjects())
+		{
+			if(targetableObj == target) continue;
+			
+			Texture arrowTexture = spriteLoader.getTexture(targetableObj instanceof Enemy ? "yellow_arrow" : "blue_arrow");
+			Graphics.drawTexture(arrowTexture, targetableObj.getCenterPos().add(0f,0.5f), batch);
+		}
 		batch.end();
 		
 		if(physicsDebugRender)
@@ -844,5 +980,5 @@ public class Game implements ApplicationListener
 	{
 		return area;
 	}
-
+	
 }

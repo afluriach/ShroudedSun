@@ -6,7 +6,7 @@ public class AI_Util
 {
 	public static void rotate(boolean clockwise, Entity entity)
 	{
-		int newDir = entity.getDir();
+		int newDir = entity.getNearestDir();
 		
 		if(clockwise)
 		{

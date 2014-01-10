@@ -102,7 +102,7 @@ public class Physics
 		//npc
 		filter = new Filter();
 		filter.categoryBits = npcCategory;
-		filter.maskBits = playerCategory | environmentCateogry | sensorCategory | npcCategory | onFloorCategory | entityHeightCategory;
+		filter.maskBits = playerCategory | environmentCateogry | sensorCategory | npcCategory | onFloorCategory | entityHeightCategory | sensorCategory;
 		collisionFilters.put("npc", filter);
 				
 		//wall
@@ -117,6 +117,11 @@ public class Physics
 		//player bullet sensor
 		collisionFilters.put("player_bullet_sensor", sensorFilter(playerBulletCategory));
 		
+		//targeting sensor
+		filter = new Filter();
+		filter.categoryBits = sensorCategory;
+		filter.maskBits = enemyCategory | npcCategory;
+		collisionFilters.put("targeting_sensor", filter);
 	}
 	
 	public static Filter sensorFilter(short target)
@@ -374,4 +379,19 @@ public class Physics
 		world.QueryAABB(cb, rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
 		return cb.detected();
 	}
+	
+	public GameObject getTargetableObjectAtPoint(Vector2 point)
+	{
+		//create rectangle centered at pixel, with an area of 1x1 tile
+		Rectangle rect = new Rectangle(point.x - 0.5f,
+				                       point.y - 0.5f,
+				                       2f,
+				                       2f);
+
+		FindTargetableObjectAtPointCallback cb = new FindTargetableObjectAtPointCallback(null, point);
+		
+		world.QueryAABB(cb, rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+		return cb.detected();
+	}
+
 }

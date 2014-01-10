@@ -73,7 +73,7 @@ public class Follower extends Enemy
 		
 		float desiredSpeed = isFacingTargetsBack() ? speed : 0f;		
 		
-		setDesiredVel(Util.get8DirUnit(getDir()).scl(desiredSpeed));
+		setDesiredVel(Util.ray(getFacingAngle(),desiredSpeed));
 		
 		super.update();
 	}
@@ -97,8 +97,8 @@ public class Follower extends Enemy
 		
 		Vector2 targetDisp = target.getCenterPos().sub(getCenterPos());
 		
-		Vector2 facingVector = Util.get8DirUnit(getDir());
-		Vector2 targetFacingVector = Util.get8DirUnit(target.getDir());
+		Vector2 facingVector = getFacingVector();
+		Vector2 targetFacingVector = target.getFacingVector(); 
 		
 		boolean facingBack = facingVector.dot(targetFacingVector) > 0;
 		boolean visible = facingVector.dot(targetDisp) > 0 && Game.inst.physics.lineOfSight(getCenterPos(), target);

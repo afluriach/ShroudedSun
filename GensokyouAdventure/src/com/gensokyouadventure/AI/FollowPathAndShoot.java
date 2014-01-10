@@ -1,5 +1,6 @@
 package com.gensokyouadventure.AI;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.gensokyouadventure.Game;
@@ -8,6 +9,7 @@ import com.gensokyouadventure.Util;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RadarSensor;
 import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.entity.Player;
 import com.gensokyouadventure.objects.projectile.EnemyBullet;
 import com.gensokyouadventure.objects.projectile.PlayerBullet;
 
@@ -27,7 +29,10 @@ public class FollowPathAndShoot extends FollowPath
 		super(fsm, path, speed, new BlueEnemyAlert(fsm, target));
 		this.target = target;		
 		
-		bulletRadar = new RadarSensor(fsm.agent.getCenterPos(), bulletSenseRadius, PlayerBullet.class, "player_bullet_sensor");
+
+		LinkedList<Class<?>> sensing = new LinkedList<Class<?>>();
+		sensing.add(PlayerBullet.class);
+		bulletRadar = new RadarSensor(fsm.agent.getCenterPos(), bulletSenseRadius, sensing, "player_bullet_sensor");
 	}
 	
 	@Override

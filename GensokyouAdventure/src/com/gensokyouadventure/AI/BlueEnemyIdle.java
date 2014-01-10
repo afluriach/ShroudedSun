@@ -1,5 +1,6 @@
 package com.gensokyouadventure.AI;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.gensokyouadventure.objects.GameObject;
@@ -33,7 +34,7 @@ public class BlueEnemyIdle extends AI_State<Entity>
 		//a state may subclass Idle to include movement
 		radar.setPos(fsm.agent.getCenterPos());
 		
-		targets = radar.getDetectedObjects(fsm.agent.getDir()*45f, fovAngle);
+		targets = radar.getDetectedObjects(fsm.agent.getFacingAngle(), fovAngle);
 		
 		if(!targets.isEmpty())
 			fsm.changeState(new BlueEnemyAlert(fsm, targets.get(0)));
@@ -43,7 +44,9 @@ public class BlueEnemyIdle extends AI_State<Entity>
 	@Override
 	public void onEnter()
 	{
-		radar = new RadarSensor(fsm.agent.getCenterPos(), radarSensorRadius, Player.class, "player_sensor");
+		LinkedList<Class<?>> sensing = new LinkedList<Class<?>>();
+		sensing.add(Player.class);
+		radar = new RadarSensor(fsm.agent.getCenterPos(), radarSensorRadius, sensing, "player_sensor");
 	}
 
 	@Override

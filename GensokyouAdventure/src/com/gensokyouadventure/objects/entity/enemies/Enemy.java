@@ -16,6 +16,7 @@ public class Enemy extends Entity
 	float invulnerableTimeRemaining = 0;
 	int touchDamage = 0;
 	boolean playerTouching;
+	boolean canDamage = true;
 
 	//ai
 	AI_FSM<Entity> fsm;
@@ -26,9 +27,14 @@ public class Enemy extends Entity
 		this.hp = hp;
 	}
 	
+	public void canDamage(boolean canDamage)
+	{
+		this.canDamage = canDamage;
+	}
+	
 	public void hit(int damage)
 	{
-		if(invulnerableTimeRemaining == 0)
+		if(invulnerableTimeRemaining == 0 && canDamage)
 		{
 			hp -= damage;
 			invulnerableTimeRemaining = invulerabilityLength;
@@ -80,7 +86,6 @@ public class Enemy extends Entity
 	@Override
 	public void handleEndContact(GameObject other)
 	{
-
 		if(other instanceof Player)
 		{
 			playerTouching = false;

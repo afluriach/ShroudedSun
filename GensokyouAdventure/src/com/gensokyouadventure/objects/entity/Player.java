@@ -1,6 +1,8 @@
 package com.gensokyouadventure.objects.entity;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
@@ -11,6 +13,8 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.Util;
 import com.gensokyouadventure.objects.GameObject;
+import com.gensokyouadventure.objects.RadarSensor;
+import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.objects.environment.Door;
 import com.gensokyouadventure.objects.environment.Jar;
 import com.gensokyouadventure.objects.environment.Sign;
@@ -51,7 +55,11 @@ public class Player extends Entity {
 	// flag that determines if the player wants to shoot, set based on the
 	// controls.
 	boolean interact = false;
-
+	
+	public RadarSensor targetableSensor;
+	float targetRadius = 6f;
+	float targetingFOV = 45f;
+	
 	private void initInteractMap() {
 		interactMap = new HashMap<Class<? extends GameObject>, ItemInteraction>();
 
@@ -63,6 +71,11 @@ public class Player extends Entity {
 
 	public Player(Vector2 pos, PrimaryDirection startingDir) {
 		super(pos, "cirno", startingDir.getAngle8Dir(), "player", "player", false);
+		
+		LinkedList<Class<?>> targetClasses = new LinkedList<Class<?>>();
+		targetClasses.add(Enemy.class);
+		targetClasses.add(NPC.class);
+		targetableSensor = new RadarSensor(getCenterPos(), targetRadius, targetClasses, "targeting_sensor");
 
 		initInteractMap();
 	}
@@ -72,6 +85,8 @@ public class Player extends Entity {
 		if (invulnerableTimeRemaining < 0) {
 			invulnerableTimeRemaining = 0;
 		}
+		
+		targetableSensor.setPos(getCenterPos());
 
 		checkInteract();
 
@@ -83,7 +98,7 @@ public class Player extends Entity {
 		if (holdingItem != null) {
 			holdingItem.setPos(getCenterPos().add(itemHoldPos));
 		}
-
+		
 		super.update();
 	}
 
@@ -205,14 +220,20 @@ public class Player extends Entity {
 		{
 			// if there is no room to drop item, do not display message
 			interactMessage = canDrop() ? "Drop" : "";
-			return;
 		}
+		else if(Game.inst.target != null && Game.inst.target instanceof NPC)
+		{
+			//else if targeting an NPC, the talk action takes precedence
+			interactMessage = "Talk";
+		}
+		else
+		{
+			GameObject obj = Game.inst.physics.closestObjectFeeler(getCenterPos(),
+					getFacingAngle(), HIT_CIRCLE_RADIUS + itemInteractDistance,
+					GameObject.class);
 
-		GameObject obj = Game.inst.physics.closestObjectFeeler(getCenterPos(),
-				getDir() * 45f, HIT_CIRCLE_RADIUS + itemInteractDistance,
-				GameObject.class);
-
-		checkItemClass(obj);
+			checkItemClass(obj);
+		}
 	}
 
 	/**
@@ -222,7 +243,12 @@ public class Player extends Entity {
 	public void interact() {
 		if (holdingItem != null && canDrop()) {
 			drop();
-		} else if (interactibleObject != null) {
+		}
+		else if(Game.inst.target != null && Game.inst.target instanceof NPC)
+		{
+			interactMap.get(NPC.class).interact(Game.inst.target, this);
+		}
+		else if (interactibleObject != null) {
 			interaction.interact(interactibleObject, this);
 		}
 	}
@@ -230,8 +256,7 @@ public class Player extends Entity {
 	// only drop if there is room in front of the player to place jar.
 	private boolean canDrop() {
 		// the center position where the item would be placed
-		Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(
-				itemInteractDistance + HIT_CIRCLE_RADIUS);
+		Vector2 holdDisp = Util.ray(getFacingAngle(), itemInteractDistance + HIT_CIRCLE_RADIUS);
 
 		// the AABB where the jar would be placed
 		Rectangle rect = new Rectangle(holdingItem.getAABB());
@@ -241,8 +266,7 @@ public class Player extends Entity {
 	}
 
 	private void drop() {
-		Vector2 holdDisp = Util.get8DirUnit(getDir()).scl(
-				itemInteractDistance + HIT_CIRCLE_RADIUS);
+		Vector2 holdDisp = Util.ray(getFacingAngle(), itemInteractDistance + HIT_CIRCLE_RADIUS);
 		holdingItem.setPos(getCenterPos().add(holdDisp));
 		((Grabbable) holdingItem).onDrop();
 
@@ -263,5 +287,9 @@ public class Player extends Entity {
 	@Override
 	public void init() {
 	}
-
+	
+	public List<GameObject> getTargetableObjects()
+	{
+		return targetableSensor.getDetectedObjects(getFacingAngle(), targetingFOV);
+	}	
 }

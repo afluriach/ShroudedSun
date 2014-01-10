@@ -27,9 +27,11 @@ public class AudioHandler
 	{		
 		FileHandle handle = Util.getInternalDirectory("sounds/");
 		
+		//ignore bootanim0.raw or other non-sound files packaged into the assets folder
 		for(FileHandle fh : handle.list())
 		{
-			sounds.put(fh.nameWithoutExtension(), Gdx.audio.newSound(fh));			
+			if(fh.extension().equals("wav") || fh.extension().equals("ogg"))
+				sounds.put(fh.nameWithoutExtension(), Gdx.audio.newSound(fh));			
 		}
 	}
 	

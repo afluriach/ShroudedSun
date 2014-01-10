@@ -22,6 +22,6 @@ public class IceBullet extends ActionAbility
 	{
 //		Game.inst.player.useMP(1);
 		
-		Game.inst.player.shoot(new PlayerIceBullet(Game.inst.player.getCenterPos(), Game.inst.player.getDir()), Player.shotInitDist);
+		Game.inst.player.shoot(new PlayerIceBullet(Game.inst.player.getCenterPos(), Game.inst.player.getFacingAngle()), Player.shotInitDist);
 	}
 }

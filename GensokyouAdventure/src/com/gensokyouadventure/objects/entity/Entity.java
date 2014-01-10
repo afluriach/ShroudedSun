@@ -19,7 +19,7 @@ public abstract class Entity extends GameObject
 {
 	static final float MASS = 50.0f;
 	static final float HIT_CIRCLE_RADIUS = 0.35f;
-	static final int defaultFacing = 2;
+	static final float defaultFacing = 90f;
 	static final float maxAcceleration = 4.5f;
 	static final float defaultSpeed = 1f;
 	
@@ -50,12 +50,12 @@ public abstract class Entity extends GameObject
 	EntityAnimation8Dir animation;
 	String character;
 	
-	private int crntDir = defaultFacing;
+	private float crntFacing = defaultFacing;
 		
 	/**
 	 * if set, change the direction on the next cycle
 	 */
-	private int desiredDir = defaultFacing;
+	private float desiredFacingAngle = defaultFacing;
 	private Vector2 desiredVel;	
 	protected float speed;	
 		
@@ -68,20 +68,23 @@ public abstract class Entity extends GameObject
 		
 		if(to.prop.containsKey("dir"))
 		{
+			int dir8 = 2;
 			try
 			{
-				crntDir = desiredDir = PrimaryDirection.valueOf(to.prop.get("dir", String.class)).getAngle8Dir();
+				dir8 = PrimaryDirection.valueOf(to.prop.get("dir", String.class)).getAngle8Dir();
 			}
 			catch(IllegalArgumentException e)
 			{
 				//the given direction is not a string representing a primary direction.
 				//the direction may also be an 8dir angle
 				
-				crntDir = desiredDir = to.prop.get("dir", Integer.class);
+				dir8 = to.prop.get("dir", Integer.class);
 				
-				if(crntDir < 0 || crntDir >= 8)
+				if(dir8 < 0 || dir8 >= 8)
 					throw new MapDataException(String.format("invalid direction %s in entity %s", to.prop.get("dir", String.class), to.name));
 			}
+			this.animation.setDirection(dir8);
+			crntFacing = desiredFacingAngle = dir8*45f;
 		}
 		
 		if(to.prop.containsKey("speed"))
@@ -91,9 +94,7 @@ public abstract class Entity extends GameObject
 		else
 		{
 			speed = defaultSpeed;
-		}
-		
-		this.animation.setDirection(crntDir);
+		}		
 	}
 	
 	public String getCharacter()
@@ -112,8 +113,8 @@ public abstract class Entity extends GameObject
 	
 	private void updateDirection()
 	{
-		crntDir = desiredDir;
-		animation.setDirection(crntDir);
+		crntFacing = desiredFacingAngle;
+		animation.setDirection(Util.getNearestDir(crntFacing));
 	}
 	
 	
@@ -154,7 +155,12 @@ public abstract class Entity extends GameObject
 		if(desired < 0 || desired >= 8)
 			throw new IllegalArgumentException();
 
-		desiredDir = desired;
+		desiredFacingAngle = desired*45f;
+	}
+	
+	public void setDesiredAngle(float angle)
+	{
+		desiredFacingAngle = angle;
 	}
 	
 	public void enableFlicker(float flickerTime, float flickerInterval)
@@ -214,9 +220,19 @@ public abstract class Entity extends GameObject
 		Game.inst.gameObjectSystem.addObject(b);
 	}
 	
-	public int getDir()
+	public float getFacingAngle()
 	{
-		return crntDir;
+		return crntFacing;
+	}
+	
+	public Vector2 getFacingVector()
+	{
+		return Util.ray(crntFacing, 1f);
+	}
+	
+	public int getNearestDir()
+	{
+		return Util.getNearestDir(crntFacing);
 	}
 	
 	public float getSpeed() {

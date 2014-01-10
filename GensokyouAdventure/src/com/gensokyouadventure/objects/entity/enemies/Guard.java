@@ -1,5 +1,7 @@
 package com.gensokyouadventure.objects.entity.enemies;
 
+import java.util.LinkedList;
+
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.AI.GuardPatrolFSM;
 import com.gensokyouadventure.AI.LookingAround;
@@ -19,8 +21,11 @@ public class Guard extends Enemy
 	public Guard(TilespaceRectMapObject mo)
 	{
 		super(mo, "meiling", 1);
+		canDamage(false);
 		
-		radar = new RadarSensor(getCenterPos(), radarRadius, Player.class, "player_sensor");
+		LinkedList<Class<?>> sensing = new LinkedList<Class<?>>();
+		sensing.add(Player.class);
+		radar = new RadarSensor(getCenterPos(), radarRadius, sensing, "player_sensor");
 		
 		if(mo.prop.containsKey("follow_path"))
 		{
@@ -51,7 +56,7 @@ public class Guard extends Enemy
 		radar.update();
 		
 		//only catch player if she is in the same room as the guard. 		
-		if(!radar.getDetectedObjects(getDir()*45f, fovAngle).isEmpty() &&
+		if(!radar.getDetectedObjects(getFacingAngle(), fovAngle).isEmpty() &&
 			Game.inst.getCrntArea().getCurrentRoom(getCenterPos()) == Game.inst.getCrntArea().getCurrentRoom(Game.inst.player.getCenterPos()))
 		{
 			catchPlayer();

@@ -14,7 +14,7 @@ import com.gensokyouadventure.objects.PlayerShieldObject;
  */
 public class DetectObjectCallback implements QueryCallback
 {
-	//has any object bee found
+	//has any object been found
 	boolean detected = false;
 	//do not count this object as a detection..
 	GameObject except;

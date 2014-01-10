@@ -15,16 +15,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 public class RadarSensor extends GameObject
 {
 	public final float radius;
-	Class<?> sensingClass;
+	Iterable<Class<?>> sensingClasses;
 	private List<GameObject> objectsWithinRadius = new LinkedList<GameObject>();
-	//objects that are in the contact with the radar, but are not visible due to line of sight.
-	private List<GameObject> obstructedObjects = new LinkedList<GameObject>();
 	
-	public RadarSensor(Vector2 pos, float radius, Class<?> sensingClass, String sensingType)
+	public RadarSensor(Vector2 pos, float radius, Iterable<Class<?>> sensingClasses, String sensingType)
 	{
 		super("radarSensor");
 		this.radius = radius;
-		this.sensingClass = sensingClass;
+		this.sensingClasses = sensingClasses;
 		
 		physicsBody = Game.inst.physics.addCircleBody(pos, radius, BodyType.DynamicBody, this, 1f, true, sensingType);
 	}
@@ -69,21 +67,28 @@ public class RadarSensor extends GameObject
 	@Override
 	public void handleContact(GameObject other)
 	{
-		//add to detected objects if it of the right class and there is a line of sight.
-		//assuming enemy is at the center of the radar.
-		if(sensingClass.isInstance(other))
+		//add to detected objects if it of the right class
+		for(Class<?> cls : sensingClasses)
 		{
-			objectsWithinRadius.add(other);
-		}
+			if(cls.isInstance(other))
+			{
+				objectsWithinRadius.add(other);
+				break;
+			}
+		}		
 	}
 
 	@Override
 	public void handleEndContact(GameObject other)
 	{
-		if(sensingClass.isInstance(other))
+		for(Class<?> cls : sensingClasses)
 		{
-			objectsWithinRadius.remove(other);
-		}
+			if(cls.isInstance(other))
+			{
+				objectsWithinRadius.remove(other);
+				break;
+			}
+		}		
 	}
 
 	@Override

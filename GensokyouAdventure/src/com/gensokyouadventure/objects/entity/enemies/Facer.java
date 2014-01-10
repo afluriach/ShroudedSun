@@ -70,8 +70,7 @@ public class Facer extends Enemy
 	{		
 		float desiredSpeed = isFacingTarget() ? speed : 0f;		
 		
-		setDesiredVel(Util.get8DirUnit(getDir()).scl(desiredSpeed));
-		
+		setDesiredVel(Util.ray(getFacingAngle(), desiredSpeed));
 		super.update();
 	}
 	
@@ -97,8 +96,8 @@ public class Facer extends Enemy
 		//generalize it so it works for 4dir facer vs 8dir player. if the dot product of of the facing vectors is 
 		//negative, they are facing. if < 1, they are diagonal.
 		
-		Vector2 facingVector = Util.get8DirUnit(getDir());
-		Vector2 targetFacingVector = Util.get8DirUnit(target.getDir());
+		Vector2 facingVector = getFacingVector();
+		Vector2 targetFacingVector = target.getFacingVector();
 		
 		boolean facing = facingVector.dot(targetFacingVector) < 0;
 		boolean visible = facingVector.dot(targetDisp) > 0 && Game.inst.physics.lineOfSight(getCenterPos(), target);
