@@ -38,8 +38,8 @@ public class TileGraph
 	{
 		map = area.map;
 		
-		this.width = map.getProperties().get("width", Integer.class);
-		this.height = map.getProperties().get("width", Integer.class);;
+		this.width = area.mapWidthTiles;
+		this.height = area.mapHeightPixels;
 		
 		tiles = new boolean[height][width];
 		

@@ -25,6 +25,13 @@ public class Graphics
 		batch.draw(texture, x, y, texture.getWidth(), texture.getHeight());
 	}
 	
+	public static void drawTexture(Texture texture, Vector2 centerPos, SpriteBatch batch, float rotation)
+	{
+		TextureRegion region = new TextureRegion(texture);
+		
+		drawTextureRegion(region, centerPos, batch, rotation);
+	}
+	
 	public static void drawTextureRegion(TextureRegion region, Vector2 centerPos, SpriteBatch batch)
 	{
 		int centerPixX = (int) (centerPos.x*Game.PIXELS_PER_TILE);

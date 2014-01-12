@@ -40,11 +40,16 @@
     <property name="msg" value="Mansion sneak floor"/>
    </properties>
   </object>
+  <object name="circuit_sign" type="sign" x="256" y="160" width="32" height="32">
+   <properties>
+    <property name="msg" value="Circuit Room."/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="rooms" width="50" height="10">
   <object name="main" type="room" x="0" y="0" width="1600" height="320"/>
  </objectgroup>
- <objectgroup name="map_links" width="50" height="10">
+ <objectgroup name="maplinks" width="50" height="10">
   <properties>
    <property name="entrance_dir" value="right"/>
   </properties>
@@ -69,6 +74,18 @@
    <properties>
     <property name="dest_link" value="entrance"/>
     <property name="dest_map" value="mansion_sneak_floor"/>
+   </properties>
+  </object>
+  <object name="to_cirucit_room" type="map_link" x="256" y="64" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="entrance"/>
+    <property name="dest_map" value="circuit"/>
+   </properties>
+  </object>
+  <object type="map_link" x="352" y="64" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="entrance"/>
+    <property name="dest_map" value="facer_floor"/>
    </properties>
   </object>
  </objectgroup>

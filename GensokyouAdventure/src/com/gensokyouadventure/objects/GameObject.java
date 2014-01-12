@@ -22,6 +22,7 @@ import com.gensokyouadventure.objects.entity.enemies.BlueEnemy;
 import com.gensokyouadventure.objects.entity.enemies.Facer;
 import com.gensokyouadventure.objects.entity.enemies.Follower;
 import com.gensokyouadventure.objects.entity.enemies.Guard;
+import com.gensokyouadventure.objects.entity.enemies.RedEnemy;
 import com.gensokyouadventure.objects.entity.enemies.TorchWalker;
 import com.gensokyouadventure.objects.environment.Barrier;
 import com.gensokyouadventure.objects.environment.Block;
@@ -30,6 +31,7 @@ import com.gensokyouadventure.objects.environment.FloorSwitch;
 import com.gensokyouadventure.objects.environment.InvisibleFloorSwitch;
 import com.gensokyouadventure.objects.environment.Jar;
 import com.gensokyouadventure.objects.environment.Sign;
+import com.gensokyouadventure.objects.environment.Statue;
 import com.gensokyouadventure.objects.environment.Torch;
 import com.gensokyouadventure.objects.environment.Wall;
 import com.gensokyouadventure.objects.interaction.Grabbable;
@@ -39,11 +41,8 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class GameObject 
 {
-	private static final float collisionBounceMargin = 0.1f;
-	
 	private static Map<String, Class<? extends GameObject>> gameObjectTypes = new HashMap<String, Class<? extends GameObject>>();
 	private static boolean objectTypesInitialized = false;
-	private Vector2 crntAcceleration;
 	
 	public static void addClass(String str, Class<? extends GameObject> cls)
 	{
@@ -68,6 +67,8 @@ public abstract class GameObject
 		addClass("guard", Guard.class);
 		addClass("stationary_npc", StationaryNPC.class);
 		addClass("random_walk_npc", RandomWalkNPC.class);
+		addClass("gold_statue", Statue.class);
+		addClass("red_enemy", RedEnemy.class);
 		
 		addClass("map_link", Door.class);
 	}
@@ -93,6 +94,7 @@ public abstract class GameObject
 	//physics
 	protected Body physicsBody;
 	boolean collisionThisFrame = false;	
+	private Vector2 crntAcceleration;
 	
 	String name;
 	boolean expired = false;

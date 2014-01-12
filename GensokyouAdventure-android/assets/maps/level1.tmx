@@ -75,7 +75,7 @@
   <object name="room3" type="room" x="0" y="224" width="640" height="256"/>
   <object name="room4" type="room" x="0" y="0" width="640" height="256"/>
  </objectgroup>
- <objectgroup name="map_links" width="20" height="30">
+ <objectgroup name="maplinks" width="20" height="30">
   <object name="to_puzzle_room" type="door" x="288" y="0" width="32" height="32">
    <properties>
     <property name="dest_link" value="entrance"/>

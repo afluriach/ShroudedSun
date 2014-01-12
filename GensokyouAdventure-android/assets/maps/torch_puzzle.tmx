@@ -30,7 +30,7 @@
  <objectgroup name="rooms" width="18" height="15">
   <object name="main" type="room" x="0" y="0" width="512" height="352"/>
  </objectgroup>
- <objectgroup name="map_links" width="18" height="15">
+ <objectgroup name="maplinks" width="18" height="15">
   <properties>
    <property name="entrance_dir" value="right"/>
   </properties>

@@ -95,7 +95,8 @@ public class Game implements ApplicationListener
 	private SpriteBatch batch;
 	private SpriteBatch guiBatch;
 	public BitmapFont font;
-	private ShapeRenderer shapeRenderer;
+	public ShapeRenderer shapeRenderer;
+	public ShapeRenderer guiShapeRenderer;
 	public SpriteLoader spriteLoader;
 
 	//audio
@@ -207,62 +208,62 @@ public class Game implements ApplicationListener
 
 	void drawGUI()
 	{
-		shapeRenderer.begin(ShapeType.Filled);
+		guiShapeRenderer.begin(ShapeType.Filled);
 		int healthBarLen = (int) (HEALTH_BAR_LENGTH*player.getHP()*1.0f/player.getMaxHP());
 		int magicBarLen  = (int) (MAGIC_BAR_LENGTH*player.getMP()*1.0f/player.getMaxMP());
 
 		//health bar
-		shapeRenderer.setColor(1,1,1,1);
-		shapeRenderer.rect(GUI_EDGE_MARGIN,
+		guiShapeRenderer.setColor(1,1,1,1);
+		guiShapeRenderer.rect(GUI_EDGE_MARGIN,
 						   screenHeight - HEALTH_BAR_THICKNESS - 2*HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
 						   HEALTH_BAR_LENGTH+2*HEALTH_BAR_OUTLINE,
 						   HEALTH_BAR_THICKNESS+2*HEALTH_BAR_OUTLINE);
 		
-		shapeRenderer.setColor(HEALTH_BAR_COLOR);
-		shapeRenderer.rect(GUI_EDGE_MARGIN + HEALTH_BAR_OUTLINE,
+		guiShapeRenderer.setColor(HEALTH_BAR_COLOR);
+		guiShapeRenderer.rect(GUI_EDGE_MARGIN + HEALTH_BAR_OUTLINE,
 						   screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
 						   healthBarLen,
 						   HEALTH_BAR_THICKNESS);
 		
-		shapeRenderer.setColor(0,0,0,1);
-		shapeRenderer.rect(GUI_EDGE_MARGIN+HEALTH_BAR_OUTLINE+healthBarLen,
+		guiShapeRenderer.setColor(0,0,0,1);
+		guiShapeRenderer.rect(GUI_EDGE_MARGIN+HEALTH_BAR_OUTLINE+healthBarLen,
 				           screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
 				           HEALTH_BAR_LENGTH - healthBarLen,
 				           HEALTH_BAR_THICKNESS);
 		
 		//magic bar
-		shapeRenderer.setColor(1,1,1,1);
-		shapeRenderer.rect(GUI_EDGE_MARGIN,
+		guiShapeRenderer.setColor(1,1,1,1);
+		guiShapeRenderer.rect(GUI_EDGE_MARGIN,
 						   screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - 2*MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
 						   MAGIC_BAR_LENGTH+2*MAGIC_BAR_OUTLINE,
 						   MAGIC_BAR_THICKNESS+2*MAGIC_BAR_OUTLINE);
 		
-		shapeRenderer.setColor(MAGIC_BAR_COLOR);
-		shapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE,
+		guiShapeRenderer.setColor(MAGIC_BAR_COLOR);
+		guiShapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE,
 				           screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
 				           magicBarLen,
 				           MAGIC_BAR_THICKNESS);
 		
-		shapeRenderer.setColor(0,0,0,1);
-		shapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE+magicBarLen,
+		guiShapeRenderer.setColor(0,0,0,1);
+		guiShapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE+magicBarLen,
 						   screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
 				           MAGIC_BAR_LENGTH - magicBarLen,
 				           MAGIC_BAR_THICKNESS);
 		
-		shapeRenderer.end();		
+		guiShapeRenderer.end();		
 		
 		if(crntDialog != null)
 		{
 			//switched to gui bach
-			crntDialog.render(guiBatch, shapeRenderer, crntConvsersationFrame);
+			crntDialog.render(guiBatch, guiShapeRenderer, crntConvsersationFrame);
 		}
 		else if(activeTextBox != null)
 		{
-			activeTextBox.render(guiBatch, shapeRenderer);			
+			activeTextBox.render(guiBatch, guiShapeRenderer);			
 		}
 		else
 		{
-			controls.render(shapeRenderer, guiBatch, font);			
+			controls.render(guiShapeRenderer, guiBatch, font);			
 		}
 		
 		if(paused)
@@ -460,6 +461,7 @@ public class Game implements ApplicationListener
 		batch = new SpriteBatch();
 		guiBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
+		guiShapeRenderer = new ShapeRenderer();
 		//font = new BitmapFont();
 		font = new BitmapFont(Gdx.files.internal("fonts/sansation.fnt"));
 		
@@ -568,7 +570,7 @@ public class Game implements ApplicationListener
 	
 	void update()
 	{
-//		area.update();
+		area.update();
 		gameObjectSystem.handleAdditions();
 		gameObjectSystem.updateAll();
 		gameObjectSystem.removeExpired();
@@ -595,7 +597,7 @@ public class Game implements ApplicationListener
 		guiBatch.dispose();
 		spriteLoader.unloadTextures();
 		font.dispose();
-		shapeRenderer.dispose();
+		guiShapeRenderer.dispose();
 		mapRenderer.dispose();
 	}
 	
@@ -651,16 +653,26 @@ public class Game implements ApplicationListener
 		Matrix4 defaultMatrix = batch.getProjectionMatrix();
 		
 		batch.setProjectionMatrix(camera.combined);
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		
 		batch.begin();
 		mapRenderer.render();
 		batch.end();
 		
 		batch.begin();
 		gameObjectSystem.render(RenderLayer.floor, batch);
+		batch.end();
+		gameObjectSystem.render(RenderLayer.floor, shapeRenderer);
+		
+		batch.begin();
 		gameObjectSystem.render(RenderLayer.groundLevel, batch);
+		batch.end();
+		gameObjectSystem.render(RenderLayer.groundLevel, shapeRenderer);
+		
+		batch.begin();
 		gameObjectSystem.render(RenderLayer.aboveGround, batch);
 		batch.end();
-		
+		gameObjectSystem.render(RenderLayer.aboveGround, shapeRenderer);
 		
 		//draw targeting arrows
 		batch.begin();

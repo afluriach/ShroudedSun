@@ -32,8 +32,8 @@ public class OpenDoor implements ItemInteraction
 			}
 			else
 			{
-				//door is current 1 unit wide
-				player.setPos(door.getCenterPos().add(player.getFacingVector()));
+				//door is current 1 unit wide. if a double door, proceed two units instead
+				player.setPos(door.getCenterPos().add(player.getFacingVector().scl(door.doubleDoor ? 2f : 1f)));
 			}
 		}
 	}

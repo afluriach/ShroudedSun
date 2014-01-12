@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="block_wall" tilewidth="32" tileheight="32">
+  <image source="../textures/block_wall.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="17" name="dirt1_blue" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_blue.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="81" name="dirt1_gold" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_gold.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="145" name="dirt1_red" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_red.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="209" name="block_wall_dark_grey" tilewidth="32" tileheight="32">
+  <image source="../textures/block_wall_dark_grey.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="225" name="dirt1_light_grey" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_light_grey.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="289" name="dirt1_orange" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_orange.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="353" name="dirt1_purple" tilewidth="32" tileheight="32">
+  <image source="../textures/dirt1_purple.png" width="256" height="256"/>
+ </tileset>
+ <layer name="background" width="64" height="64">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3Yw65mQRhG4X9fQtu2T9u2cdo+tm3bNtq2bfOSek1qWMlOqpPuv863kmf0jvaovmyPR5IkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZKkf5mf4/H4IwCBCEIwQhDq6HdbCuNbwhGBSEQhGjGIdfS7LcXxLfFIQCKSkIwUpDr63ZbS+JZ0ZCATWchGDnId/W5LeXxLPgpQiCIUowSljn63pTK+pRwVqEQVqlGDWke/21Id31KPBjSiCc1oQauj322pjW9pRwc60YVu9KDX0e+S9L9Uh3o0oBFNaEYLWjW7yob7rw3t6EAnutCNHvRqdpUN998ZnMU5nMcFXMQlXNbsKhvuvyu4imu4jhu4iVu4rdlVNtx/d3AX93AfD/AQj/BYs6tsuP+e4Cme4Tle4CVe4bVmV5nef/3QHwMwEIMwGEMw1MWu2ot98MV+HMBBHMJhza56g7d4h/f4gI/4hM+aXWV6/w3DcIzASIzCaIzBWBe76giO4hiO4wRO4hROa3bVF3zFN3zHD/zEL/zW7H+rcRiPCZiISZiMKZjqYlf5wR8BCEQQghGCUM2uMnn/TZuG6ZiBmZiF2ZgDHxe7KgzhiEAkohCNGMRqdpXJ+296/8zFPMzHAizEIizGEhe7Kg7xSEAikpCMFKRqdpXJ+296/yzFMizHCqzEKqzGGhe7Kg3pyEAmspCNHORqdpXJ+296/6zFOqzHBmzEJmzGFhe7Kg/5KEAhilCMEpRqdpXJ+296/2zFNmzHDuzELuzGHhe7qgzlqEAlqlCNGtRqdpXJ+296/3j7+296/3j7+296/3j7+2/6/6uvv/99uT+fYDJmAEAAAA==
+  </data>
+ </layer>
+ <layer name="walls" width="64" height="64">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2ZSw7CMAwFff/70RWCHAU23bCwij+J485IXVUvL6OkUggiAAAAAAAAAAAAAADXeX6fR/IzZskYOJp0WMG/R4cV/Ht0WMG/R4cV/Ht0WMG/R4eVWf6e3xkjeW7ZHM6ezDninw/++N/Z38vu/ndf/8r+L8m//3wrPXIxXwHrGW4oWbmYr4B1H1be//+Avz2H//zeaFb6R/xPNxzjDIdDhH/EHvCMsyobkY8Yx5vVzlmivDvPP7v7a9+dKO+8397vPNj/e2Uj8hHj4I8//mvY3b/K+q+iiv/O6x9xT6fdw1XNnvkPw7DFvABAAAA=
+  </data>
+ </layer>
+ <objectgroup name="enemy" width="64" height="64"/>
+ <objectgroup name="rooms" width="64" height="64" visible="0">
+  <object name="room1" type="room" x="0" y="1600" width="576" height="448"/>
+  <object name="room2" type="room" x="576" y="1600" width="480" height="448"/>
+  <object name="room3" type="room" x="1056" y="1408" width="480" height="640"/>
+  <object name="room4" type="room" x="1536" y="1696" width="512" height="352"/>
+  <object name="room5" type="room" x="1536" y="1408" width="512" height="288"/>
+  <object name="room6" type="room" x="1536" y="1088" width="512" height="320"/>
+  <object name="room7" type="room" x="704" y="704" width="832" height="704"/>
+ </objectgroup>
+ <objectgroup name="doors" width="64" height="64">
+  <object type="door" x="544" y="1952" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="switch" value="and_switch1"/>
+   </properties>
+  </object>
+  <object type="door" x="576" y="1952" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+  <object type="door" x="1024" y="1952" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="switch" value="or_switch2"/>
+   </properties>
+  </object>
+  <object type="door" x="1056" y="1952" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1504" y="1888" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="switch" value="not_switch3"/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1536" y="1888" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1760" y="1696" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="switch" value="not_switch4"/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1760" y="1664" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1728" y="1408" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="switch" value="nand_switch5"/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1728" y="1376" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1536" y="1280" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="switch" value="and_switch6"/>
+   </properties>
+  </object>
+  <object name="door" type="door" x="1504" y="1280" width="32" height="32">
+   <properties>
+    <property name="double" value=""/>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="chest" width="64" height="64"/>
+ <objectgroup name="circuit" width="64" height="64">
+  <object x="192" y="1888" width="32" height="32"/>
+  <object x="256" y="1888" width="32" height="32"/>
+  <object x="320" y="1888" width="32" height="32"/>
+  <object name="and_switch1" type="and" x="256" y="1760" width="32" height="32"/>
+  <object x="192" y="1888">
+   <polyline points="0,0 0,-96 64,-96"/>
+  </object>
+  <object x="256" y="1888">
+   <polyline points="0,0 0,-96"/>
+  </object>
+  <object x="320" y="1888">
+   <polyline points="0,0 0,-96 -32,-96"/>
+  </object>
+  <object name="or_switch2" type="or" x="704" y="1728" width="32" height="32"/>
+  <object x="672" y="1856" width="32" height="32"/>
+  <object x="736" y="1856" width="32" height="32"/>
+  <object x="800" y="1856" width="32" height="32"/>
+  <object x="672" y="1856">
+   <polyline points="0,0 0,-96 32,-96"/>
+  </object>
+  <object x="736" y="1856">
+   <polyline points="0,0 0,-32 -32,-32 -32,-96"/>
+  </object>
+  <object x="800" y="1856">
+   <polyline points="0,0 0,-64 -64,-64 -64,-96"/>
+  </object>
+  <object x="1664" y="1952" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1728" y="1952" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1792" y="1952" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1856" y="1952" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object name="and" type="and" x="1760" y="1856" width="32" height="32"/>
+  <object name="not_switch4" type="not" x="1760" y="1792" width="32" height="32"/>
+  <object x="1760" y="1856">
+   <polyline points="0,0 0,-32"/>
+  </object>
+  <object x="1664" y="1952">
+   <polyline points="0,0 0,-64 96,-64"/>
+  </object>
+  <object x="1728" y="1952">
+   <polyline points="0,0 32,-64"/>
+  </object>
+  <object x="1792" y="1952">
+   <polyline points="0,0 -32,-64"/>
+  </object>
+  <object x="1888" y="1952">
+   <polyline points="0,0 0,-64 -96,-64"/>
+  </object>
+  <object x="1664" y="1600" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1728" y="1600" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1792" y="1600" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1856" y="1600" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object name="nand_switch5" type="nand" x="1760" y="1472" width="32" height="32"/>
+  <object x="1664" y="1600">
+   <polyline points="0,0 0,-96 96,-96"/>
+  </object>
+  <object x="1728" y="1600">
+   <polyline points="0,0 32,-96"/>
+  </object>
+  <object x="1792" y="1600">
+   <polyline points="0,0 -32,-96"/>
+  </object>
+  <object x="1856" y="1600">
+   <polyline points="0,0 0,-96 -64,-96"/>
+  </object>
+  <object x="1632" y="1312" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1696" y="1312" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1792" y="1312" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object x="1856" y="1312" width="32" height="32">
+   <properties>
+    <property name="lit" value=""/>
+   </properties>
+  </object>
+  <object name="or" type="or" x="1744" y="1216" width="32" height="32"/>
+  <object x="1728" y="1312">
+   <polyline points="0,0 32,-64"/>
+  </object>
+  <object x="1792" y="1312">
+   <polyline points="0,0 -32,-64"/>
+  </object>
+  <object name="nand" type="nand" x="1664" y="1216" width="32" height="32"/>
+  <object name="nand" type="nand" x="1824" y="1216" width="32" height="32"/>
+  <object name="and_switch6" type="and" x="1744" y="1152" width="32" height="32"/>
+  <object x="1632" y="1312">
+   <polyline points="0,0 32,-64"/>
+  </object>
+  <object x="1696" y="1312">
+   <polyline points="0,0 -32,-64"/>
+  </object>
+  <object x="1856" y="1312">
+   <polyline points="0,0 -32,-64"/>
+  </object>
+  <object x="1824" y="1216">
+   <polyline points="0,0 0,-64 -64,-64"/>
+  </object>
+  <object x="1696" y="1216">
+   <polyline points="0,0 0,-64 64,-64"/>
+  </object>
+  <object x="1760" y="1216">
+   <polyline points="0,0 0,-32"/>
+  </object>
+  <object x="1152" y="1952" width="32" height="32"/>
+  <object name="not" type="not" x="1248" y="1952" width="32" height="32"/>
+  <object x="1376" y="1952" width="32" height="32"/>
+  <object x="1376" y="1952">
+   <polyline points="0,0 0,-96"/>
+  </object>
+  <object name="not" type="not" x="1376" y="1824" width="32" height="32"/>
+  <object x="1376" y="1824">
+   <polyline points="0,0 0,-96"/>
+  </object>
+  <object name="not_switch3" type="not" x="1376" y="1696" width="32" height="32"/>
+  <object x="1184" y="1824" width="32" height="32"/>
+  <object name="not" type="not" x="1184" y="1696" width="32" height="32"/>
+  <object name="not" type="not" x="1184" y="1568" width="32" height="32"/>
+  <object name="not" type="not" x="1312" y="1568" width="32" height="32"/>
+  <object x="1184" y="1824">
+   <polyline points="0,0 0,-96"/>
+  </object>
+  <object x="1184" y="1696">
+   <polyline points="0,0 0,-96"/>
+  </object>
+  <object x="1216" y="1600">
+   <polyline points="0,0 96,0"/>
+  </object>
+  <object x="1184" y="1952">
+   <polyline points="0,0 64,0"/>
+  </object>
+  <object x="1792" y="1312">
+   <polyline points="0,0 32,-64"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="maplinks" width="64" height="64">
+  <object name="entrance" x="64" y="1952" width="32" height="32">
+   <properties>
+    <property name="entrance_dir" value="up"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

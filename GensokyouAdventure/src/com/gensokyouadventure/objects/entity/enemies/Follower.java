@@ -9,6 +9,7 @@ import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
 import com.gensokyouadventure.objects.entity.Player;
 import com.gensokyouadventure.objects.projectile.PlayerBullet;
+import com.gensokyouadventure.objects.projectile.StatueFireBullet;
 
 public class Follower extends Enemy
 {
@@ -31,6 +32,7 @@ public class Follower extends Enemy
 	public Follower(TilespaceRectMapObject to) {
 		
 		super(to, "reisen", 1);
+		hp=1;
 		
 		if(to.prop.containsKey("target"))
 			targetName = to.prop.get("target", String.class);
@@ -60,7 +62,10 @@ public class Follower extends Enemy
 		{
 			((Player)other).hit(TOUCH_DAMAGE);
 		}
-		
+		else if(other instanceof StatueFireBullet)
+		{
+			hit(1);
+		}
 	}
 
 	@Override

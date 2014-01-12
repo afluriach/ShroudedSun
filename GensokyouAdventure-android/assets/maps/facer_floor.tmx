@@ -14,12 +14,12 @@
  </tileset>
  <layer name="background" width="20" height="80">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3W1XIVQRSF4fMKOAcnuHtwdw2Q4CQhWCAEd3eXQPAAAQIEd7fgro/EP1Vzsaure2ZzBRS9q76LrtVXM2t6OplIJKqhOmqgJmqhNuogKfJkzN5g6iIF9VAfDdAQjdDYyOP2BtMETdEMzdECLdEKrY08bm8wbdAW7dAeHZCKjuhk5HF7g+mMLuiKbuiOHuiJXkYetzeY3uiDvuiH/hiAgRhk5HF7gxmMIRiKYRiOEUjDSCOP22vOKIxGeriuhMqogqooh/KogIqW3JwJmIhJ4Tqqi67+ycnBVEwL11FddPVPzmzkYU64juqiq39yFmIRFofrqC66+idnJVZhdbiO6qKrf3I2YhM2h+uoLrr6J2cndmF3uI7q4r/avwMoxEEcwmEcwVEcM3JN/46jCCdwEqdQjNM4Y+Sa/p1FCc7hPC6gFBdxycg1/buMK7iKa7iOG7iJW0au6d9t3MFd3MN9PMBDPDJyTf8e4wme4hmeowwv8NLINf17hdd4g7d4h/f4gI9GrunfJ3zGF3zFN3zHD/w08j/Rv98ZTf9cz972bjT9cz1727vR9M/17G3vRtM/17O3vRtN/1zfvu1s0PTP9e3bzgZN/1zfvu1s0PTP9e3bzgbfP/v/V/4nMzAGYzEO40Wu/f/K/+RkZCIL2Zgicu3/V97TpmMGZiIXs0Suvf/Je1o+5mIe5mOByLXnn7ynLcFSLMNyrBC59v4n72lrsBbrsB4bRK69/8l72hZsxTZsxw6Ra+9/8p62B3uxDwXYL/K/vX+u3I8fP378+PHjx8//O78AITii/wAZAAA=
+   H4sIAAAAAAAAC+3WxW9VQRjG4btijxUuUtyhaHF3pxQoLVDc3d3d3d3d3d39T+I3ySy+TGZyPhIWBOZNnsXkm9zFPe+ZM+lUKlUGZVEO5ZGJCqiItJinE/aaVEJlVEFVVEN11EBNZ56016QWaqMO6qIeslAfDZx50l6ThmiExmiCbDRFMzR35kl7TVqgJVqhNdqgLdqhvTNP2mvSAR3RCZ3RBV3RDd2dedJekx7oiV7ojT7oi37IEfMiir1u+iMXA+y6JDJQyq6LohiKo4QzL+35vQIMwVC7lv0y0fRPZhRGY4xdy36ZaPonMwmTMcWuZb9MNP2TmYXZmGPXsl8mmv7JLMJiLLFr2S8TTf9kVmE11ti17JeJpn8ym7AZW+xa9svkX+jfLuzGHuzFPuzHARwUc/O+afp3CIdxBEdxDMdxAieduaZ/p3AaZ3AW53AeF3DRmWv6dwmXcQVXcQ3XcQM3nbmmf7dwG3dwF/dwHw/w0Jlr+vcIj/EET/EMz/ECL525pn+v8Bpv8Bbv8B4f8NGZa/r3CZ/xBV/xDd/xAz+d+Z/sn5n/7vmXFE3/Qv+979lo+hf6733PRtO/0H/vezaa/oX+e9+z0fQv9O77zgZN/0Lvvu9s0PQv9O77zgZN/0Lvvu9siP3zf3/ld3IgBiEPg5Ev5trvr/xODkMhhmMERoq59vsr72ljMQ7jMQETxVx7/5P3tKmYhumYgZlirj3/5D1tLuZhPhZgoZhr73/ynrYUy7AcK7BSzLX3P3lPW4t1WI8N2Cjm2vufvKdtxTZsxw7sFPO/vX+heUxMTExMTExMzP+bX+pOplcAGQAA
   </data>
  </layer>
  <layer name="walls" width="20" height="80">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+2X0QqDMAxFL0wdat38/6/1QUFbhV1hoIZzIC8STgptWpMk1Ub0Rs4on8bMef3Z5+RF8n207t97+V5pv5/fkzXL+u668eGL7Eua+6lV3m+tzt+VT7hf8MX2DcrPrXT89ncXrQ8fvki+st+2bwj9hu8uPrem63PmvO088yvK/62jcGYeAAAAAIjFBPRxg4oAGQAA
+   H4sIAAAAAAAAC+2XywqAIBBFL/S07PH/X9uiojTBa7UQuQdmUQxnhHHSLICGiJHIWcHTkjnVzz4mryTfjKt/3fG+xrOfQ2JNv37sWb40X/+zL5WYj5nLkvrB+iz2eTJw583g3bzl/n2Rr2zfBHffAuGzX/tZPvm++/x5u58hmjf5cvGxNVkfe588/2di4d+3QrGQaxNCCCGEEOWwASNY5XAAGQAA
   </data>
  </layer>
  <objectgroup name="enemy" width="20" height="80">
@@ -47,6 +47,66 @@
    <properties>
     <property name="activating_class" value="follower"/>
     <property name="activation_margin" value="0.5"/>
+   </properties>
+  </object>
+  <object name="statue1" type="gold_statue" x="544" y="1152" width="64" height="64">
+   <properties>
+    <property name="dir" value="left"/>
+   </properties>
+  </object>
+  <object name="statue2" type="gold_statue" x="352" y="512" width="64" height="64">
+   <properties>
+    <property name="dir" value="right"/>
+   </properties>
+  </object>
+  <object name="switch4-1" type="floor_switch" x="384" y="1440" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+   </properties>
+  </object>
+  <object name="switch4-2" type="floor_switch" x="448" y="1440" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+   </properties>
+  </object>
+  <object name="switch4-3" type="floor_switch" x="512" y="1440" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+   </properties>
+  </object>
+  <object name="switch4-4" type="floor_switch" x="576" y="1440" width="32" height="32">
+   <properties>
+    <property name="activating_class" value="facer"/>
+   </properties>
+  </object>
+  <object name="facer" type="facer" x="352" y="64" width="32" height="32">
+   <properties>
+    <property name="dir" value="up"/>
+   </properties>
+  </object>
+  <object name="facer" type="facer" x="416" y="64" width="32" height="32">
+   <properties>
+    <property name="dir" value="up"/>
+   </properties>
+  </object>
+  <object name="facer" type="facer" x="480" y="64" width="32" height="32">
+   <properties>
+    <property name="dir" value="up"/>
+   </properties>
+  </object>
+  <object name="facer" type="facer" x="544" y="64" width="32" height="32">
+   <properties>
+    <property name="dir" value="up"/>
+   </properties>
+  </object>
+  <object name="red1" type="red_enemy" x="256" y="256" width="32" height="32">
+   <properties>
+    <property name="dir" value="down"/>
+   </properties>
+  </object>
+  <object name="red2" type="red_enemy" x="256" y="480" width="32" height="32">
+   <properties>
+    <property name="dir" value="up"/>
    </properties>
   </object>
  </objectgroup>
@@ -77,14 +137,14 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="rooms" width="20" height="80">
+ <objectgroup name="rooms" width="20" height="80" visible="0">
   <object name="lobby" type="room" x="0" y="0" width="352" height="224"/>
   <object name="corridor" type="room" x="64" y="192" width="160" height="384"/>
   <object name="room1" type="room" x="0" y="544" width="352" height="320"/>
   <object name="room2" type="room" x="0" y="832" width="352" height="384"/>
   <object name="room3" type="room" x="0" y="1184" width="352" height="352"/>
   <object name="room4" type="room" x="320" y="0" width="320" height="1536"/>
-  <object name="room5" type="room" x="192" y="192" width="128" height="384"/>
+  <object name="room5" type="room" x="192" y="192" width="160" height="384"/>
  </objectgroup>
  <objectgroup name="floor_objects" width="20" height="80">
   <object name="room1_switch" type="floor_switch" x="260" y="730" width="32" height="32">
@@ -106,7 +166,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="map_links" width="20" height="80">
+ <objectgroup name="maplinks" width="20" height="80">
   <properties>
    <property name="entrance_dir" value="right"/>
   </properties>
@@ -115,6 +175,20 @@
     <property name="dest_link" value="exit"/>
     <property name="dest_map" value="level2"/>
     <property name="entrance_dir" value="right"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="doors" width="20" height="80">
+  <object name="door" type="door" x="320" y="384" width="32" height="32">
+   <properties>
+    <property name="open" value=""/>
+   </properties>
+  </object>
+  <object name="facer_floor_end" type="door" x="608" y="384" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="entrance"/>
+    <property name="dest_map" value="facer_floor_2"/>
+    <property name="switch" value="switch4-1 switch4-2 switch4-3 switch4-4"/>
    </properties>
   </object>
  </objectgroup>

@@ -1,10 +1,12 @@
 package com.gensokyouadventure.objects;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.gensokyouadventure.Game;
 
@@ -12,6 +14,8 @@ public class GameObjectSystem
 {
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	Map<RenderLayer, ArrayList<GameObject>> renderLayers = new TreeMap<RenderLayer, ArrayList<GameObject>>();
+	//collection of objects that render shapes instead of the the usual SpriteBatch
+	Map<RenderLayer, ArrayList<ShapeRender>> shapeRenderLayers = new TreeMap<RenderLayer, ArrayList<ShapeRender>>();
 	Map<String, GameObject> nameMap = new TreeMap<String, GameObject>();
 	ArrayList<GameObject> objectsToAdd = new ArrayList<GameObject>();
 	
@@ -31,6 +35,10 @@ public class GameObjectSystem
 		renderLayers.put(RenderLayer.floor, new ArrayList<GameObject>());
 		renderLayers.put(RenderLayer.groundLevel, new ArrayList<GameObject>());
 		renderLayers.put(RenderLayer.aboveGround, new ArrayList<GameObject>());
+		
+		shapeRenderLayers.put(RenderLayer.floor, new ArrayList<ShapeRender>());
+		shapeRenderLayers.put(RenderLayer.groundLevel, new ArrayList<ShapeRender>());
+		shapeRenderLayers.put(RenderLayer.aboveGround, new ArrayList<ShapeRender>());
 	}
 		
 	/**
@@ -43,13 +51,20 @@ public class GameObjectSystem
 		objectsToAdd.add(go);
 	}
 	
+	public void addAllObjects(Collection<GameObject> gameObjects)
+	{
+		objectsToAdd.addAll(gameObjects);
+	}
+	
 	public void handleAdditions()
 	{
 		for(GameObject go : objectsToAdd)
 		{
 			gameObjects.add(go);
 			renderLayers.get(go.renderLayer).add(go);
-			nameMap.put(go.name, go);
+			if(go instanceof ShapeRender)
+				shapeRenderLayers.get(go.renderLayer).add((ShapeRender) go);
+			if(go.name != null) nameMap.put(go.name, go);
 		}
 		objectsToAdd.clear();
 	}
@@ -105,6 +120,14 @@ public class GameObjectSystem
 		for(GameObject go : renderLayers.get(layer))
 		{
 			go.render(sb);
+		}
+	}
+	
+	public void render(RenderLayer layer, ShapeRenderer sr)
+	{
+		for(ShapeRender s : shapeRenderLayers.get(layer))
+		{
+			s.render(sr);
 		}
 	}
 	

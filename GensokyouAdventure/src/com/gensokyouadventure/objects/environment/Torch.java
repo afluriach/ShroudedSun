@@ -20,10 +20,10 @@ public class Torch extends GameObject
 //	private static final float SWITCH_SIZE = 1.0f;
 //	private static final float BORDER_THICKNESS_PIXELS = 4;
 	
-	private Texture texture;
-	private Animation flame;
+	protected Texture texture;
+	protected Animation flame;
 	
-	private boolean lit = false;
+	protected boolean lit = false;
 
 	/**
 	 * if 0, the torch stays lit indefinitely. if not, it will go out after the specified time
@@ -38,9 +38,23 @@ public class Torch extends GameObject
 	{
 		super(to);
 		
-		texture = Game.inst.spriteLoader.getTexture("torch");
-		flame = Game.inst.spriteLoader.loadAnimation("flame32", 0.125f, PrimaryDirection.up);
+		String torchSprite;
+		String flameAnimation;
+				
+		if(to.prop.containsKey("color"))
+		{
+			torchSprite = to.prop.get("color", String.class) + "_torch";
+			flameAnimation = to.prop.get("color", String.class) + "_flame32";
+		}
+		else
+		{
+			torchSprite = "torch";
+			flameAnimation = "flame32";
+		}
 		
+		texture = Game.inst.spriteLoader.getTexture(torchSprite);
+		flame = Game.inst.spriteLoader.loadAnimation(flameAnimation, 0.125f, PrimaryDirection.up);
+	
 		if(to.prop.containsKey("light_time"))
 		{
 			lightTime = to.prop.get("light_time", Float.class);
@@ -49,6 +63,8 @@ public class Torch extends GameObject
 		{
 			lightTime = 0f;
 		}
+		
+		lit = to.prop.containsKey("lit");
 		
 		renderLayer = RenderLayer.groundLevel;
 				
@@ -112,6 +128,11 @@ public class Torch extends GameObject
 	public boolean isActivated()
 	{
 		return lit;
+	}
+	
+	public void setLit(boolean lit)
+	{
+		this.lit = lit;
 	}
 
 	@Override

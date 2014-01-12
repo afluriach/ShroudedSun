@@ -22,6 +22,9 @@ public class Door extends GameObject implements Switch
 	private Texture lockedTexture;
 	private Texture unlockedTexture;
 	private boolean isLocked = true;
+	//a double door is paired with another door immediately next to it. the player will move two units
+	//when traversing through this door to get through the other door
+	public boolean doubleDoor;
 	
 	SwitchListener switchListener;
 	ClearListener clearListener;
@@ -60,6 +63,8 @@ public class Door extends GameObject implements Switch
 		
 		if(to.prop.containsKey("open"))
 			isLocked = false;
+		
+		doubleDoor = (to.prop.containsKey("double"));
 
 		//door is a solid object, unlike a barrier which disappears when unlocked.
 		setSensor(false);

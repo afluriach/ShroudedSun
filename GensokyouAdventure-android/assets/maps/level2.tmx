@@ -101,7 +101,7 @@
   <object name="room6" type="room" x="0" y="1952" width="480" height="224"/>
   <object name="room_2" type="room" x="0" y="832" width="416" height="256"/>
  </objectgroup>
- <objectgroup name="map_links" width="20" height="80">
+ <objectgroup name="maplinks" width="20" height="80">
   <object name="main_room_center" type="map_link" x="287" y="185" width="32" height="32">
    <properties>
     <property name="entrance_dir" value="up"/>

@@ -121,11 +121,32 @@ public class SpriteLoader
 		spriteSheetsLoaded.add(sheet);
 	}
 	
+	private void loadAnimation(Texture sheet, int spriteWidth, int spriteHeight, int spriteCount, String name, PrimaryDirection dir)
+	{
+		TextureRegion [][] splice = TextureRegion.split(sheet, spriteWidth, spriteHeight);
+		TextureRegion[] frames = new TextureRegion[spriteCount];
+		
+		System.arraycopy(splice[0], 0, frames, 0, spriteCount);
+		
+		AnimationSpriteSet spriteSet = new AnimationSpriteSet(frames, dir);
+		animationSpriteSet.put(name, spriteSet);
+		spriteSheetsLoaded.add(sheet);
+	}
+
+	
 	private void loadAnimations()
 	{
 		loadAnimation(loadTexture("animations/flame64.png"), 64, 8, "flame64", PrimaryDirection.up);
-		loadAnimation(loadTexture("animations/flame32.png"), 32, 8, "flame32", PrimaryDirection.up);
 		loadAnimation(loadTexture("animations/cirno_bullet_aa.png"), 128, 15, "cirno_bullet_aa", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/flame32.png"), 32, 8, "flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/white_flame32.png"), 32, 8, "white_flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/orange_flame32.png"), 32, 8, "orange_flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/red_flame32.png"), 32, 8, "red_flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/purple_flame32.png"), 32, 8, "purple_flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/blue_flame32.png"), 32, 8, "blue_flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/green_flame32.png"), 32, 8, "green_flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/yellow_flame32.png"), 32, 8, "yellow_flame32", PrimaryDirection.up);
+		loadAnimation(loadTexture("animations/flame_bullet.png"), 256, 128, 16, "flame_bullet", PrimaryDirection.right);
 	}
 	
 	public void unloadTextures()

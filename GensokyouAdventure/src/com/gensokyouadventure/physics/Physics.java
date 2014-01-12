@@ -43,6 +43,7 @@ public class Physics
 	public static final short environmentCateogry      = 128;
 	public static final short sensorCategory           = 256;
 	public static final short npcCategory              = 512;
+	public static final short trapCategory             = 1024;
 	
 	public static Map<String, Filter> collisionFilters;
 	
@@ -54,7 +55,7 @@ public class Physics
 		//enemy
 		filter = new Filter();
 		filter.categoryBits = enemyCategory;
-		filter.maskBits = playerCategory | playerBulletCategory | playerShieldCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory; 
+		filter.maskBits = playerCategory | playerBulletCategory | playerShieldCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory | trapCategory; 
 		collisionFilters.put("enemy", filter);
 		
 		//enemy bullet
@@ -66,7 +67,7 @@ public class Physics
 		//player
 		filter = new Filter();
 		filter.categoryBits = playerCategory;
-		filter.maskBits = enemyCategory | enemyBulletCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory | npcCategory;
+		filter.maskBits = enemyCategory | enemyBulletCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory | npcCategory | trapCategory;
 		collisionFilters.put("player", filter);
 		
 		//player bullet
@@ -110,6 +111,12 @@ public class Physics
 		filter.categoryBits = environmentCateogry;
 		filter.maskBits = playerCategory | playerBulletCategory | enemyCategory | enemyBulletCategory | environmentCateogry | entityHeightCategory | sensorCategory;
 		collisionFilters.put("wall", filter);
+		
+		//trap. trap objects can hit the player and enemies
+		filter = new Filter();
+		filter.categoryBits = trapCategory;
+		filter.maskBits = playerCategory | enemyCategory | environmentCateogry;
+		collisionFilters.put("trap", filter);
 		
 		//player sensor
 		collisionFilters.put("player_sensor", sensorFilter(playerCategory));
