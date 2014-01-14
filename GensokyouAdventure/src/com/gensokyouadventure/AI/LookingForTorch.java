@@ -16,9 +16,9 @@ import com.gensokyouadventure.objects.environment.Torch;
  * @author ant
  *
  */
-public class LookingForTorch extends AI_State<Entity>
+public class LookingForTorch extends AI_State
 {
-	public LookingForTorch(Entity agent, AI_FSM<Entity> fsm)
+	public LookingForTorch(Entity agent, AI_FSM fsm)
 	{
 		super(fsm);
 	}

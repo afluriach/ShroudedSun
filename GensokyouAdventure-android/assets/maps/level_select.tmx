@@ -88,5 +88,11 @@
     <property name="dest_map" value="facer_floor"/>
    </properties>
   </object>
+  <object name="cathedral" type="map_link" x="448" y="64" width="32" height="32">
+   <properties>
+    <property name="dest_link" value="entrance"/>
+    <property name="dest_map" value="cathedral"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

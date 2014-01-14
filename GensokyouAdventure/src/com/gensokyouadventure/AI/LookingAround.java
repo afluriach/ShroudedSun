@@ -3,14 +3,14 @@ package com.gensokyouadventure.AI;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.objects.entity.Entity;
 
-public class LookingAround extends AI_State<Entity>
+public class LookingAround extends AI_State
 {
 	float timeInterval;
 	boolean clockwise;
 	
 	float timeAccumulated = 0;
 	
-	public LookingAround(AI_FSM<Entity> fsm, float timeInterval, boolean clockwise)
+	public LookingAround(AI_FSM fsm, float timeInterval, boolean clockwise)
 	{
 		super(fsm);
 		this.clockwise = clockwise;

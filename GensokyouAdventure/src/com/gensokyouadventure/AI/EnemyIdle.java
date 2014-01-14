@@ -7,9 +7,10 @@ import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RadarSensor;
 import com.gensokyouadventure.objects.entity.Entity;
 import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.enemies.Enemy;
 
 //this state represents an enemy waiting for the player. 
-public class BlueEnemyIdle extends AI_State<Entity>
+public class EnemyIdle extends AI_State
 {
 	private static final float fovAngle = 45f;
 	private static final float radarSensorRadius = 7f;
@@ -19,7 +20,7 @@ public class BlueEnemyIdle extends AI_State<Entity>
 	
 	RadarSensor radar;
 	
-	public BlueEnemyIdle(AI_FSM<Entity> fsm)
+	public EnemyIdle(AI_FSM fsm)
 	{
 		super(fsm);
 	}
@@ -37,7 +38,7 @@ public class BlueEnemyIdle extends AI_State<Entity>
 		targets = radar.getDetectedObjects(fsm.agent.getFacingAngle(), fovAngle);
 		
 		if(!targets.isEmpty())
-			fsm.changeState(new BlueEnemyAlert(fsm, targets.get(0)));
+			fsm.changeState(new EnemyAlert(fsm, targets.get(0)));
 	}
 	
 

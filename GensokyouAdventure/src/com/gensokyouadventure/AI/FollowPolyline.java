@@ -6,7 +6,7 @@ import com.gensokyouadventure.map.Path;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
 
-public class FollowPolyline extends AI_State<Entity>
+public class FollowPolyline extends AI_State
 {
 	Path path;
 	int crntTargetPoint;
@@ -17,7 +17,7 @@ public class FollowPolyline extends AI_State<Entity>
 	float speed;
 	boolean loop;
 	
-	public FollowPolyline(AI_FSM<Entity> fsm, Path path, float speed)
+	public FollowPolyline(AI_FSM fsm, Path path, float speed)
 	{
 		super(fsm);
 		this.path = path;

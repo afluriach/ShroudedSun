@@ -8,6 +8,7 @@ import com.gensokyouadventure.map.TilespaceRectMapObject;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
 import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.projectile.EnemyBullet;
 import com.gensokyouadventure.objects.projectile.PlayerBullet;
 import com.gensokyouadventure.objects.projectile.StatueFireBullet;
 
@@ -124,4 +125,11 @@ public class Follower extends Enemy
 	{
 		AI_Util.rotate(rotateClockwise, this);
 	}
+	
+	@Override
+	public EnemyBullet getBullet() {
+		//doesn't fire
+		return null;
+	}
+
 }

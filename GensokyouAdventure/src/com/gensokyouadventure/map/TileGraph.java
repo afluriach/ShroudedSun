@@ -207,7 +207,7 @@ public class TileGraph
 		
 		costs[start.y][start.x] = 0;
 		
-		queue.add(new TileVertex(start.x, start.y, 0f));
+		queue.add(new TileVertex(start.x, start.y, 0f, end));
 		
 		while(!queue.isEmpty())
 		{
@@ -217,6 +217,10 @@ public class TileGraph
 			{
 				continue;
 			}
+			
+			//if this is an old queue entry, the current cost at the node might be lower than this entry
+			//this will happen often. for a highly connected graph, an indirect heap would be better
+			if(crnt.cost > costs[crnt.y][crnt.x]) continue;
 			
 			//consider all 8 potential adjacent tilenodes. loop through the nine-patch (3x3) tiles centered at the current node as a 2d array
 			//if cost to node from this one is less than previously recorded, update cost, add to queue.
@@ -253,7 +257,7 @@ public class TileGraph
 						costs[crnt.y+i][crnt.x+j] = crnt.cost + adjCost;
 						prev[crnt.y+i][crnt.x+j] = new IVector2(crnt.x, crnt.y);
 						
-						queue.add(new TileVertex(crnt.x+j, crnt.y+i, costs[crnt.y+i][crnt.x+j]));	
+						queue.add(new TileVertex(crnt.x+j, crnt.y+i, costs[crnt.y+i][crnt.x+j], end));	
 					}
 				}
 			}
@@ -320,18 +324,21 @@ public class TileGraph
 		//avoid using a vector object to save space. 
 		int x, y;
 		float cost;
+		float distToTarget2;
 		
-		public TileVertex(int x, int y, float cost)
+		public TileVertex(int x, int y, float cost, IVector2 target)
 		{
 			this.x = x;
 			this.y = y;
 			this.cost = cost;
+			
+			distToTarget2 = (target.x - x)*(target.x - x) + (target.y - y)*(target.y - y);
 		}
 		
 		public int compareTo(TileVertex o)
 		{
-			if(this.cost < o.cost) return -1;
-			else if(this.cost == o.cost) return 0;
+			if(this.distToTarget2 < o.distToTarget2) return -1;
+			else if(this.distToTarget2 > o.distToTarget2) return 1;
 			else return 0;
 		}
 	}	

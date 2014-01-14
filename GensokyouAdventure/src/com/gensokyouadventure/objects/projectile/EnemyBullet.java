@@ -13,14 +13,15 @@ public class EnemyBullet extends Bullet
 	public static final float speed = 4f;
 	public static final float mass = 2;
 	public static final float radius = 0.5f;
-	public static final int damage = 1;
 	
+	int damage;
 	Texture texture;
 	
-	public EnemyBullet(Vector2 pos, float angle)
+	public EnemyBullet(Vector2 pos, float angle, Texture texture, int damage)
 	{
 		super(pos,radius, "EnemyBullet", angle, speed, mass, "enemy_bullet");
-		texture = Game.inst.spriteLoader.getTexture("bullet_aa");
+		this.texture= texture; 
+		this.damage = damage;
 	}
 	
 	@Override

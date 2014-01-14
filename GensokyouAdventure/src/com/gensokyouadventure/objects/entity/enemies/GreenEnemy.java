@@ -2,18 +2,18 @@ package com.gensokyouadventure.objects.entity.enemies;
 
 import com.gensokyouadventure.AI.EnemyFSM;
 import com.gensokyouadventure.map.TilespaceRectMapObject;
-import com.gensokyouadventure.objects.projectile.BlueEnemyBullet;
 import com.gensokyouadventure.objects.projectile.EnemyBullet;
+import com.gensokyouadventure.objects.projectile.GreenEnemyBullet;
 
-public class BlueEnemy extends Enemy
+public class GreenEnemy extends Enemy
 {
-	private static final float SPEED = 1.5f;
+	private static final float SPEED = 3f;
 	private static final int TOUCH_DAMAGE = 1;
-	public static final int maxHP = 3;
+	public static final int maxHP = 5;
 			
-	public BlueEnemy(TilespaceRectMapObject to) {
+	public GreenEnemy(TilespaceRectMapObject to) {
 		
-		super(to, "sakuya", maxHP);
+		super(to, "yuuka", maxHP);
 		
 		fsm = new EnemyFSM(this);
 		touchDamage = TOUCH_DAMAGE;
@@ -22,8 +22,6 @@ public class BlueEnemy extends Enemy
 
 	@Override
 	public EnemyBullet getBullet() {
-		return new BlueEnemyBullet(getCenterPos(), getFacingAngle());
+		return new GreenEnemyBullet(getCenterPos(), getFacingAngle());
 	}
-	
-	
 }

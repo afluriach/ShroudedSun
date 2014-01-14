@@ -57,8 +57,8 @@ public class Player extends Entity {
 	boolean interact = false;
 	
 	public RadarSensor targetableSensor;
-	float targetRadius = 6f;
-	float targetingFOV = 45f;
+	float targetRadius = 12f;
+	float targetingFOV = 90f;
 	
 	private void initInteractMap() {
 		interactMap = new HashMap<Class<? extends GameObject>, ItemInteraction>();

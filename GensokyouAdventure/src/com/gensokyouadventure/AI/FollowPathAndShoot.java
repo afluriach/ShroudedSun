@@ -10,6 +10,7 @@ import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RadarSensor;
 import com.gensokyouadventure.objects.entity.Entity;
 import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.objects.projectile.EnemyBullet;
 import com.gensokyouadventure.objects.projectile.PlayerBullet;
 
@@ -24,9 +25,9 @@ public class FollowPathAndShoot extends FollowPath
 	
 	RadarSensor bulletRadar;
 	
-	public FollowPathAndShoot(AI_FSM<Entity> fsm, List<PathSegment> path, float speed, GameObject target)
+	public FollowPathAndShoot(AI_FSM fsm, List<PathSegment> path, float speed, GameObject target)
 	{
-		super(fsm, path, speed, new BlueEnemyAlert(fsm, target));
+		super(fsm, path, speed, new EnemyAlert(fsm, target));
 		this.target = target;		
 		
 
@@ -60,7 +61,7 @@ public class FollowPathAndShoot extends FollowPath
 
 	void shoot(float angle)
 	{
-		fsm.agent.shoot(new EnemyBullet(fsm.agent.getCenterPos(), angle), bulletSpawnDist);
+		fsm.agent.shoot(((Enemy) fsm.agent).getBullet(), bulletSpawnDist);
 	}
 	
 	public void onExit()

@@ -4,7 +4,7 @@ import com.gensokyouadventure.Game;
 import com.gensokyouadventure.map.Path;
 import com.gensokyouadventure.objects.entity.Entity;
 
-public class GuardPatrolFSM extends AI_FSM<Entity>
+public class GuardPatrolFSM extends AI_FSM
 {
 	String pathName;
 	float speed;
@@ -17,7 +17,7 @@ public class GuardPatrolFSM extends AI_FSM<Entity>
 	}
 
 	@Override
-	public AI_State<Entity> getStartState()
+	public AI_State getStartState()
 	{
 		Path path = Game.inst.getCrntArea().getPath(pathName);
 		return new FollowPolyline(this, path, speed);

@@ -153,8 +153,6 @@ public class Controls
 		drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
 		drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
 
-		drawButtonOuter(shapeRenderer, colors.dpadlight, buttonStrafe);
-		drawButtonInner(shapeRenderer,  strafe, colors.dpadlight, colors.dpaddark, buttonStrafe);
 
 		
 		if(touchControls)
@@ -164,6 +162,9 @@ public class Controls
 
 			drawButtonOuter(shapeRenderer, colors.dpadlight, controlPad);
 			drawButtonInner(shapeRenderer, false, colors.dpadlight, colors.dpaddark, controlPad);
+			
+			drawButtonOuter(shapeRenderer, colors.dpadlight, buttonStrafe);
+			drawButtonInner(shapeRenderer,  strafe, colors.dpadlight, colors.dpaddark, buttonStrafe);
 		}
 		
 		shapeRenderer.end();
@@ -190,10 +191,12 @@ public class Controls
 		batch.end();
 		
 		drawInteractMessage(batch, font);
-		drawStrafeMessage(batch, font);
 		
 		if(touchControls)
+		{
 			drawPauseMessage(batch, font);
+			drawStrafeMessage(batch, font);
+		}
 	}
 
 	private void drawPauseMessage(SpriteBatch batch, BitmapFont font) {

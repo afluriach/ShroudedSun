@@ -3,6 +3,7 @@ package com.gensokyouadventure.AI;
 import com.badlogic.gdx.Gdx;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.objects.GameObject;
+import com.gensokyouadventure.objects.entity.Entity;
 
 /**
  * FSM that runs AI. This is the abstract base class. A particular class will need to be created for each agent.
@@ -12,7 +13,7 @@ import com.gensokyouadventure.objects.GameObject;
  * @author ant
  *
  */
-public abstract class AI_FSM<AgentType extends GameObject>
+public abstract class AI_FSM
 {
 	//one way to construct a FSM is to think of it like a graph. there will be a list of states, and the edges represent the transitions between states.
 	//this means a state transition table with exit conditions that are checked to see when state changes will need to be performed.
@@ -24,14 +25,14 @@ public abstract class AI_FSM<AgentType extends GameObject>
 	//state transitions will be checked in the order they are in the list
 //	TreeMap<String, ArrayList<StateTransition>> transitions;
 	
-	public AI_FSM(AgentType agent)
+	public AI_FSM(Entity agent)
 	{
 		this.agent = agent;
 	}
 	
-	AI_State<AgentType> crntState;
-	AI_State<AgentType> prevState;
-	AgentType agent;
+	AI_State crntState;
+	AI_State prevState;
+	Entity agent;
 //	ArrayList<StateTransition> crntStateTrans;
 	
 	public void init()
@@ -109,15 +110,15 @@ public abstract class AI_FSM<AgentType extends GameObject>
 //		transitions.get(fromState).add(trans);
 //	}
 	
-	public void changeState(AI_State<? extends AgentType> newState)
+	public void changeState(AI_State newState)
 	{
 		Game.log(String.format("agent %s changed state from to %s to %s.", agent.getName(), crntState.getClass().getSimpleName(), newState.getClass().getSimpleName()));
 		
 		prevState = crntState;
 		crntState.onExit();
 		newState.onEnter();
-		crntState = (AI_State<AgentType>) newState;
+		crntState = newState;
 	}
 	
-	public abstract AI_State<AgentType> getStartState();	
+	public abstract AI_State getStartState();	
 }

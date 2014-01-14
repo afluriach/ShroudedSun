@@ -8,6 +8,7 @@ import com.gensokyouadventure.Game;
 import com.gensokyouadventure.PathSegment;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.objects.entity.enemies.TorchWalker;
 
 /**
@@ -15,15 +16,15 @@ import com.gensokyouadventure.objects.entity.enemies.TorchWalker;
  * @author ant
  *
  */
-public class FollowPath extends AI_State<Entity>
+public class FollowPath extends AI_State
 {
 	Vector2 crntWaypoint;
 	List<PathSegment> path;
 	float speed;
 	//the next state for the entity after finishing the path
-	AI_State<Entity> nextState;
+	AI_State nextState;
 	
-	public FollowPath(AI_FSM<Entity> fsm, List<PathSegment> path, float speed, AI_State<Entity> next)
+	public FollowPath(AI_FSM fsm, List<PathSegment> path, float speed, AI_State next)
 	{
 		super(fsm);
 		this.path = path;

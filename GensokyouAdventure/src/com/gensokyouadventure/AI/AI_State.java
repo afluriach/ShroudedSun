@@ -7,11 +7,11 @@ import com.gensokyouadventure.objects.GameObject;
  * @author ant
  *
  */
-public abstract class AI_State<AgentType extends GameObject>
+public abstract class AI_State
 {
-	AI_FSM<AgentType> fsm;
+	AI_FSM fsm;
 	
-	public AI_State(AI_FSM<AgentType> fsm)
+	public AI_State(AI_FSM fsm)
 	{
 		this.fsm = fsm;
 	}

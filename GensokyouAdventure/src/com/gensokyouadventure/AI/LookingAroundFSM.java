@@ -2,7 +2,7 @@ package com.gensokyouadventure.AI;
 
 import com.gensokyouadventure.objects.entity.Entity;
 
-public class LookingAroundFSM extends AI_FSM<Entity>
+public class LookingAroundFSM extends AI_FSM
 {
 	float interval;
 	boolean clockwise;
@@ -15,7 +15,7 @@ public class LookingAroundFSM extends AI_FSM<Entity>
 	}
 
 	@Override
-	public AI_State<Entity> getStartState()
+	public AI_State getStartState()
 	{
 		return new LookingAround(this, interval, clockwise);
 	}

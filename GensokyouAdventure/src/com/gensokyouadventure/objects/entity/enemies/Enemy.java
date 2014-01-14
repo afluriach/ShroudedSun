@@ -6,8 +6,9 @@ import com.gensokyouadventure.map.TilespaceRectMapObject;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
 import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.projectile.EnemyBullet;
 
-public class Enemy extends Entity
+public abstract class Enemy extends Entity
 {
 	//health and damage
 	private static final float invulerabilityLength = 0.5f;
@@ -19,7 +20,7 @@ public class Enemy extends Entity
 	boolean canDamage = true;
 
 	//ai
-	AI_FSM<Entity> fsm;
+	AI_FSM fsm;
 	
 	public Enemy(TilespaceRectMapObject mo, String animation, int hp)
 	{
@@ -91,6 +92,8 @@ public class Enemy extends Entity
 			playerTouching = false;
 		}
 	}
+	
+	public abstract EnemyBullet getBullet();
 
 
 }

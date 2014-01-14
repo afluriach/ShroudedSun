@@ -21,7 +21,9 @@ import com.gensokyouadventure.objects.entity.StationaryNPC;
 import com.gensokyouadventure.objects.entity.enemies.BlueEnemy;
 import com.gensokyouadventure.objects.entity.enemies.Facer;
 import com.gensokyouadventure.objects.entity.enemies.Follower;
+import com.gensokyouadventure.objects.entity.enemies.GreenEnemy;
 import com.gensokyouadventure.objects.entity.enemies.Guard;
+import com.gensokyouadventure.objects.entity.enemies.DarkCirno;
 import com.gensokyouadventure.objects.entity.enemies.RedEnemy;
 import com.gensokyouadventure.objects.entity.enemies.TorchWalker;
 import com.gensokyouadventure.objects.environment.Barrier;
@@ -57,7 +59,9 @@ public abstract class GameObject
 		addClass("block", Block.class);
 		addClass("floor_switch", FloorSwitch.class);
 		addClass("invisible_floor_switch", InvisibleFloorSwitch.class);
+		addClass("red_enemy", RedEnemy.class);
 		addClass("blue_enemy", BlueEnemy.class);
+		addClass("green_enemy", GreenEnemy.class);
 		addClass("jar", Jar.class);
 		addClass("sign", Sign.class);
 		addClass("facer", Facer.class);
@@ -68,7 +72,7 @@ public abstract class GameObject
 		addClass("stationary_npc", StationaryNPC.class);
 		addClass("random_walk_npc", RandomWalkNPC.class);
 		addClass("gold_statue", Statue.class);
-		addClass("red_enemy", RedEnemy.class);
+		addClass("dark_cirno", DarkCirno.class);
 		
 		addClass("map_link", Door.class);
 	}
