@@ -20,6 +20,7 @@ public class Barrier extends GameObject implements Switch
 {
 	private Texture texture;
 	private boolean isLocked = true;
+	private boolean permanent;
 	
 	SwitchListener switchListener;
 	ClearListener clearListener;
@@ -39,6 +40,8 @@ public class Barrier extends GameObject implements Switch
 		{
 			clearListener = new ClearListener(to.prop.get("cleared", String.class));
 		}
+		
+		permanent = to.prop.containsKey("permanent");
 	}		
 	public boolean isLocked()
 	{
@@ -109,6 +112,14 @@ public class Barrier extends GameObject implements Switch
 	public boolean isActivated()
 	{
 		return !isLocked;
+	}
+	@Override
+	public boolean isPermanent() {
+		return permanent;
+	}
+	@Override
+	public void activate() {
+		isLocked = false;
 	}
 
 	

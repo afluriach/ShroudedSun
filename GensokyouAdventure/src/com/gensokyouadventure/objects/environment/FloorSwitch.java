@@ -28,6 +28,7 @@ public class FloorSwitch extends GameObject implements Switch
 	 * placed activating object on top of it.
 	 */
 	private boolean sticky;
+	private boolean permanent;
 	
 	/**
 	 * The class of GameObject that can activate this switch. The activating class is the Player
@@ -74,6 +75,8 @@ public class FloorSwitch extends GameObject implements Switch
 			activatingObjectName = to.prop.get("activating_name", String.class);
 			activatingClass = null;
 		}
+		
+		permanent = to.prop.containsKey("permanent");
 		
 		renderLayer = RenderLayer.floor;
 				
@@ -138,5 +141,15 @@ public class FloorSwitch extends GameObject implements Switch
 
 	@Override
 	public void init() {
+	}
+
+	@Override
+	public boolean isPermanent() {
+		return permanent;
+	}
+
+	@Override
+	public void activate() {
+		activated = true;
 	}
 }

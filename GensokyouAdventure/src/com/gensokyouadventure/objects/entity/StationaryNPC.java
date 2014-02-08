@@ -31,6 +31,7 @@ public class StationaryNPC extends NPC implements Switch
 		
 		if(to.prop.containsKey("cleared"))
 			clearListener = new ClearListener(to.prop.get("cleared", String.class));
+		
 	}
 	
 	@Override
@@ -70,6 +71,16 @@ public class StationaryNPC extends NPC implements Switch
 	@Override
 	public boolean isActivated() {
 		return activated;
+	}
+
+	@Override
+	public boolean isPermanent() {
+		return false;
+	}
+
+	@Override
+	public void activate() {
+		
 	}
 	
 }

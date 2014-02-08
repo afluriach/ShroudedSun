@@ -25,6 +25,7 @@ public class Door extends GameObject implements Switch
 	//a double door is paired with another door immediately next to it. the player will move two units
 	//when traversing through this door to get through the other door
 	public boolean doubleDoor;
+	private boolean permanent;
 	
 	SwitchListener switchListener;
 	ClearListener clearListener;
@@ -65,6 +66,8 @@ public class Door extends GameObject implements Switch
 			isLocked = false;
 		
 		doubleDoor = (to.prop.containsKey("double"));
+		
+		permanent = to.prop.containsKey("permanent");
 
 		//door is a solid object, unlike a barrier which disappears when unlocked.
 		setSensor(false);
@@ -133,5 +136,13 @@ public class Door extends GameObject implements Switch
 	public void init()
 	{
 		if(switchListener != null) switchListener.init();
+	}
+	@Override
+	public boolean isPermanent() {
+		return permanent;
+	}
+	@Override
+	public void activate() {
+		isLocked = false;
 	}
 }

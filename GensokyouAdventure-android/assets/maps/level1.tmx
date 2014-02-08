@@ -55,6 +55,7 @@
   </object>
   <object name="door1" type="door" x="288" y="224" width="32" height="32">
    <properties>
+    <property name="permanent" value=""/>
     <property name="switch" value="switch3 switch4"/>
    </properties>
   </object>
@@ -68,8 +69,10 @@
     <property name="color" value="red"/>
    </properties>
   </object>
+  <object name="sp1" type="save_point" x="544" y="736" width="32" height="32"/>
+  <object name="sp2" type="save_point" x="96" y="64" width="32" height="32"/>
  </objectgroup>
- <objectgroup name="rooms" width="20" height="30">
+ <objectgroup name="rooms" width="20" height="30" visible="0">
   <object name="room1" type="room" x="0" y="672" width="640" height="288"/>
   <object name="room2" type="room" x="0" y="448" width="640" height="256"/>
   <object name="room3" type="room" x="0" y="224" width="640" height="256"/>
@@ -138,6 +141,7 @@
   <object name="barrier2" type="barrier" x="288" y="448" width="32" height="32">
    <properties>
     <property name="cleared" value="enemy1 enemy2 enemy3"/>
+    <property name="permanent" value=""/>
    </properties>
   </object>
   <object name="switch3" type="floor_switch" x="64" y="512" width="32" height="32">

@@ -16,7 +16,7 @@ public class LinkSelectMenu extends TextListMenu
 		//start game at selected area and maplink
 		Game.inst.menuHandler.closeMenu = true;
 		
-		Game.inst.loadArea(area, menuEntries[menuOption]);
+		Game.inst.loadAreaAtMaplink(area, menuEntries[menuOption]);
 		
 		return null;
 	}

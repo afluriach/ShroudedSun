@@ -15,7 +15,7 @@ public class Save implements ItemInteraction {
 	@Override
 	public void interact(GameObject obj, Player player) {
 		//bring up save point menu. 
-		Game.inst.menuHandler.setTopLevelMenu(new SavePointMenu());
+		Game.inst.menuHandler.setTopLevelMenu(new SavePointMenu(obj.getName()));
 	}
 
 	@Override

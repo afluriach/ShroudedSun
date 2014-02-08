@@ -22,6 +22,7 @@ import com.gensokyouadventure.objects.circuit.LogicGateTorch;
 import com.gensokyouadventure.objects.circuit.Wire;
 import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.environment.Door;
+import com.gensokyouadventure.objects.environment.Switch;
 import com.gensokyouadventure.objects.environment.Wall;
 import com.gensokyouadventure.physics.PrimaryDirection;
 
@@ -42,14 +43,33 @@ public class Area
 	public String musicTitle;
 	public CircuitGraph circuitGraph;
 		
-	public void load(JsonValue val)
+	public AreaState save()
 	{
+		AreaState state = new AreaState();
 		
+		//save activated objects
+		
+		for(GameObject go : Game.inst.gameObjectSystem.getObjectsByType(Switch.class))
+		{
+			Switch sw = (Switch) go;
+			
+			if(sw.isActivated() && sw.isPermanent())
+			{
+				state.activatedObjects.add(go.getName());
+			}
+		}
+		return state;
 	}
 	
-	public JsonValue save()
+	public void load(AreaState state)
 	{
-		return null;
+		//load activated objects
+
+		for(String name : state.activatedObjects)
+		{
+			Switch sw = (Switch) Game.inst.gameObjectSystem.getObjectByName(name);
+			sw.activate();
+		}
 	}
 	
 	public TiledMap map;

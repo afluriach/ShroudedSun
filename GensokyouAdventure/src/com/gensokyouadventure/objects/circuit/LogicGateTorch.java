@@ -84,5 +84,15 @@ public class LogicGateTorch extends Torch implements Switch
 		//for the input torches
 		if(torchOp == null && other instanceof PlayerBullet) lit = !lit;
 	}
+
+	@Override
+	public boolean isPermanent() {
+		return false;
+	}
+
+	@Override
+	public void activate() {
+		//ignore. circuit torches are not permanent switches
+	}
 	
 }

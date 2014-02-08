@@ -7,6 +7,7 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -31,6 +32,7 @@ import com.gensokyouadventure.graphics.Graphics;
 import com.gensokyouadventure.graphics.SpriteLoader;
 import com.gensokyouadventure.map.Area;
 import com.gensokyouadventure.map.AreaLoader;
+import com.gensokyouadventure.map.AreaState;
 import com.gensokyouadventure.map.MapLink;
 import com.gensokyouadventure.map.Room;
 import com.gensokyouadventure.map.TileGraph;
@@ -45,6 +47,7 @@ import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.physics.Physics;
 import com.gensokyouadventure.physics.PrimaryDirection;
+import com.google.gson.Gson;
 
 public class Game implements ApplicationListener
 {
@@ -91,6 +94,9 @@ public class Game implements ApplicationListener
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
 	public static final String TAG = "GensokyouAdventure";
+	
+	//the max number of profiles
+	public static final int numProfiles = 10;
 	
 	
 	//graphics
@@ -148,6 +154,8 @@ public class Game implements ApplicationListener
 	String teleportDestMap;
 	public DialogLoader dialogLoader;
 	public MenuHandler menuHandler;
+	public SaveState saveState;
+	public int crntProfileID;
 	
 	//ability
 	Ability bEquipped;
@@ -181,6 +189,15 @@ public class Game implements ApplicationListener
 		
 	}
 
+	public void spawnPlayer(String savepointName)
+	{
+		GameObject savePoint = gameObjectSystem.getObjectByName(savepointName);
+		
+		player = PlayableCharacter.getCharacter(crntCharacter, savePoint.getCenterPos().add(0, -1), PrimaryDirection.up);
+		gameObjectSystem.addObject(player);
+		gameObjectSystem.handleAdditions();
+
+	}
 	
 	public void loadPlayer(String mapLinkStart)
 	{
@@ -507,12 +524,15 @@ public class Game implements ApplicationListener
 	
 	public void loadLevelSelect()
 	{
-		loadArea("level_select", "entrance");
+		saveState = new SaveState();
+		loadAreaAtMaplink("level_select", "entrance");
+		crntProfileID = 0;
 	}
 	
 	public void loadGameStart()
 	{
-		loadArea("level1", "player_start");
+//		saveState = new SaveState();
+		loadAreaAtMaplink("level1", "player_start");
 	}
 	
 	void checkMaplinkCollision()
@@ -545,7 +565,7 @@ public class Game implements ApplicationListener
 	{
 		if(destMap != null && !destMap.equals(""))
 		{
-			loadArea(destMap, destLink);
+			loadAreaAtMaplink(destMap, destLink);
 			mapEntranceLink = destLink;
 			areaName = destMap;
 		}
@@ -554,10 +574,51 @@ public class Game implements ApplicationListener
 		player.setPos(Util.clearRectangle(dest.location, dest.entranceDir, ENTRANCE_CLEAR_DISTANCE));
 		player.setVel(Vector2.Zero);
 	}
+	
+	//used when loading a game
+	public void loadAreaAtSavePoint(String areaName, String savePointName)
+	{
+		//save area state before unloading
+		if(area != null)
+			saveState.areaState.put(this.areaName, area.save());
 		
-	public void loadArea(String areaName, String mapLink)
+		gameObjectSystem.clear();
+		physics.clear();
+		
+		area = areaLoader.loadArea(areaName);
+		this.areaName = areaName;
+		
+		if(area.musicTitle != null)
+			soundLoader.playMusic(area.musicTitle, false);
+		
+		mapRenderer = new OrthogonalTiledMapRenderer(area.map);
+		mapRenderer.setView(camera);
+		
+		Game.log("loading map objects...");
+		area.instantiateMapObjects();
+		Game.log("...done.");
+
+		spawnPlayer(savePointName);
+		gameObjectSystem.initAll();
+		
+		tileGraph = new TileGraph(area);
+		
+		//load area state. create a blank area state if this area is new
+		if(!saveState.areaState.containsKey(areaName))
+			saveState.areaState.put(areaName, new AreaState());
+			
+		area.load(saveState.areaState.get(areaName));		
+
+	}
+		
+	//used when moving between areas
+	public void loadAreaAtMaplink(String areaName, String mapLink)
 	{
 		Area oldArea = area;
+		
+		//save area state before unloading
+		if(area != null)
+			saveState.areaState.put(this.areaName, area.save());
 		
 		gameObjectSystem.clear();
 		physics.clear();
@@ -590,6 +651,12 @@ public class Game implements ApplicationListener
 		gameObjectSystem.initAll();
 		
 		tileGraph = new TileGraph(area);
+		
+		//load area state. create a blank area state if this area is new
+		if(!saveState.areaState.containsKey(areaName))
+			saveState.areaState.put(areaName, new AreaState());
+			
+		area.load(saveState.areaState.get(areaName));		
 	}
 	
 	void initCamera()
@@ -928,8 +995,18 @@ public class Game implements ApplicationListener
 	{
 		if(player.getHP() <= 0)
 		{
-			//reload current area
-			loadArea(areaName,mapEntranceLink);
+			//reload current area. if mapEntranceLink is null, 
+			//the player did not enter the area in this play session and the player should be respawned at the 
+			//save point instead
+			if(mapEntranceLink == null)
+			{
+				loadAreaAtSavePoint(saveState.crntArea,saveState.crntSavePoint);
+			}
+			else
+			{
+				loadAreaAtMaplink(areaName,mapEntranceLink);				
+			}
+			
 			initCamera();
 		}
 	}
@@ -1069,5 +1146,65 @@ public class Game implements ApplicationListener
 			
 			crntCharacter = newChar;
 		}
+	}
+	
+	String getProfilePath(int profile)
+	{
+		return String.format("files/%03d.file", profile);
+	}
+	
+	public int[] getProfileIds()
+	{
+		int profileCount = 0;
+		
+		//first check to see how many profiles there are. no guarantee 
+		//for contiguous numbering
+		for(int i=0; i<= numProfiles; ++i)
+		{
+			FileHandle fh = Gdx.files.local(getProfilePath(i));
+			
+			if(fh.exists()) profileCount++;
+		}
+		
+		int [] files = new int[profileCount];
+		int idx = 0;
+		
+		for(int i=0; i <= numProfiles; ++i)
+		{
+			FileHandle fh = Gdx.files.local(getProfilePath(i));
+			
+			if(fh.exists()) files[idx++] = i;
+		}
+		
+		return files;		
+	}
+	
+	public SaveState loadSaveState(int profileID)
+	{
+		FileHandle fh = Gdx.files.local(getProfilePath(profileID));
+		String jsonString = fh.readString();
+		Gson gson = new Gson();
+		
+		return gson.fromJson(jsonString, SaveState.class);
+	}
+	
+	public void loadGame()
+	{		
+		saveState = loadSaveState(crntProfileID);
+		
+		loadAreaAtSavePoint(saveState.crntArea, saveState.crntSavePoint);
+	}
+		
+	public void saveGame(String savePointName)
+	{
+		saveState.crntSavePoint = savePointName;
+		saveState.crntArea = areaName;
+		
+		String filename = getProfilePath(crntProfileID);
+		Gson gson = new Gson();
+		FileHandle fh = Gdx.files.local(filename);
+		
+		String jsonString = gson.toJson(saveState);
+		fh.writeString(jsonString, false);		
 	}
 }

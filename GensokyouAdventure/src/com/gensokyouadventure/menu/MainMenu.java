@@ -3,7 +3,7 @@ import com.gensokyouadventure.Game;
 
 public class MainMenu extends TextListMenu
 {
-	static final String[] entries = {"Start", "Level Select", "Dev Start", "Exit"};
+	static final String[] entries = {"Select Profile", "Level Select", "Dev Start", "Exit"};
 	
 	public MainMenu()
 	{
@@ -17,9 +17,10 @@ public class MainMenu extends TextListMenu
 		{
 		case 0:
 			//start game from the beginning.
-			Game.inst.menuHandler.closeMenu = true; 
-			Game.inst.loadGameStart();
-			return null;
+//			Game.inst.menuHandler.closeMenu = true; 
+//			Game.inst.loadGameStart();
+//			return null;
+			return new ProfileSelectMenu();
 		case 1:
 			//start game from level select room
 			Game.inst.menuHandler.closeMenu = true;

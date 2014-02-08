@@ -53,6 +53,8 @@ public abstract class TextListMenu
 		
 		for(int i=0;i<menuEntries.length; ++i)
 		{
+			if(menuEntries[i] == null) continue;
+			
 			//look at each string to be drawn and find out which is the longest. this is the line width that will
 			//be used in the pos rect (to draw the trim). thus the trim will fit based on string length
 			FloatArray positions = new FloatArray();
@@ -109,6 +111,8 @@ public abstract class TextListMenu
 		
 		for(int i=0;i<menuEntries.length; ++i)
 		{
+			if(menuEntries[i] == null) continue;
+			
 			font.setColor(i==selectedMenuItem ? Graphics.hsva(0f, 0f, 1f, 1f) : Graphics.hsva(0f, 0f, 0.7f, 1f));
 
 			font.draw(sb, menuEntries[i], center.x - longestLineWidth/2, firstLineY - lineSeparation*(i+2));

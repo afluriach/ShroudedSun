@@ -6,11 +6,14 @@ import com.gensokyouadventure.Game;
 
 public class SavePointMenu extends TextListMenu
 {
-	static final String[] entries = {"Select Character", "Exit"};
+	static final String[] entries = {"Save", "Select Character", "Exit"};
+	String savePointName;
 	
-	public SavePointMenu()
+	public SavePointMenu(String savePointName)
 	{
 		super("Save Point", entries);
+		
+		this.savePointName = savePointName;
 	}
 	
 	@Override
@@ -19,8 +22,11 @@ public class SavePointMenu extends TextListMenu
 		switch(menuOption)
 		{
 		case 0:
-			return new DevCharacterSelectMenu();
+			Game.inst.saveGame(savePointName);
+			Game.inst.menuHandler.closeMenu = true;
 		case 1:
+			return new DevCharacterSelectMenu();
+		case 2:
 		default:
 			Game.inst.menuHandler.closeMenu = true;
 			return null;
