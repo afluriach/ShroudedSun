@@ -3,7 +3,7 @@ package com.gensokyouadventure.objects.interaction;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.Util;
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.environment.Door;
 
 public class OpenDoor implements ItemInteraction

@@ -104,4 +104,17 @@ public enum PrimaryDirection
 //		return Math.abs(this.getAngle() - dir.getAngle()) == 180f;
 		return this == dir.getOpposite();
 	}
+	
+	public static PrimaryDirection from8Dir(int dir)
+	{
+		//diagonal does not count as a valid direction
+		switch(dir)
+		{
+		case 0: return right;
+		case 2: return up;
+		case 4: return left;
+		case 6: return down;
+		default: return null;
+		}
+	}
 }

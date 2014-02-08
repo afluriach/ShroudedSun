@@ -32,6 +32,7 @@ import com.gensokyouadventure.objects.environment.Door;
 import com.gensokyouadventure.objects.environment.FloorSwitch;
 import com.gensokyouadventure.objects.environment.InvisibleFloorSwitch;
 import com.gensokyouadventure.objects.environment.Jar;
+import com.gensokyouadventure.objects.environment.SavePoint;
 import com.gensokyouadventure.objects.environment.Sign;
 import com.gensokyouadventure.objects.environment.Statue;
 import com.gensokyouadventure.objects.environment.Torch;
@@ -73,6 +74,7 @@ public abstract class GameObject
 		addClass("random_walk_npc", RandomWalkNPC.class);
 		addClass("gold_statue", Statue.class);
 		addClass("dark_cirno", DarkCirno.class);
+		addClass("save_point", SavePoint.class);
 		
 		addClass("map_link", Door.class);
 	}

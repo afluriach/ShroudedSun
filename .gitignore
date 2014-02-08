@@ -22,7 +22,7 @@ proguard/
 
 #GWT build caches
 gwt-unitCache/
-PezVenture-html/war/
+GensokyouAdventure-html/war/
 
 # Intellij project files
 *.iml
@@ -32,3 +32,4 @@ PezVenture-html/war/
 
 .metadata/.plugins/
 .metadata/.log
+

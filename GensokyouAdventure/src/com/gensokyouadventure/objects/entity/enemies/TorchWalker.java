@@ -12,7 +12,7 @@ import com.gensokyouadventure.AI.TorchWalkerFSM;
 import com.gensokyouadventure.map.TilespaceRectMapObject;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.environment.Torch;
 import com.gensokyouadventure.objects.projectile.PlayerBullet;
 import com.gensokyouadventure.physics.PrimaryDirection;

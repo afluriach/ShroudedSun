@@ -9,7 +9,7 @@ import com.gensokyouadventure.Util;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RadarSensor;
 import com.gensokyouadventure.objects.entity.Entity;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.objects.projectile.EnemyBullet;
 import com.gensokyouadventure.objects.projectile.PlayerBullet;

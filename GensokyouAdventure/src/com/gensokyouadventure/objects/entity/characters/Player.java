@@ -1,4 +1,4 @@
-package com.gensokyouadventure.objects.entity;
+package com.gensokyouadventure.objects.entity.characters;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,19 +14,23 @@ import com.gensokyouadventure.Game;
 import com.gensokyouadventure.Util;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RadarSensor;
+import com.gensokyouadventure.objects.entity.Entity;
+import com.gensokyouadventure.objects.entity.NPC;
 import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.objects.environment.Door;
 import com.gensokyouadventure.objects.environment.Jar;
+import com.gensokyouadventure.objects.environment.SavePoint;
 import com.gensokyouadventure.objects.environment.Sign;
 import com.gensokyouadventure.objects.interaction.GrabItem;
 import com.gensokyouadventure.objects.interaction.Grabbable;
 import com.gensokyouadventure.objects.interaction.ItemInteraction;
 import com.gensokyouadventure.objects.interaction.OpenDoor;
 import com.gensokyouadventure.objects.interaction.Read;
+import com.gensokyouadventure.objects.interaction.Save;
 import com.gensokyouadventure.objects.interaction.Talk;
 import com.gensokyouadventure.physics.PrimaryDirection;
 
-public class Player extends Entity {
+public abstract class Player extends Entity {
 	public static final float SPEED = 3.0f;
 	private static final int MAX_HP = 10;
 	private static final int MAX_MP = 10;
@@ -67,10 +71,11 @@ public class Player extends Entity {
 		interactMap.put(NPC.class, new Talk());
 		interactMap.put(Jar.class, new GrabItem());
 		interactMap.put(Door.class, new OpenDoor());
+		interactMap.put(SavePoint.class, new Save());
 	}
 
-	public Player(Vector2 pos, PrimaryDirection startingDir) {
-		super(pos, "cirno", startingDir.getAngle8Dir(), "player", "player", false);
+	public Player(Vector2 pos, PrimaryDirection startingDir, String character) {
+		super(pos, character, startingDir.getAngle8Dir(), "player", "player", false);
 		
 		LinkedList<Class<?>> targetClasses = new LinkedList<Class<?>>();
 		targetClasses.add(Enemy.class);
@@ -271,13 +276,6 @@ public class Player extends Entity {
 		((Grabbable) holdingItem).onDrop();
 
 		holdingItem = null;
-	}
-
-	@Override
-	public void render(SpriteBatch sb) {
-		if (animation != null && showingSprite) {
-			animation.render(sb, getCenterPos());
-		}
 	}
 
 	public void setInteract() {

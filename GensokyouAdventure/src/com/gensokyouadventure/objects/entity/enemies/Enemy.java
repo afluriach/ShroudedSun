@@ -5,7 +5,7 @@ import com.gensokyouadventure.AI.AI_FSM;
 import com.gensokyouadventure.map.TilespaceRectMapObject;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.projectile.EnemyBullet;
 
 public abstract class Enemy extends Entity

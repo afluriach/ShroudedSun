@@ -6,7 +6,7 @@ import java.util.List;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RadarSensor;
 import com.gensokyouadventure.objects.entity.Entity;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.entity.enemies.Enemy;
 
 //this state represents an enemy waiting for the player. 

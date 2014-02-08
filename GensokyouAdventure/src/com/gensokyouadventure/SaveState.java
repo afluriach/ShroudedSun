@@ -3,6 +3,7 @@ package com.gensokyouadventure;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.BitSet;
+import java.util.HashSet;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.files.FileHandle;
@@ -11,5 +12,5 @@ import com.badlogic.gdx.files.FileHandle;
 public class SaveState
 {
 	TreeMap<String, AreaState> areaState = new TreeMap<String, AreaState>();
-
+	HashSet<String> unlockedAbilities = new HashSet<String>();
 }

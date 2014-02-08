@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.gensokyouadventure.Util;
 
 public class AreaLoader
@@ -32,5 +35,28 @@ public class AreaLoader
 			throw new RuntimeException(String.format("area %s not found", name));
 		
 		return new Area(MapUtil.loadMap(String.format("maps/%s.tmx", name)));
+	}
+	
+	public String[] getAreas()
+	{
+		return areas.toArray(new String[areas.size()]);
+	}
+	
+	public String[] getLinksInArea(String name)
+	{
+		if(!areas.contains(name))
+			throw new RuntimeException(String.format("area %s not found", name));
+		
+		TiledMap areaMap = MapUtil.loadMap(String.format("maps/%s.tmx", name));
+		MapLayer maplinkLayer = areaMap.getLayers().get("maplinks");
+		
+		String[] linkNames = new String[maplinkLayer.getObjects().getCount()];
+		
+		for(int i=0;i<maplinkLayer.getObjects().getCount(); ++i)
+		{
+			linkNames[i] = maplinkLayer.getObjects().get(i).getName();
+		}
+		
+		return linkNames;
 	}
 }

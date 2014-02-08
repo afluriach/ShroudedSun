@@ -20,7 +20,7 @@ import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.circuit.CircuitGraph;
 import com.gensokyouadventure.objects.circuit.LogicGateTorch;
 import com.gensokyouadventure.objects.circuit.Wire;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.environment.Door;
 import com.gensokyouadventure.objects.environment.Wall;
 import com.gensokyouadventure.physics.PrimaryDirection;

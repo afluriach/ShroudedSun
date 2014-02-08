@@ -2,7 +2,7 @@ package com.gensokyouadventure.ability;
 
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.objects.PlayerShieldObject;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 
 public class Shield extends ToggleAbility
 {

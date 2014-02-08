@@ -7,7 +7,7 @@ import com.gensokyouadventure.AI.AI_Util;
 import com.gensokyouadventure.map.TilespaceRectMapObject;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.entity.Entity;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.projectile.EnemyBullet;
 import com.gensokyouadventure.objects.projectile.PlayerBullet;
 import com.gensokyouadventure.objects.projectile.StatueFireBullet;

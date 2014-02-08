@@ -18,7 +18,7 @@ import com.gensokyouadventure.physics.PrimaryDirection;
 public abstract class Entity extends GameObject
 {
 	static final float MASS = 50.0f;
-	static final float HIT_CIRCLE_RADIUS = 0.35f;
+	protected static final float HIT_CIRCLE_RADIUS = 0.35f;
 	static final float defaultFacing = 90f;
 	static final float maxAcceleration = 4.5f;
 	static final float defaultSpeed = 1f;

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.Game;
 import com.gensokyouadventure.graphics.Graphics;
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 
 public class EnemyBullet extends Bullet
 {

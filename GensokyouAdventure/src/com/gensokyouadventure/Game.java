@@ -34,12 +34,17 @@ import com.gensokyouadventure.map.AreaLoader;
 import com.gensokyouadventure.map.MapLink;
 import com.gensokyouadventure.map.Room;
 import com.gensokyouadventure.map.TileGraph;
+import com.gensokyouadventure.menu.MainMenu;
+import com.gensokyouadventure.menu.MenuHandler;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.GameObjectSystem;
 import com.gensokyouadventure.objects.RenderLayer;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.EChar;
+import com.gensokyouadventure.objects.entity.characters.PlayableCharacter;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.entity.enemies.Enemy;
 import com.gensokyouadventure.physics.Physics;
+import com.gensokyouadventure.physics.PrimaryDirection;
 
 public class Game implements ApplicationListener
 {
@@ -85,8 +90,6 @@ public class Game implements ApplicationListener
 	//game logic
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
 
-	public static final String startingLevel = "level_select";
-	public static final String startingLink = "entrance";
 	public static final String TAG = "GensokyouAdventure";
 	
 	
@@ -104,15 +107,15 @@ public class Game implements ApplicationListener
 	
 	//map
 	Area area;
-	String areaName = startingLevel;
-	String mapEntranceLink=startingLink;
-	AreaLoader areaLoader;
+	String areaName;
+	String mapEntranceLink;
+	public AreaLoader areaLoader;
 	OrthogonalTiledMapRenderer mapRenderer;
 	Room crntRoom;
 	TileGraph tileGraph;
 	
 	//control state
-	Controls controls;
+	public Controls controls;
 	//if the button has been held from the previous frame
 	boolean interactHeld = false;
 	boolean pauseHeld = false;
@@ -129,6 +132,7 @@ public class Game implements ApplicationListener
 		
 	//logic
 	float updateTimeAccumulated = 0;
+	public EChar crntCharacter = EChar.reimu;
 	public Player player;
 	public Physics physics;
 	public GameObjectSystem gameObjectSystem;
@@ -143,6 +147,7 @@ public class Game implements ApplicationListener
 	String teleportDestLink;
 	String teleportDestMap;
 	public DialogLoader dialogLoader;
+	public MenuHandler menuHandler;
 	
 	//ability
 	Ability bEquipped;
@@ -189,7 +194,8 @@ public class Game implements ApplicationListener
 			mp = player.getMP();
 		}
 		
-		player = new Player(Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
+		player = PlayableCharacter.getCharacter(crntCharacter, Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
+//		player = new Player(Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
 		gameObjectSystem.addObject(player);
 		gameObjectSystem.handleAdditions();
 		
@@ -208,6 +214,36 @@ public class Game implements ApplicationListener
 
 	void drawGUI()
 	{
+		if(area != null)
+			drawGameGui();		
+		
+		if(crntDialog != null)
+		{
+			//switched to gui bach
+			crntDialog.render(guiBatch, guiShapeRenderer, crntConvsersationFrame);
+		}
+		else if(activeTextBox != null)
+		{
+			activeTextBox.render(guiBatch, guiShapeRenderer);			
+		}
+		else if(menuHandler.menuActive())
+		{
+			menuHandler.render(guiBatch, font, guiShapeRenderer);
+		}
+		else
+		{
+			controls.render(guiShapeRenderer, guiBatch, font);			
+		}
+		
+		if(paused)
+		{
+			//TODO draw box/background for the pause message, similar to a dialog box
+			Graphics.drawTextCentered(Controls.buttonTextColor, "-PAUSED-", guiBatch, font, screenWidth/2, screenHeight/2);
+		}
+	}
+
+
+	private void drawGameGui() {
 		guiShapeRenderer.begin(ShapeType.Filled);
 		int healthBarLen = (int) (HEALTH_BAR_LENGTH*player.getHP()*1.0f/player.getMaxHP());
 		int magicBarLen  = (int) (MAGIC_BAR_LENGTH*player.getMP()*1.0f/player.getMaxMP());
@@ -250,27 +286,7 @@ public class Game implements ApplicationListener
 				           MAGIC_BAR_LENGTH - magicBarLen,
 				           MAGIC_BAR_THICKNESS);
 		
-		guiShapeRenderer.end();		
-		
-		if(crntDialog != null)
-		{
-			//switched to gui bach
-			crntDialog.render(guiBatch, guiShapeRenderer, crntConvsersationFrame);
-		}
-		else if(activeTextBox != null)
-		{
-			activeTextBox.render(guiBatch, guiShapeRenderer);			
-		}
-		else
-		{
-			controls.render(guiShapeRenderer, guiBatch, font);			
-		}
-		
-		if(paused)
-		{
-			//TODO draw box/background for the pause message, similar to a dialog box
-			Graphics.drawTextCentered(Controls.buttonTextColor, "-PAUSED-", guiBatch, font, screenWidth/2, screenHeight/2);
-		}
+		guiShapeRenderer.end();
 	}
 	
 	void pauseGame()
@@ -472,16 +488,31 @@ public class Game implements ApplicationListener
 		gameObjectSystem = new GameObjectSystem();
 		areaLoader = new AreaLoader();
 		
+		menuHandler = new MenuHandler();
+		
 		controls = new Controls(screenWidth, screenHeight, touchControls, keyControls);
 		
 		//default abilities
 		bEquipped = new Shield();
 		xEquipped = new IceBullet();
 		
+		//this is where the area gets loaded. when the main menu is displayed, no area should be loaded. 
 		//initialize game world
-		loadArea(startingLevel, mapEntranceLink);
+//		loadArea(startingLevel, mapEntranceLink);
+		
+		menuHandler.setTopLevelMenu(new MainMenu());
 		
 		initCamera();
+	}
+	
+	public void loadLevelSelect()
+	{
+		loadArea("level_select", "entrance");
+	}
+	
+	public void loadGameStart()
+	{
+		loadArea("level1", "player_start");
 	}
 	
 	void checkMaplinkCollision()
@@ -524,7 +555,7 @@ public class Game implements ApplicationListener
 		player.setVel(Vector2.Zero);
 	}
 		
-	void loadArea(String areaName, String mapLink)
+	public void loadArea(String areaName, String mapLink)
 	{
 		Area oldArea = area;
 		
@@ -532,6 +563,7 @@ public class Game implements ApplicationListener
 		physics.clear();
 
 		area = areaLoader.loadArea(areaName);
+		this.areaName = areaName;
 		
 		//stop the music that is currently playing if the last area had music and it is a 
 		//different track from the current area. which also means stop if this area doesn't
@@ -548,6 +580,7 @@ public class Game implements ApplicationListener
 			soundLoader.playMusic(area.musicTitle, false);
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(area.map);
+		mapRenderer.setView(camera);
 		
 		Game.log("loading map objects...");
 		area.instantiateMapObjects();
@@ -562,7 +595,7 @@ public class Game implements ApplicationListener
 	void initCamera()
 	{
 		camera.position.set(screenWidth/2, screenHeight/2, 0);
-		mapRenderer.setView(camera);
+		//mapRenderer.setView(camera);
 		
 		camera.update();
 		camera.apply(Gdx.graphics.getGL10());
@@ -570,12 +603,16 @@ public class Game implements ApplicationListener
 	
 	void update()
 	{
-		area.update();
-		gameObjectSystem.handleAdditions();
-		gameObjectSystem.updateAll();
-		gameObjectSystem.removeExpired();
-		physics.update();
-		tileGraph.refresh();
+		//do not update if area is not loaded. 
+		if(area != null)
+		{			
+			area.update();
+			gameObjectSystem.handleAdditions();
+			gameObjectSystem.updateAll();
+			gameObjectSystem.removeExpired();
+			physics.update();
+			tileGraph.refresh();
+		}
 	}
 
 	
@@ -598,15 +635,12 @@ public class Game implements ApplicationListener
 		spriteLoader.unloadTextures();
 		font.dispose();
 		guiShapeRenderer.dispose();
-		mapRenderer.dispose();
+		if(mapRenderer != null)
+			mapRenderer.dispose();
 	}
 	
 	@Override
 	public void render() {
-		checkPlayerDeath();
-		checkMaplinkCollision();
-		checkTeleport();
-		
 		controls.update();
 		//handle input
 		if(crntDialog != null)
@@ -619,6 +653,10 @@ public class Game implements ApplicationListener
 			timeInDialog += Game.SECONDS_PER_FRAME;
 			handleDialogControls();
 		}
+		else if(menuHandler.menuActive())
+		{
+			menuHandler.update();
+		}
 		else
 		{
 			//normal gameplay input
@@ -626,22 +664,38 @@ public class Game implements ApplicationListener
 		}
 		
 		//update logic
-		if(activeTextBox == null && crntDialog == null && !paused)
+		if(activeTextBox == null && crntDialog == null && !menuHandler.menuActive() && !paused)
 		{
 			updateTimeAccumulated += Gdx.graphics.getDeltaTime();
 			while(updateTimeAccumulated >= SECONDS_PER_FRAME)
 			{
+				checkPlayerDeath();
+				checkMaplinkCollision();
+				checkTeleport();
 				update();
 				updateTimeAccumulated -= SECONDS_PER_FRAME;
 			}
 		}
 		
-		//adjust camera
+		if(area != null)
+		{
+			updateCamera();
+			renderArea();			
+		}
+		
+		drawGUI();		
+	}
+
+
+	private void updateCamera() {
 		moveCamera();
 		camera.update();
 		camera.apply(Gdx.graphics.getGL10());
 		mapRenderer.setView(camera);
-		
+	}
+
+
+	private void renderArea() {
 		//render
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
@@ -698,8 +752,6 @@ public class Game implements ApplicationListener
 		batch.setProjectionMatrix(defaultMatrix);
 		
 		popScissors();
-		
-		drawGUI();		
 	}
 
 	void handleConversationControls()
@@ -993,4 +1045,29 @@ public class Game implements ApplicationListener
 		return area;
 	}
 	
+	public void exit()
+	{
+		//exit game
+		Gdx.app.exit();
+	}
+	
+	public void changeCharacter(EChar newChar)
+	{
+		//change the current character. replace existing player object
+				
+		if(newChar != crntCharacter)
+		{
+			int hp = player.getHP(); 
+			int mp = player.getMP();
+
+			player.expire();
+			player = PlayableCharacter.getCharacter(newChar, player.getCenterPos(), PrimaryDirection.up);
+			gameObjectSystem.addObject(player);
+			
+			player.setHP(hp);
+			player.setMP(mp);
+			
+			crntCharacter = newChar;
+		}
+	}
 }

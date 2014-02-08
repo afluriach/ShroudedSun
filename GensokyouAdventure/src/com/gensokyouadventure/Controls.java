@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.gensokyouadventure.graphics.Graphics;
+import com.gensokyouadventure.physics.PrimaryDirection;
 
 /**
  * Implements touch and button controls and keep track of control state.
@@ -85,6 +86,17 @@ public class Controls
 		createShapes();
 	}
 	
+	//the "direction" that is being input. controlpad if above deadzone. this will include arrow keys
+	public PrimaryDirection controlPadDirection()
+	{
+		if(controlPadPos.len() < gamepadDeadzone) return null;
+		
+		int dir8 = Util.getNearestDir(controlPadPos.angle());
+		
+		//the controlpad is pointing in a primary direction. ignore diagonal
+		return PrimaryDirection.from8Dir(dir8); 
+	}
+	
 	/**
 	 * used to change GUI layout if screen resolution changes
 	 */
@@ -93,6 +105,18 @@ public class Controls
 		this.width = width;
 		this.height = height;
 		createShapes();
+	}
+	
+	//is the select menu button pressed (a button)
+	public boolean selectButton()
+	{
+		return a;
+	}
+	
+	//is the back buttton pressed (x or b)
+	public boolean backButton()
+	{
+		return b || x;
 	}
 	
 	public void createShapes()

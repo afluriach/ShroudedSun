@@ -1,7 +1,7 @@
 package com.gensokyouadventure.objects.interaction;
 
 import com.gensokyouadventure.objects.GameObject;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 
 
 public class GrabItem implements ItemInteraction

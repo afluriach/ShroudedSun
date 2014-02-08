@@ -1,7 +1,7 @@
 package com.gensokyouadventure.ability;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 
 /**
  * Ability that can be activated

@@ -12,7 +12,7 @@ import com.gensokyouadventure.graphics.Graphics;
 import com.gensokyouadventure.map.TilespaceRectMapObject;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RenderLayer;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 
 public class FloorSwitch extends GameObject implements Switch
 {

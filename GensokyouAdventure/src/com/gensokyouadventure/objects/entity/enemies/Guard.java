@@ -10,7 +10,7 @@ import com.gensokyouadventure.event.CaughtByGuards;
 import com.gensokyouadventure.map.TilespaceRectMapObject;
 import com.gensokyouadventure.objects.GameObject;
 import com.gensokyouadventure.objects.RadarSensor;
-import com.gensokyouadventure.objects.entity.Player;
+import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.projectile.EnemyBullet;
 
 public class Guard extends Enemy

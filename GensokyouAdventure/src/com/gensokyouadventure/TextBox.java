@@ -10,7 +10,7 @@ import com.gensokyouadventure.graphics.Graphics;
 
 public class TextBox
 {
-	public static final int trimThickess = 3;
+	public static final int trimThickness = 3;
 	public static final int margin = 5;
 	
 	public static final Color textColor = Color.WHITE;
@@ -35,10 +35,10 @@ public class TextBox
 		this.msg = msg;
 		
 		lineHeight = (int) font.getLineHeight();
-		lineWidth = (int) (pos.width - 2*trimThickess - 2*margin);
+		lineWidth = (int) (pos.width - 2*trimThickness - 2*margin);
 		
-		lineStartY= (int) (pos.y+pos.height - trimThickess - margin - lineHeight/2);
-		lineStartX= (int) (pos.x+trimThickess+margin);
+		lineStartY= (int) (pos.y+pos.height - trimThickness - margin - lineHeight/2);
+		lineStartX= (int) (pos.x+trimThickness+margin);
 	}
 	
 	public void render(SpriteBatch batch, ShapeRenderer sr)
@@ -46,16 +46,16 @@ public class TextBox
 		//draw background
 		sr.begin(ShapeType.Filled);		
 			sr.setColor(bgColor);	
-			sr.rect(pos.x + trimThickess, pos.y + trimThickess, pos.width - 2*trimThickess, pos.height - 2*trimThickess);
+			sr.rect(pos.x + trimThickness, pos.y + trimThickness, pos.width - 2*trimThickness, pos.height - 2*trimThickness);
 		sr.end();
 		
 		//draw trim
 		sr.begin(ShapeType.Line);		
 			sr.setColor(trimColor);
-			sr.rectLine(pos.x, pos.y, pos.x+pos.width, pos.y, trimThickess);
-			sr.rectLine(pos.x+pos.width, pos.y, pos.x+pos.width, pos.y+pos.height, trimThickess);
-			sr.rectLine(pos.x+pos.width, pos.y+pos.height, pos.x, pos.y+pos.height, trimThickess);
-			sr.rectLine(pos.x, pos.y+pos.height, pos.x, pos.y, trimThickess);		
+			sr.rectLine(pos.x, pos.y, pos.x+pos.width, pos.y, trimThickness);
+			sr.rectLine(pos.x+pos.width, pos.y, pos.x+pos.width, pos.y+pos.height, trimThickness);
+			sr.rectLine(pos.x+pos.width, pos.y+pos.height, pos.x, pos.y+pos.height, trimThickness);
+			sr.rectLine(pos.x, pos.y+pos.height, pos.x, pos.y, trimThickness);		
 		sr.end();
 
 		batch.begin();

@@ -69,9 +69,7 @@ public class Dialog
 			rightPortrait = Game.inst.spriteLoader.getPortrait(rightCharacter);
 			rightPic = rightPortrait.frames[crntFrame.rightPortrait];
 		}
-		
-		//TODO, draw pic with transparency or tint depending on focus.
-		
+				
 		batch.begin();		
 			if(leftCharacter != null)
 			{
