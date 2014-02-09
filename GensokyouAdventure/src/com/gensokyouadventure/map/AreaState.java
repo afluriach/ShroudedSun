@@ -6,4 +6,5 @@ import java.util.HashSet;
 public class AreaState
 {
 	public HashSet<String> activatedObjects = new HashSet<String>();
+	public HashSet<String> openedChests = new HashSet<String>();
 }

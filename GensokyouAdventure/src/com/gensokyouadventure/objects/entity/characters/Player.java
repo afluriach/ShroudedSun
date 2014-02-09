@@ -21,9 +21,11 @@ import com.gensokyouadventure.objects.environment.Door;
 import com.gensokyouadventure.objects.environment.Jar;
 import com.gensokyouadventure.objects.environment.SavePoint;
 import com.gensokyouadventure.objects.environment.Sign;
+import com.gensokyouadventure.objects.environment.TreasureChest;
 import com.gensokyouadventure.objects.interaction.GrabItem;
 import com.gensokyouadventure.objects.interaction.Grabbable;
 import com.gensokyouadventure.objects.interaction.ItemInteraction;
+import com.gensokyouadventure.objects.interaction.OpenChest;
 import com.gensokyouadventure.objects.interaction.OpenDoor;
 import com.gensokyouadventure.objects.interaction.Read;
 import com.gensokyouadventure.objects.interaction.Save;
@@ -32,8 +34,6 @@ import com.gensokyouadventure.physics.PrimaryDirection;
 
 public abstract class Player extends Entity {
 	public static final float SPEED = 3.0f;
-	private static final int MAX_HP = 10;
-	private static final int MAX_MP = 10;
 	private static final float invulerabilityLength = 1.0f;
 	private static final float invulerabilityFlickerInterval = 0.1f;
 	public static final float shotInitDist = 0.5f;
@@ -45,8 +45,8 @@ public abstract class Player extends Entity {
 	// in.
 	private HashMap<Class<? extends GameObject>, ItemInteraction> interactMap;
 
-	int hp = MAX_HP;
-	int mp = MAX_MP;
+//	int hp = MAX_HP;
+//	int mp = MAX_MP;
 	float invulnerableTimeRemaining = 0f;
 
 	// interaction logic, including interacting with obejcts in the environment
@@ -72,6 +72,7 @@ public abstract class Player extends Entity {
 		interactMap.put(Jar.class, new GrabItem());
 		interactMap.put(Door.class, new OpenDoor());
 		interactMap.put(SavePoint.class, new Save());
+		interactMap.put(TreasureChest.class, new OpenChest());
 	}
 
 	public Player(Vector2 pos, PrimaryDirection startingDir, String character) {
@@ -119,43 +120,9 @@ public abstract class Player extends Entity {
 
 	}
 
-	public int getHP() {
-		return hp;
-	}
-
-	public int getMaxHP() {
-		return MAX_HP;
-	}
-
-	public int getMP() {
-		return mp;
-	}
-
-	public void setHP(int hp) {
-		this.hp = hp;
-	}
-
-	public void setMP(int mp) {
-		this.mp = mp;
-	}
-
-	public int getMaxMP() {
-		return MAX_MP;
-	}
-
-	public void useMP(int amount) {
-		mp -= amount;
-	}
-
-	public void heal(int hp) {
-		this.hp += hp;
-		if (this.hp > MAX_HP)
-			this.hp = MAX_HP;
-	}
-
 	public void hit(int damage) {
 		if (invulnerableTimeRemaining == 0) {
-			hp -= damage;
+			Game.inst.playerHP -= damage;
 			invulnerableTimeRemaining = invulerabilityLength;
 			enableFlicker(invulerabilityLength, invulerabilityFlickerInterval);
 		}
@@ -172,7 +139,7 @@ public abstract class Player extends Entity {
 	 * @param hp
 	 */
 	public void directDamage(int hp) {
-		this.hp -= hp;
+		Game.inst.playerHP -= hp;
 
 	}
 

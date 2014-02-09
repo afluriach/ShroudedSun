@@ -46,6 +46,16 @@
    </properties>
   </object>
   <object name="sp1" type="save_point" x="64" y="64" width="32" height="32"/>
+  <object name="chest1" type="chest" x="160" y="224" width="32" height="32">
+   <properties>
+    <property name="hp_up" value="2"/>
+   </properties>
+  </object>
+  <object name="chest2" type="chest" x="256" y="224" width="32" height="32">
+   <properties>
+    <property name="mp_up" value="2"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="rooms" width="50" height="10" visible="0">
   <object name="main" type="room" x="0" y="0" width="1600" height="320"/>

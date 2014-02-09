@@ -27,6 +27,8 @@ public class MenuHandler
 	{
 		frameStack.clear();
 		frameStack.push(frame);
+		
+		selectHeld = true;
 	}
 	
 	public void openSubMenu(TextListMenu frame)

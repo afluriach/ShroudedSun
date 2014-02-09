@@ -17,6 +17,14 @@ public class SaveState
 	public String crntArea;
 	public String crntSavePoint;
 	
+	public int gold = 0;
+	
+	public int crntHP = Game.STARTING_HP;
+	public int crntMP = Game.STARTING_MP;
+			
+	public int maxHP = Game.STARTING_HP;
+	public int maxMP = Game.STARTING_MP;
+	
 	public TreeMap<String, AreaState> areaState = new TreeMap<String, AreaState>();
 	public HashSet<String> unlockedAbilities = new HashSet<String>();
 }

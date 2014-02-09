@@ -36,6 +36,7 @@ import com.gensokyouadventure.objects.environment.SavePoint;
 import com.gensokyouadventure.objects.environment.Sign;
 import com.gensokyouadventure.objects.environment.Statue;
 import com.gensokyouadventure.objects.environment.Torch;
+import com.gensokyouadventure.objects.environment.TreasureChest;
 import com.gensokyouadventure.objects.environment.Wall;
 import com.gensokyouadventure.objects.interaction.Grabbable;
 import com.gensokyouadventure.physics.Physics;
@@ -75,6 +76,7 @@ public abstract class GameObject
 		addClass("gold_statue", Statue.class);
 		addClass("dark_cirno", DarkCirno.class);
 		addClass("save_point", SavePoint.class);
+		addClass("chest", TreasureChest.class);
 		
 		addClass("map_link", Door.class);
 	}

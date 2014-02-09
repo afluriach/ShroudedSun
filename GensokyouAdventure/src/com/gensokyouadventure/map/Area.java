@@ -23,6 +23,7 @@ import com.gensokyouadventure.objects.circuit.Wire;
 import com.gensokyouadventure.objects.entity.characters.Player;
 import com.gensokyouadventure.objects.environment.Door;
 import com.gensokyouadventure.objects.environment.Switch;
+import com.gensokyouadventure.objects.environment.TreasureChest;
 import com.gensokyouadventure.objects.environment.Wall;
 import com.gensokyouadventure.physics.PrimaryDirection;
 
@@ -48,7 +49,6 @@ public class Area
 		AreaState state = new AreaState();
 		
 		//save activated objects
-		
 		for(GameObject go : Game.inst.gameObjectSystem.getObjectsByType(Switch.class))
 		{
 			Switch sw = (Switch) go;
@@ -58,6 +58,18 @@ public class Area
 				state.activatedObjects.add(go.getName());
 			}
 		}
+		
+		//save opened chests
+		for(GameObject go : Game.inst.gameObjectSystem.getObjectsByType(TreasureChest.class))
+		{
+			TreasureChest chest = (TreasureChest) go;
+			
+			if(chest.opened())
+			{
+				state.openedChests.add(go.getName());
+			}
+		}
+		
 		return state;
 	}
 	
@@ -69,6 +81,14 @@ public class Area
 		{
 			Switch sw = (Switch) Game.inst.gameObjectSystem.getObjectByName(name);
 			sw.activate();
+		}
+		
+		//load opened chests
+		
+		for(String name : state.openedChests)
+		{
+			TreasureChest chest = (TreasureChest) Game.inst.gameObjectSystem.getObjectByName(name);
+			chest.open();
 		}
 	}
 	

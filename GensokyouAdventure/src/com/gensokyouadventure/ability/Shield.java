@@ -16,7 +16,7 @@ public class Shield extends ToggleAbility
 	
 	public boolean canActivate()
 	{
-		return Game.inst.player.getMP() > 0;
+		return Game.inst.playerMP > 0;
 	}
 	
 	public void onActivate()
@@ -41,13 +41,13 @@ public class Shield extends ToggleAbility
 		if(timeActive >= 1)
 		{
 			timeActive -= 1;
-			Game.inst.player.useMP(1);
+			Game.inst.playerMP -= 1;
 		}
 		
 		//update position of shield object
 		shield.setPos(Game.inst.player.getCenterPos());
 		
-		return Game.inst.player.getMP() > 0;
+		return Game.inst.playerMP > 0;
 	}
 
 	@Override

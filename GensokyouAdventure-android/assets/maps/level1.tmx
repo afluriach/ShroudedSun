@@ -71,6 +71,11 @@
   </object>
   <object name="sp1" type="save_point" x="544" y="736" width="32" height="32"/>
   <object name="sp2" type="save_point" x="96" y="64" width="32" height="32"/>
+  <object name="chest1" type="chest" x="544" y="864" width="32" height="32">
+   <properties>
+    <property name="gold" value="5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="rooms" width="20" height="30" visible="0">
   <object name="room1" type="room" x="0" y="672" width="640" height="288"/>

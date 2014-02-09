@@ -57,15 +57,14 @@ public class Game implements ApplicationListener
 	public static final int GUI_EDGE_MARGIN = 20;
 	public static final int BUTTON_RADIUS = 35;
 	
-	public static final int HEALTH_BAR_THICKNESS = 30;
+	//base length of the HP and MP guages, i.e. the legnth of the guage when MAX HP/MP is
+	//equal to starting HP/MP. 
+	public static final int GUAGE_THICKNESS = 30;
 	public static final int HEALTH_BAR_LENGTH = 200;
-	public static final int HEALTH_BAR_OUTLINE = 4;
-	
+	public static final int MAGIC_BAR_LENGTH = 200;
+	public static final int GUAGE_OUTLINE_THICKNESS = 4;
 	public static final int HEALTH_MAGIC_SPACING = 10;
 
-	public static final int MAGIC_BAR_THICKNESS = 30;
-	public static final int MAGIC_BAR_LENGTH = 200;
-	public static final int MAGIC_BAR_OUTLINE = 4;
 	
 	public static final Rectangle dialogPos = new Rectangle(350, 50, 500, 400);
 	
@@ -92,6 +91,9 @@ public class Game implements ApplicationListener
 
 	//game logic
 	public static final float ENTRANCE_CLEAR_DISTANCE = 0.5f;
+	public static final int STARTING_HP = 10;
+	public static final int STARTING_MP = 10;
+
 
 	public static final String TAG = "GensokyouAdventure";
 	
@@ -156,6 +158,8 @@ public class Game implements ApplicationListener
 	public MenuHandler menuHandler;
 	public SaveState saveState;
 	public int crntProfileID;
+	public int playerHP;
+	public int playerMP;
 	
 	//ability
 	Ability bEquipped;
@@ -202,25 +206,11 @@ public class Game implements ApplicationListener
 	public void loadPlayer(String mapLinkStart)
 	{
 		MapLink link = area.getMapLink(mapLinkStart);
-		int hp = 0; 
-		int mp = 0;
-		
-		if(player != null)
-		{
-			hp = player.getHP();
-			mp = player.getMP();
-		}
 		
 		player = PlayableCharacter.getCharacter(crntCharacter, Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
 //		player = new Player(Util.clearRectangle(link.location, link.entranceDir, ENTRANCE_CLEAR_DISTANCE), link.entranceDir);
 		gameObjectSystem.addObject(player);
 		gameObjectSystem.handleAdditions();
-		
-		if(hp != 0)
-		{
-			player.setHP(hp);
-			player.setMP(mp);
-		}
 	}
 	
 	public static void log(String msg)
@@ -260,50 +250,55 @@ public class Game implements ApplicationListener
 	}
 
 
-	private void drawGameGui() {
+	private void drawGameGui()
+	{
+		int healthBarMaxLen = (int) (HEALTH_BAR_LENGTH*saveState.maxHP*1.0f/STARTING_HP);
+		int magicBarMaxLen  = (int) (MAGIC_BAR_LENGTH*saveState.maxMP*1.0f/STARTING_MP);
+		
 		guiShapeRenderer.begin(ShapeType.Filled);
-		int healthBarLen = (int) (HEALTH_BAR_LENGTH*player.getHP()*1.0f/player.getMaxHP());
-		int magicBarLen  = (int) (MAGIC_BAR_LENGTH*player.getMP()*1.0f/player.getMaxMP());
 
 		//health bar
-		guiShapeRenderer.setColor(1,1,1,1);
-		guiShapeRenderer.rect(GUI_EDGE_MARGIN,
-						   screenHeight - HEALTH_BAR_THICKNESS - 2*HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
-						   HEALTH_BAR_LENGTH+2*HEALTH_BAR_OUTLINE,
-						   HEALTH_BAR_THICKNESS+2*HEALTH_BAR_OUTLINE);
 		
-		guiShapeRenderer.setColor(HEALTH_BAR_COLOR);
-		guiShapeRenderer.rect(GUI_EDGE_MARGIN + HEALTH_BAR_OUTLINE,
-						   screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
-						   healthBarLen,
-						   HEALTH_BAR_THICKNESS);
+		drawGuage(GUI_EDGE_MARGIN,
+				screenHeight - GUI_EDGE_MARGIN - GUAGE_THICKNESS - GUAGE_OUTLINE_THICKNESS*2,
+				healthBarMaxLen, playerHP*1.0f/saveState.maxHP, HEALTH_BAR_COLOR);
 		
-		guiShapeRenderer.setColor(0,0,0,1);
-		guiShapeRenderer.rect(GUI_EDGE_MARGIN+HEALTH_BAR_OUTLINE+healthBarLen,
-				           screenHeight - HEALTH_BAR_THICKNESS - HEALTH_BAR_OUTLINE - GUI_EDGE_MARGIN,
-				           HEALTH_BAR_LENGTH - healthBarLen,
-				           HEALTH_BAR_THICKNESS);
 		
 		//magic bar
-		guiShapeRenderer.setColor(1,1,1,1);
-		guiShapeRenderer.rect(GUI_EDGE_MARGIN,
-						   screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - 2*MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
-						   MAGIC_BAR_LENGTH+2*MAGIC_BAR_OUTLINE,
-						   MAGIC_BAR_THICKNESS+2*MAGIC_BAR_OUTLINE);
 		
-		guiShapeRenderer.setColor(MAGIC_BAR_COLOR);
-		guiShapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE,
-				           screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
-				           magicBarLen,
-				           MAGIC_BAR_THICKNESS);
+		drawGuage(GUI_EDGE_MARGIN,
+				screenHeight - GUI_EDGE_MARGIN - GUAGE_THICKNESS*2 - GUAGE_OUTLINE_THICKNESS*4 - HEALTH_MAGIC_SPACING,
+				magicBarMaxLen, playerMP*1.0f/saveState.maxMP, MAGIC_BAR_COLOR);
+				
+		guiShapeRenderer.end();
+		
+		//gold
+		guiBatch.begin();
+			guiBatch.draw(spriteLoader.getTexture("coin32"), screenWidth-98, screenHeight-54);
+		guiBatch.end();
+
+		Graphics.drawTextCentered(Color.WHITE, String.format("%03d", saveState.gold), guiBatch, font, screenWidth - 35, screenHeight-35);
+		
+	}
+	
+	public void drawGuage(int x, int y, int length, float filled, Color color)
+	{
+		//health bar
+		guiShapeRenderer.setColor(1,1,1,1);
+		guiShapeRenderer.rect(x,y,length+2*GUAGE_OUTLINE_THICKNESS,
+						   GUAGE_THICKNESS+2*GUAGE_OUTLINE_THICKNESS);
+		
+		guiShapeRenderer.setColor(color);
+		guiShapeRenderer.rect(x + GUAGE_OUTLINE_THICKNESS,
+						     y + GUAGE_OUTLINE_THICKNESS ,
+						   length*filled,
+						   GUAGE_THICKNESS);
 		
 		guiShapeRenderer.setColor(0,0,0,1);
-		guiShapeRenderer.rect(GUI_EDGE_MARGIN+MAGIC_BAR_OUTLINE+magicBarLen,
-						   screenHeight - HEALTH_BAR_THICKNESS - GUI_EDGE_MARGIN - 2*HEALTH_BAR_OUTLINE - HEALTH_MAGIC_SPACING - MAGIC_BAR_OUTLINE - MAGIC_BAR_THICKNESS,
-				           MAGIC_BAR_LENGTH - magicBarLen,
-				           MAGIC_BAR_THICKNESS);
-		
-		guiShapeRenderer.end();
+		guiShapeRenderer.rect(x+GUAGE_OUTLINE_THICKNESS+length*filled,
+				           y + GUAGE_OUTLINE_THICKNESS,
+				           length*(1-filled),
+				           GUAGE_THICKNESS);
 	}
 	
 	void pauseGame()
@@ -527,12 +522,18 @@ public class Game implements ApplicationListener
 		saveState = new SaveState();
 		loadAreaAtMaplink("level_select", "entrance");
 		crntProfileID = 0;
+		
+		playerHP = STARTING_HP;
+		playerMP = STARTING_MP;		
 	}
 	
 	public void loadGameStart()
 	{
 //		saveState = new SaveState();
 		loadAreaAtMaplink("level1", "player_start");
+		
+		playerHP = STARTING_HP;
+		playerMP = STARTING_MP;
 	}
 	
 	void checkMaplinkCollision()
@@ -993,7 +994,7 @@ public class Game implements ApplicationListener
 	
 	public void checkPlayerDeath()
 	{
-		if(player.getHP() <= 0)
+		if(playerHP <= 0)
 		{
 			//reload current area. if mapEntranceLink is null, 
 			//the player did not enter the area in this play session and the player should be respawned at the 
@@ -1134,16 +1135,10 @@ public class Game implements ApplicationListener
 				
 		if(newChar != crntCharacter)
 		{
-			int hp = player.getHP(); 
-			int mp = player.getMP();
-
 			player.expire();
 			player = PlayableCharacter.getCharacter(newChar, player.getCenterPos(), PrimaryDirection.up);
 			gameObjectSystem.addObject(player);
-			
-			player.setHP(hp);
-			player.setMP(mp);
-			
+						
 			crntCharacter = newChar;
 		}
 	}
@@ -1191,6 +1186,8 @@ public class Game implements ApplicationListener
 	public void loadGame()
 	{		
 		saveState = loadSaveState(crntProfileID);
+		playerHP = saveState.crntHP;
+		playerMP = saveState.crntMP;
 		
 		loadAreaAtSavePoint(saveState.crntArea, saveState.crntSavePoint);
 	}
@@ -1199,6 +1196,11 @@ public class Game implements ApplicationListener
 	{
 		saveState.crntSavePoint = savePointName;
 		saveState.crntArea = areaName;
+		saveState.crntHP = playerHP;
+		saveState.crntMP = playerMP;
+		
+		//save state of current area
+		saveState.areaState.put(areaName, area.save());
 		
 		String filename = getProfilePath(crntProfileID);
 		Gson gson = new Gson();
