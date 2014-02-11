@@ -817,6 +817,20 @@ public class Game implements ApplicationListener
 		if(physicsDebugRender)
 			physics.debugRender(camera.combined);
 		
+		//overlay blank space
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(Color.BLACK);
+		
+		for(Rectangle blank : crntRoom.getBlackspace())
+		{
+			log(String.format("blank space: %f,%f - %f,%f", blank.x, blank.y, blank.width, blank.height));
+			
+			shapeRenderer.rect(blank.x*PIXELS_PER_TILE,
+					           blank.y*PIXELS_PER_TILE,
+					           blank.width*PIXELS_PER_TILE,
+					           blank.height*PIXELS_PER_TILE);
+		}
+		shapeRenderer.end();
 		batch.setProjectionMatrix(defaultMatrix);
 		
 		popScissors();

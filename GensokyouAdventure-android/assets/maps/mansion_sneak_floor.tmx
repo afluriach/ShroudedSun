@@ -109,8 +109,8 @@
   <object name="room1" type="room" x="0" y="0" width="288" height="256"/>
   <object name="room2" type="room" x="256" y="0" width="608" height="416"/>
   <object name="room3" type="room" x="832" y="0" width="416" height="640"/>
-  <object name="room8" type="room" x="64" y="224" width="224" height="416"/>
-  <object name="room7" type="room" x="288" y="384" width="544" height="256"/>
+  <object name="room3" type="room" x="64" y="224" width="224" height="416"/>
+  <object name="room3" type="room" x="288" y="384" width="544" height="256"/>
   <object name="room4" type="room" x="64" y="608" width="608" height="608"/>
   <object name="room5" type="room" x="640" y="608" width="608" height="608"/>
   <object name="room6" type="room" x="0" y="1184" width="1248" height="864"/>
