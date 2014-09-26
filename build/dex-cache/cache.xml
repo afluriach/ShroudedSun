@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gdx-controllers-1.0.1-8c3d0d44a2e50d6147c58bfbd305f775ad58808a.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-controllers/1.0.1/91f82d897d5741760606480a51cf203c069b394d/gdx-controllers-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="91f82d897d5741760606480a51cf203c069b394d"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gdx-box2d-1.0.1-e1ed9b0b1ffe7e02ff2d352d6fb1efa228c86182.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d/1.0.1/78a107753410e8bb11216b654489996bf573b163/gdx-box2d-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="78a107753410e8bb11216b654489996bf573b163"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/box2dlights-1.2-5fe6379ea50913e53aada96bc665e23477a41614.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.box2dlights/box2dlights/1.2/8b3baf8bd6d5fdf7052d9798977133f46a9e7a05/box2dlights-1.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="8b3baf8bd6d5fdf7052d9798977133f46a9e7a05"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gdx-bullet-1.0.1-1cd189142aa4ae8b75b2d7b9950db52311345ada.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-bullet/1.0.1/779e875cdcc99da4169071534d18ac88af83e65c/gdx-bullet-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="779e875cdcc99da4169071534d18ac88af83e65c"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/core-1.0-c239a355d47074cba2d6ce6a918e6bc460627e13.jar"
+        jar="/home/ant/git/ShroudedSun/core/build/libs/core-1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="48692e531c119de6b93082b49df35dd06c5841c5"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gson-1.7.2-0b2361b889942a4b18f621c2c9cfb161426a9258.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/1.7.2/112366d8158749e25532ebce162232c6e0fb20a5/gson-1.7.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="112366d8158749e25532ebce162232c6e0fb20a5"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gdx-controllers-android-1.0.1-cd1e98239c9068738cfa795ae2c46a0ef9616a0b.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-controllers-android/1.0.1/463d74702a9964cfc6022a4e448f0330f891d588/gdx-controllers-android-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="463d74702a9964cfc6022a4e448f0330f891d588"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gdx-freetype-1.0.1-188357d72a1ea0f4b86bf794287f0b635f855998.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype/1.0.1/f8abcbb42cbceed437115c52ae25aa348c996374/gdx-freetype-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="f8abcbb42cbceed437115c52ae25aa348c996374"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gdx-1.0.1-920f1f0f1d6f5f33329f849cf6a524d8a833eb4e.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.0.1/ebd13341e1f7bf0139baf26aaef195a00677d7c3/gdx-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="ebd13341e1f7bf0139baf26aaef195a00677d7c3"/>
+    <item
+        dex="/home/ant/git/ShroudedSun/android/build/pre-dexed/debug/gdx-backend-android-1.0.1-f49813049bb0c26ae89824e6a1ffe4f991c9551c.jar"
+        jar="/home/ant/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-android/1.0.1/e72403f6baff51e9a638939dd2c8a5e9a7f7dc18/gdx-backend-android-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="e72403f6baff51e9a638939dd2c8a5e9a7f7dc18"/>
+
+</pre-dex-items>
