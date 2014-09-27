@@ -2,11 +2,11 @@ package com.electricsunstudio.shroudedsun.physics;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
-import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.objects.GameObject;
-import com.electricsunstudio.shroudedsun.objects.RadarSensor;
 import com.electricsunstudio.shroudedsun.objects.RenderLayer;
 import com.electricsunstudio.shroudedsun.objects.PlayerShieldObject;
+import com.electricsunstudio.shroudedsun.objects.environment.Wall;
+
 
 /**
  * detect if there is any object on the floor
@@ -36,7 +36,8 @@ public class DetectObjectCallback implements QueryCallback
 		if(!fixture.isSensor() && //ignore collision with sensor fixture
             go.getRenderLayer() != RenderLayer.floor &&
 		   go != except && 
-		   !(go instanceof PlayerShieldObject))
+		   !(go instanceof PlayerShieldObject) &&
+			!(go instanceof Wall))
 		{
 			detected = true;
 			return false; //object found, can terminate query.

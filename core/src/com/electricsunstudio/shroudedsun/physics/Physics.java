@@ -388,6 +388,7 @@ public class Physics
 	/**
 	 * check to see if there is any object obstructing a given space
 	 * @param rect the area to check
+	 * @param except ignore this object if it is in the space
 	 * @except ignore collision with this object
 	 * @return whether or not there is an object present
 	 */

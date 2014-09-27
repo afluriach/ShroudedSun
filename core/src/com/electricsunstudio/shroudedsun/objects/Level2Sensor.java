@@ -22,11 +22,9 @@ public class Level2Sensor extends GameObject
 	//ideally will only put one in each. but if the player stands in the door
 	//with a second one within reach then it is possible to put two in.
 	//if flag is set, render something in the main room for this and 
-	boolean extra_occupy_result = false;
-
 	void extraResult()
 	{
-
+		Game.log(getName() + " extra");
 	}
 
 	public Level2Sensor(TilespaceRectMapObject to)
@@ -37,18 +35,16 @@ public class Level2Sensor extends GameObject
 	}
 
 	@Override
-	public void update() {
-		if(occupancy > 1 && !extra_occupy_result)
+	public void update()
+	{
+		if(occupancy > 0 && !player_present && !barrier.isLocked() && !barrier.isBlocked())
 		{
-			extraResult();
-		}
-
-
-		if(occupancy > 0 && !barrier.isLocked() && !player_present)
-		{
-			//if unit is occupied, close the door if nothing is blocking it
 			barrier.lock();
-			Game.log("lock " + barrier.getName());
+
+			if(occupancy > 1)
+			{
+				extraResult();
+			}
 		}
 	}
 

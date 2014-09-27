@@ -2,7 +2,6 @@ package com.electricsunstudio.shroudedsun.objects.environment;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
@@ -127,5 +126,13 @@ public class Barrier extends GameObject implements Switch
 		isLocked = false;
 	}
 
+	//is there an object occupying the barrier tile?
+	//only makes sense if the barrier is currently unlocked
+	//if locked, should return false as this is excluded and nothing else
+	//should be occupying this space
+	public boolean isBlocked()
+	{
+		return Game.inst.physics.checkSpace(getAABB(), this);
+	}
 	
 }
