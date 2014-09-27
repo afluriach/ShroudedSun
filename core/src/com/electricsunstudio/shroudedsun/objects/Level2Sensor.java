@@ -4,12 +4,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Game;
-import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
 import com.electricsunstudio.shroudedsun.objects.entity.characters.Player;
 import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
 import com.electricsunstudio.shroudedsun.objects.environment.Barrier;
-import com.electricsunstudio.shroudedsun.objects.Level2Spirit;
-
 
 public class Level2Sensor extends GameObject
 {
@@ -25,6 +22,11 @@ public class Level2Sensor extends GameObject
 	void extraResult()
 	{
 		Game.log(getName() + " extra");
+	}
+	
+	public int getOccupancy()
+	{
+		return occupancy;
 	}
 
 	public Level2Sensor(TilespaceRectMapObject to)
@@ -93,5 +95,4 @@ public class Level2Sensor extends GameObject
 
 		barrier = (Barrier) Game.inst.gameObjectSystem.getObjectByName("bar"+sensor_id);
 	}
-
 }

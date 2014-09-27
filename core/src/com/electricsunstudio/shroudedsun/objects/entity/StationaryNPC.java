@@ -15,7 +15,7 @@ public class StationaryNPC extends NPC implements Switch
 {
 	String dialog1, dialog2;
 	
-	boolean activated;
+	protected boolean activated;
 	
 	SwitchListener switchListener;
 	ClearListener clearListener;
@@ -23,15 +23,9 @@ public class StationaryNPC extends NPC implements Switch
 	public StationaryNPC(TilespaceRectMapObject to)
 	{
 		super(to);
-		
-		dialog1 = to.prop.get("dialog1", String.class);
-		dialog2 = to.prop.get("dialog2", String.class);
 
-		if(to.prop.containsKey("switch"))
-			switchListener = new SwitchListener(to.prop.get("switch", String.class));
-		
-		if(to.prop.containsKey("cleared"))
-			clearListener = new ClearListener(to.prop.get("cleared", String.class));
+		initDialog(to);
+		initSwitch(to);
 		
 	}
 
@@ -39,7 +33,27 @@ public class StationaryNPC extends NPC implements Switch
     {
         //public NPC(Vector2 pos, String name, int startingDir, String animation, boolean stationary)
         super(to.rect.getCenter(new Vector2()), to.name, 2, entity, true);
+		initDialog(to);
+		initSwitch(to);
     }
+	
+	void initDialog(TilespaceRectMapObject to)
+	{
+		//if dialogs are not defined, use name1 and name2 for the default
+		dialog1 = to.prop.containsKey("dialog1") ? to.prop.get("dialog1", String.class) : to.name + "1";
+		dialog2 = to.prop.containsKey("dialog2") ? to.prop.get("dialog2", String.class) : to.name + "2";
+		
+		Game.log(String.format("%s: %s,%s", to.name, dialog1, dialog2));
+	}
+	
+	void initSwitch(TilespaceRectMapObject to)
+	{
+		if(to.prop.containsKey("switch"))
+			switchListener = new SwitchListener(to.prop.get("switch", String.class));
+		
+		if(to.prop.containsKey("cleared"))
+			clearListener = new ClearListener(to.prop.get("cleared", String.class));
+	}
     
     
 	@Override

@@ -1,0 +1,52 @@
+<level2>
+	<gatekeeper1>
+		<f focus="right" lp ="3" rp="4">
+			Ugh, these spirits are everywhere!
+		</f>
+		
+		<f focus="left" lp="3" rp="4">
+		    ...!?
+		</f>
+		
+		<f focus="right" lp="3" rp="8">
+		    Curse these insufferable things!
+		</f>
+
+		<f focus="left" lp="3" rp="4">
+		    ...
+		</f>
+		
+		<f focus="right" lp="3" rp="2">
+		    I just want to pick these spirits up and throw them!
+		</f>
+		
+		<f focus="right" lp="3" rp="4">
+		    But they move around too much...
+		</f>
+
+		<f focus="right" lp="3" rp="5">
+		    I guess I'm waiting for someone with special powers to come along and help.
+		</f>
+		
+	</gatekeeper1>
+	
+	<gatekeeper2>
+		<f focus="right" lp="7" rp="5">
+			Sometimes I wish I had ice powers.
+		</f>
+
+		<f focus="left" lp="7" rp="5">
+			Yeah, aren't they the greatest?
+		</f>
+		
+		<f focus="right" lp="7" rp="6">
+			In any case, you have successfully contained those troublesome spirits.
+		</f>
+
+		<f focus="right" lp="7" rp="6">
+			I'll step aside.
+		</f>
+		
+	</gatekeeper2>
+	
+</level2>
