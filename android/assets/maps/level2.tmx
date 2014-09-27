@@ -8,7 +8,7 @@
  </tileset>
  <layer name="floor" width="80" height="40">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3W61KBARhFYYoOSio5hSgKhSKHIuX+r6p1Dd80870zrTXz/No3sDMZMzMzMzMzMzMzM/uLsjjAIXLI4wjHOAmwR+8UBZzhHEVcoITLAHv0rnCNMm5QQRU11APs0WvgFk200MYdOugG2KN3jwf00McjnjDAMMAevRGe8YIxJpjiFW8B9ujNMMc7FlhihTU+AuzR+8QGW3xhh2/8YB9gj17a/87/5//z/yUv7X/n//P/+f+Sl/a/8//97/9nZmZmlna/wI8v3wAyAAA=
+   H4sIAAAAAAAAA+3Wx1KCQRBFYQRFMaJiziggwZyz7/9UnvXsZlj8dtU5Vd/qVu+7VjMzMzMzMzMzMzMz+x8tYgnLWMEq1tBGq3BPy7mP1gY20cEWtrGDXawX7mk599HaxwEOcYRjnOAUe4V7Ws59tLo4xwV66GOAS5wV7mk599EaYYwJrnCNG9xiWMEerXs84BFPeMYLXnFXwR6td3zgE1/4xg9+8VbBHq06GpjFHJqYxwJmCve0nPto+f9Nl//fdPn/mZmZmZmZWbT+AFwMaOMAMgAA
   </data>
  </layer>
  <layer name="walls" width="80" height="40">

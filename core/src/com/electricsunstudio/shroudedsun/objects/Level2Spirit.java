@@ -81,7 +81,7 @@ public class Level2Spirit extends Enemy implements Grabbable
     public void render(SpriteBatch sb)
     {
         //if frozen, display alternate animation frame
-        if(isFrozen() && !held)
+        if(isFrozen())
         {
             frozen_animation.render(sb, getCenterPos());
         }
@@ -102,14 +102,14 @@ public class Level2Spirit extends Enemy implements Grabbable
         //disable collision with player
         setSensor(true);
         //disable object in the air above player
-        renderLayer = RenderLayer.aboveGround;
+        setRenderLayer(RenderLayer.aboveGround);
     }
 
     @Override
     public void onDrop() {
         held = false;
         setSensor(false);
-        renderLayer = RenderLayer.floor;
+        setRenderLayer(RenderLayer.floor);
     }
 
     @Override

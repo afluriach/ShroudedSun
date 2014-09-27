@@ -14,7 +14,7 @@ import com.electricsunstudio.shroudedsun.physics.PrimaryDirection;
 public class PlayerIceBullet extends PlayerBullet implements Elemental
 {
 	public static final int speed = 5;
-	public static final float radius = .4f;
+	public static final float radius = 0.32f;
 	public static final float mass = 0.5f;
 	public static final int damage = 1;
 	

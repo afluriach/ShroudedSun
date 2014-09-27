@@ -168,6 +168,12 @@ public abstract class GameObject
 		return renderLayer;
 	}
 	
+	public void setRenderLayer(RenderLayer layer)
+	{
+		Game.inst.gameObjectSystem.updateRenderLayer(this, layer);
+		renderLayer = layer;
+	}
+	
 	public void setPos(Vector2 pos)
 	{
 		physicsBody.setTransform(pos, physicsBody.getAngle());

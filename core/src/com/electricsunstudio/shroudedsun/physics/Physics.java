@@ -58,7 +58,7 @@ public class Physics
 		//enemy
 		filter = new Filter();
 		filter.categoryBits = enemyCategory;
-		filter.maskBits = playerCategory | playerBulletCategory | playerShieldCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory | trapCategory; 
+		filter.maskBits = playerCategory | enemyCategory | playerBulletCategory | playerShieldCategory | onFloorCategory | entityHeightCategory | environmentCateogry | sensorCategory | trapCategory; 
 		collisionFilters.put("enemy", filter);
 		
 		//enemy bullet
