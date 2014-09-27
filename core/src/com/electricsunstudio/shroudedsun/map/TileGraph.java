@@ -112,13 +112,13 @@ public class TileGraph
 		//some objects like a jar or the player would be pushed out of the way as part of pathfinding. 
 		
 		TiledMapTileLayer wallLayer = (TiledMapTileLayer) map.getLayers().get("walls");
-		TiledMapTileLayer groundLayer = (TiledMapTileLayer) map.getLayers().get("background");
+		TiledMapTileLayer floorLayer = (TiledMapTileLayer) map.getLayers().get("floor");
 		
 		for(int i=0;i<height; ++i)
 		{
 			for(int j=0;j<width; ++j)
 			{
-				if(wallLayer.getCell(j, i) != null || groundLayer.getCell(j, i) == null)
+				if(wallLayer.getCell(j, i) != null || floorLayer.getCell(j, i) == null)
 					tiles[i][j] = false;
 			}
 		}

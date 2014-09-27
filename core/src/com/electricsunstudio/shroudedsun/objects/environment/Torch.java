@@ -105,18 +105,11 @@ public class Torch extends GameObject
 			{
 				lit = true;
 				lightTimeRemaining = lightTime;
-				
-				if(other instanceof Bullet)
-					other.expire();
 			}
 			else if( ((Elemental) other).getElement() == Element.ice)
 			{
 				lit = false;
-				
-				if(other instanceof Bullet)
-					other.expire();
 			}
-
 		}
 	}
 

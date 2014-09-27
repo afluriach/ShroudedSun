@@ -1,5 +1,6 @@
 package com.electricsunstudio.shroudedsun.objects.entity;
 
+import com.badlogic.gdx.math.Vector2;
 import com.electricsunstudio.shroudedsun.Dialog;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
@@ -33,7 +34,14 @@ public class StationaryNPC extends NPC implements Switch
 			clearListener = new ClearListener(to.prop.get("cleared", String.class));
 		
 	}
-	
+
+    public StationaryNPC(TilespaceRectMapObject to, String entity)
+    {
+        //public NPC(Vector2 pos, String name, int startingDir, String animation, boolean stationary)
+        super(to.rect.getCenter(new Vector2()), to.name, 2, entity, true);
+    }
+    
+    
 	@Override
 	public void update()
 	{

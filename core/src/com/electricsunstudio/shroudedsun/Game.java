@@ -513,8 +513,9 @@ public class Game implements ApplicationListener
 //		loadArea(startingLevel, mapEntranceLink);
 		
 		initCamera();
-        //loadAreaAtMaplink("underworld2", "entrance");
-        loadLevelSelect();
+        
+        loadGameStart();
+        //loadLevelSelect();
 	}
 	
 	public void loadLevelSelect()
@@ -529,9 +530,10 @@ public class Game implements ApplicationListener
 	
 	public void loadGameStart()
 	{
-//		saveState = new SaveState();
-		loadAreaAtMaplink("level1", "player_start");
-		
+		saveState = new SaveState();
+		//loadAreaAtMaplink("level1", "player_start");
+		loadAreaAtMaplink("level2", "entrance");
+            
 		playerHP = STARTING_HP;
 		playerMP = STARTING_MP;
 	}
@@ -816,20 +818,23 @@ public class Game implements ApplicationListener
 		if(physicsDebugRender)
 			physics.debugRender(camera.combined);
 		
-		//overlay blank space
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.BLACK);
-		
-		for(Rectangle blank : crntRoom.getBlackspace())
-		{
-			log(String.format("blank space: %f,%f - %f,%f", blank.x, blank.y, blank.width, blank.height));
-			
-			shapeRenderer.rect(blank.x*PIXELS_PER_TILE,
-					           blank.y*PIXELS_PER_TILE,
-					           blank.width*PIXELS_PER_TILE,
-					           blank.height*PIXELS_PER_TILE);
-		}
-		shapeRenderer.end();
+		//overlay blank space for non-rectangular rooms
+        if(crntRoom != null)
+        {
+            shapeRenderer.begin(ShapeType.Filled);
+            shapeRenderer.setColor(Color.BLACK);
+
+
+            for(Rectangle blank : crntRoom.getBlackspace())
+            {
+                shapeRenderer.rect(blank.x*PIXELS_PER_TILE,
+                                   blank.y*PIXELS_PER_TILE,
+                                   blank.width*PIXELS_PER_TILE,
+                                   blank.height*PIXELS_PER_TILE);
+            }
+            shapeRenderer.end();
+        }
+        
 		batch.setProjectionMatrix(defaultMatrix);
 		
 		popScissors();

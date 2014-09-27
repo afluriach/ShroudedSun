@@ -1,19 +1,18 @@
 package com.electricsunstudio.shroudedsun.physics;
 
-import java.util.Map;
-import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -24,6 +23,10 @@ import com.badlogic.gdx.utils.Array;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
 import com.electricsunstudio.shroudedsun.objects.GameObject;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
 
 public class Physics
 {
@@ -73,7 +76,7 @@ public class Physics
 		//player bullet
 		filter = new Filter();
 		filter.categoryBits = playerBulletCategory;
-		filter.maskBits = enemyCategory | entityHeightCategory | environmentCateogry | sensorCategory;
+		filter.maskBits = enemyCategory | entityHeightCategory | environmentCateogry | sensorCategory | npcCategory;
 		collisionFilters.put("player_bullet", filter);
 		
 		//player shield
@@ -91,7 +94,7 @@ public class Physics
 		//environmental object
 		filter = new Filter();
 		filter.categoryBits = environmentCateogry;
-		filter.maskBits = playerCategory | playerBulletCategory | enemyCategory | enemyBulletCategory | environmentCateogry | onFloorCategory | sensorCategory;
+		filter.maskBits = playerCategory | playerBulletCategory | enemyCategory | enemyBulletCategory | environmentCateogry | onFloorCategory | sensorCategory | npcCategory;
 		collisionFilters.put("environmental_floor", filter);
 		
 		//environmental hovering object
@@ -103,7 +106,7 @@ public class Physics
 		//npc
 		filter = new Filter();
 		filter.categoryBits = npcCategory;
-		filter.maskBits = playerCategory | environmentCateogry | sensorCategory | npcCategory | onFloorCategory | entityHeightCategory | sensorCategory;
+		filter.maskBits = playerCategory | environmentCateogry | sensorCategory | npcCategory | onFloorCategory | entityHeightCategory | sensorCategory | playerBulletCategory;
 		collisionFilters.put("npc", filter);
 				
 		//wall
@@ -374,19 +377,27 @@ public class Physics
 	{
 		world.destroyJoint(j);
 	}
-	
+
+	void queryAABB(Rectangle rect, QueryCallback cb)
+	{
+		//could there possibly be overlap. the barrier and walls should be on
+		//exactly adjacent tiles.
+		world.QueryAABB(cb, rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);        
+	}
+
 	/**
 	 * check to see if there is any object obstructing a given space
 	 * @param rect the area to check
+	 * @except ignore collision with this object
 	 * @return whether or not there is an object present
 	 */
 	public boolean checkSpace(Rectangle rect, GameObject except)
 	{
 		DetectObjectCallback cb = new DetectObjectCallback(except);
-		world.QueryAABB(cb, rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+		queryAABB(rect, cb);
 		return cb.detected();
 	}
-	
+    	
 	public GameObject getTargetableObjectAtPoint(Vector2 point)
 	{
 		//create rectangle centered at pixel, with an area of 1x1 tile

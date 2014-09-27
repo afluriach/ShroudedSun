@@ -1,9 +1,8 @@
 package com.electricsunstudio.shroudedsun.objects.environment;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
@@ -12,6 +11,8 @@ import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
 import com.electricsunstudio.shroudedsun.objects.ClearListener;
 import com.electricsunstudio.shroudedsun.objects.GameObject;
 import com.electricsunstudio.shroudedsun.objects.SwitchListener;
+import java.util.ArrayList;
+
 
 //barrier is a static collider when locked. change to a Dynamic sensor
 //when unlocked
@@ -40,14 +41,19 @@ public class Barrier extends GameObject implements Switch
 		{
 			clearListener = new ClearListener(to.prop.get("cleared", String.class));
 		}
+
+		if(to.prop.containsKey("locked"))
+		{
+			isLocked = to.prop.get("locked", String.class).equalsIgnoreCase("true");
+		}
 		
 		permanent = to.prop.containsKey("permanent");
-	}		
+	}
 	public boolean isLocked()
 	{
 		return isLocked;
 	}
-
+    
 	@Override
 	public void render(SpriteBatch sb)
 	{
@@ -96,7 +102,6 @@ public class Barrier extends GameObject implements Switch
 	{
 		setSensor(false);
 		isLocked = true;
-
 	}
 
 	@Override

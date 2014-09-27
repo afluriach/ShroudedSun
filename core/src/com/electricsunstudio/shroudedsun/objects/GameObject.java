@@ -42,6 +42,9 @@ import com.electricsunstudio.shroudedsun.objects.interaction.Grabbable;
 import com.electricsunstudio.shroudedsun.physics.Physics;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.electricsunstudio.shroudedsun.objects.Gatekeeper;
+import com.electricsunstudio.shroudedsun.objects.Level2Sensor;
+import com.electricsunstudio.shroudedsun.objects.Level2Spirit;
 
 public abstract class GameObject 
 {
@@ -77,6 +80,10 @@ public abstract class GameObject
 		addClass("dark_cirno", DarkCirno.class);
 		addClass("save_point", SavePoint.class);
 		addClass("chest", TreasureChest.class);
+        
+        addClass("level2_gatekeeper", Gatekeeper.class);
+        addClass("level2_sensor", Level2Sensor.class);
+        addClass("level2_spirit", Level2Spirit.class);
 		
 		addClass("map_link", Door.class);
 	}

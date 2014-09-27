@@ -24,10 +24,10 @@ public abstract class NPC extends Entity
 		}
 
 	}
-	
+    	
 	public NPC(Vector2 pos, String name, int startingDir, String animation, boolean stationary)
 	{
-		super(pos, name, startingDir, animation, "npc", stationary);
+		super(pos, animation, startingDir, name, "npc", stationary);
 		speed = defaultSpeed;
 	}
 	

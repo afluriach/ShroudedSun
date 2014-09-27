@@ -31,6 +31,8 @@ import com.electricsunstudio.shroudedsun.objects.interaction.Read;
 import com.electricsunstudio.shroudedsun.objects.interaction.Save;
 import com.electricsunstudio.shroudedsun.objects.interaction.Talk;
 import com.electricsunstudio.shroudedsun.physics.PrimaryDirection;
+import com.electricsunstudio.shroudedsun.objects.Level2Spirit;
+
 
 public abstract class Player extends Entity {
 	public static final float SPEED = 3.0f;
@@ -70,6 +72,7 @@ public abstract class Player extends Entity {
 		interactMap.put(Sign.class, new Read());
 		interactMap.put(NPC.class, new Talk());
 		interactMap.put(Jar.class, new GrabItem());
+		interactMap.put(Level2Spirit.class, new GrabItem());
 		interactMap.put(Door.class, new OpenDoor());
 		interactMap.put(SavePoint.class, new Save());
 		interactMap.put(TreasureChest.class, new OpenChest());
@@ -86,6 +89,7 @@ public abstract class Player extends Entity {
 		initInteractMap();
 	}
 
+	@Override
 	public void update() {
 		invulnerableTimeRemaining -= Game.SECONDS_PER_FRAME;
 		if (invulnerableTimeRemaining < 0) {
@@ -103,8 +107,12 @@ public abstract class Player extends Entity {
 
 		if (holdingItem != null) {
 			holdingItem.setPos(getCenterPos().add(itemHoldPos));
-		}
-		
+            
+            //drop item if it is no longer holdable
+            if(!((Grabbable)holdingItem).canGrab())
+                dropInPlace();
+    	}
+
 		super.update();
 	}
 
@@ -224,7 +232,7 @@ public abstract class Player extends Entity {
 			interaction.interact(interactibleObject, this);
 		}
 	}
-
+    
 	// only drop if there is room in front of the player to place jar.
 	private boolean canDrop() {
 		// the center position where the item would be placed
@@ -244,6 +252,12 @@ public abstract class Player extends Entity {
 
 		holdingItem = null;
 	}
+    
+    private void dropInPlace()
+    {
+        ((Grabbable)holdingItem).onDrop();
+        holdingItem = null;
+    }
 
 	public void setInteract() {
 		interact = true;

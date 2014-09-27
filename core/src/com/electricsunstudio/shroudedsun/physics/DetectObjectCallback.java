@@ -16,7 +16,7 @@ public class DetectObjectCallback implements QueryCallback
 {
 	//has any object been found
 	boolean detected = false;
-	//do not count this object as a detection..
+	//do not count this object as a detection.
 	GameObject except;
 	
 	public boolean detected()
@@ -28,13 +28,14 @@ public class DetectObjectCallback implements QueryCallback
 	{
 		this.except = except;
 	}
-		
+
+	@Override
 	public boolean reportFixture(Fixture fixture)
 	{
 		GameObject go = (GameObject)fixture.getBody().getUserData();
-		if(go.getRenderLayer() != RenderLayer.floor &&
+		if(!fixture.isSensor() && //ignore collision with sensor fixture
+            go.getRenderLayer() != RenderLayer.floor &&
 		   go != except && 
-		   !(go instanceof RadarSensor) &&
 		   !(go instanceof PlayerShieldObject))
 		{
 			detected = true;
