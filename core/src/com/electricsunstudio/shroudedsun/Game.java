@@ -170,6 +170,11 @@ public class Game implements ApplicationListener
 	boolean yToggleActive = false;
 	float abilityWaitTimeRemaining;
 	
+	//GUI information
+	boolean showHealth = false;
+	boolean showMagic = false;
+	boolean showGold = false;
+	
 	//game session info
 	public boolean touchControls;
 	public int screenHeight;
@@ -259,24 +264,31 @@ public class Game implements ApplicationListener
 
 		//health bar
 		
-		drawGuage(GUI_EDGE_MARGIN,
-				screenHeight - GUI_EDGE_MARGIN - GUAGE_THICKNESS - GUAGE_OUTLINE_THICKNESS*2,
-				healthBarMaxLen, playerHP*1.0f/saveState.maxHP, HEALTH_BAR_COLOR);
-		
+		if(showHealth)
+		{
+			drawGuage(GUI_EDGE_MARGIN,
+					screenHeight - GUI_EDGE_MARGIN - GUAGE_THICKNESS - GUAGE_OUTLINE_THICKNESS*2,
+					healthBarMaxLen, playerHP*1.0f/saveState.maxHP, HEALTH_BAR_COLOR);
+		}
 		
 		//magic bar
 		
-		drawGuage(GUI_EDGE_MARGIN,
-				screenHeight - GUI_EDGE_MARGIN - GUAGE_THICKNESS*2 - GUAGE_OUTLINE_THICKNESS*4 - HEALTH_MAGIC_SPACING,
-				magicBarMaxLen, playerMP*1.0f/saveState.maxMP, MAGIC_BAR_COLOR);
-				
+		if(showMagic)
+		{
+			drawGuage(GUI_EDGE_MARGIN,
+					screenHeight - GUI_EDGE_MARGIN - GUAGE_THICKNESS*2 - GUAGE_OUTLINE_THICKNESS*4 - HEALTH_MAGIC_SPACING,
+					magicBarMaxLen, playerMP*1.0f/saveState.maxMP, MAGIC_BAR_COLOR);
+		}
+		
 		guiShapeRenderer.end();
 		
 		//gold
-		guiBatch.begin();
-			guiBatch.draw(spriteLoader.getTexture("coin32"), screenWidth-98, screenHeight-54);
-		guiBatch.end();
-
+		if(showGold)
+		{
+			guiBatch.begin();
+				guiBatch.draw(spriteLoader.getTexture("coin32"), screenWidth-98, screenHeight-54);
+			guiBatch.end();
+		}
 		Graphics.drawTextCentered(Color.WHITE, String.format("%03d", saveState.gold), guiBatch, font, screenWidth - 35, screenHeight-35);
 		
 	}

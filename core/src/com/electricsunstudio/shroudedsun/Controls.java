@@ -42,6 +42,9 @@ public class Controls
 	static final ButtonColorScheme colors = ButtonColorScheme.scheme;
 	static final Color buttonTextColor = Graphics.hsva(0f, 0f, 0.5f, 1f);
 	
+	public static boolean showItemButtons = false;
+	public static boolean showInteractButton = false;
+	
 	//touch
 	boolean touchControls;
 	boolean keyControls;
@@ -167,16 +170,24 @@ public class Controls
 	{
 		shapeRenderer.begin(ShapeType.Filled);
 		
-		drawButtonOuter(shapeRenderer, colors.alight, buttonA);
-		drawButtonOuter(shapeRenderer, colors.blight, buttonB);
-		drawButtonOuter(shapeRenderer, colors.xlight, buttonX);
-		drawButtonOuter(shapeRenderer, colors.ylight, buttonY);
+		if(showInteractButton)
+			drawButtonOuter(shapeRenderer, colors.alight, buttonA);
 		
-		drawButtonInner(shapeRenderer,a, colors.alight, colors.adark, buttonA);
-		drawButtonInner(shapeRenderer,b, colors.blight, colors.bdark, buttonB);
-		drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
-		drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
-
+		if(showItemButtons)
+		{
+			drawButtonOuter(shapeRenderer, colors.blight, buttonB);
+			drawButtonOuter(shapeRenderer, colors.xlight, buttonX);
+			drawButtonOuter(shapeRenderer, colors.ylight, buttonY);
+		}
+		
+		if(showInteractButton)
+			drawButtonInner(shapeRenderer,a, colors.alight, colors.adark, buttonA);
+		if(showItemButtons)
+		{
+			drawButtonInner(shapeRenderer,b, colors.blight, colors.bdark, buttonB);
+			drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
+			drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
+		}
 
 		
 		if(touchControls)
@@ -200,16 +211,19 @@ public class Controls
 		
 		//TODO do not draw other buttons if paused
 		//TODO draw icon transparent if not available
+
+		if(showItemButtons)
+		{
+			if(Game.inst.bEquipped != null)
+				Graphics.drawTexture(Game.inst.bEquipped.icon,  new Vector2(buttonB.x*Game.TILES_PER_PIXEL,  buttonB.y*Game.TILES_PER_PIXEL), batch);
+
+			if(Game.inst.xEquipped != null)
+				Graphics.drawTexture(Game.inst.xEquipped.icon,  new Vector2(buttonX.x*Game.TILES_PER_PIXEL,  buttonX.y*Game.TILES_PER_PIXEL), batch);
+
+			if(Game.inst.yEquipped != null)
+				Graphics.drawTexture(Game.inst.yEquipped.icon,  new Vector2(buttonY.x*Game.TILES_PER_PIXEL,  buttonY.y*Game.TILES_PER_PIXEL), batch);
+		}
 		
-		if(Game.inst.bEquipped != null)
-			Graphics.drawTexture(Game.inst.bEquipped.icon,  new Vector2(buttonB.x*Game.TILES_PER_PIXEL,  buttonB.y*Game.TILES_PER_PIXEL), batch);
-
-		if(Game.inst.xEquipped != null)
-			Graphics.drawTexture(Game.inst.xEquipped.icon,  new Vector2(buttonX.x*Game.TILES_PER_PIXEL,  buttonX.y*Game.TILES_PER_PIXEL), batch);
-
-		if(Game.inst.yEquipped != null)
-			Graphics.drawTexture(Game.inst.yEquipped.icon,  new Vector2(buttonY.x*Game.TILES_PER_PIXEL,  buttonY.y*Game.TILES_PER_PIXEL), batch);
-
 		batch.setColor(1f, 1f, 1f, 1f);
 		
 		batch.end();
