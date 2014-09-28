@@ -20,51 +20,61 @@
   <object name="bar1" type="environment.Barrier" x="992" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar2" type="environment.Barrier" x="992" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar3" type="environment.Barrier" x="864" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar4" type="environment.Barrier" x="864" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar5" type="environment.Barrier" x="736" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar6" type="environment.Barrier" x="736" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar7" type="environment.Barrier" x="608" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar8" type="environment.Barrier" x="608" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar9" type="environment.Barrier" x="480" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
   <object name="bar10" type="environment.Barrier" x="480" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="true"/>
+    <property name="sprite" value="cell_door"/>
    </properties>
   </object>
  </objectgroup>

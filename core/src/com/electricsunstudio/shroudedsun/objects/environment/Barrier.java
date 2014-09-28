@@ -18,7 +18,9 @@ import java.util.ArrayList;
 
 public class Barrier extends GameObject implements Switch
 {
-	private Texture texture;
+	private static final String defaultSprite = "barrier";
+	
+	protected Texture texture;
 	private boolean isLocked = true;
 	private boolean permanent;
 	
@@ -28,8 +30,9 @@ public class Barrier extends GameObject implements Switch
 	public Barrier(TilespaceRectMapObject to)
 	{
 		super(to);
+		
 		physicsBody = Game.inst.physics.addRectBody(to.rect, this, BodyType.StaticBody, "environmental_floor");
-		texture = Game.inst.spriteLoader.getTexture("barrier");
+		texture = Game.inst.spriteLoader.getTexture(to.prop.get("sprite", defaultSprite, String.class));
 		
 		if(to.prop.containsKey("switch"))
 		{
@@ -47,7 +50,8 @@ public class Barrier extends GameObject implements Switch
 		}
 		
 		permanent = to.prop.containsKey("permanent");
-	}
+	}	
+	
 	public boolean isLocked()
 	{
 		return isLocked;
