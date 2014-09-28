@@ -45,11 +45,15 @@ import com.badlogic.gdx.utils.Array;
 import com.electricsunstudio.shroudedsun.objects.Gatekeeper;
 import com.electricsunstudio.shroudedsun.objects.Level2Sensor;
 import com.electricsunstudio.shroudedsun.objects.Level2Spirit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class GameObject 
 {
 	private static Map<String, Class<? extends GameObject>> gameObjectTypes = new HashMap<String, Class<? extends GameObject>>();
 	private static boolean objectTypesInitialized = false;
+	//for any class name loaded from a map, prepend this package
+	public static final String basePackage = "com.electricsunstudio.shroudedsun.objects";
 	
 	public static void addClass(String str, Class<? extends GameObject> cls)
 	{
@@ -81,10 +85,6 @@ public abstract class GameObject
 		addClass("save_point", SavePoint.class);
 		addClass("chest", TreasureChest.class);
         
-        addClass("level2_gatekeeper", Gatekeeper.class);
-        addClass("level2_sensor", Level2Sensor.class);
-        addClass("level2_spirit", Level2Spirit.class);
-		
 		addClass("map_link", Door.class);
 	}
 	
@@ -98,11 +98,38 @@ public abstract class GameObject
 			addTypes();
 			objectTypesInitialized = true;
 		}
-		if(!gameObjectTypes.containsKey(name))
+		
+		//name found in class mapping
+		if(gameObjectTypes.containsKey(name))
 		{
-			throw new NoSuchElementException("unknow object type:" + name);
+			return gameObjectTypes.get(name);
 		}
-		return gameObjectTypes.get(name);
+		//check if a valid class exists with a given name
+		//every class loaded by name has to be in the com.ESS.SS.objects package.
+		
+		//concat object package.
+		//the type used in the map could still have a package path
+		//i.e. level2.gatekeeper would become
+		//com.electricsunstudio.shroudedsun.objects.level2.gatekeeper
+		else
+		{
+			String classPath = basePackage + "." + name;
+			
+			Class cls = null;
+			try {
+				cls = Class.forName(classPath);
+			} catch (ClassNotFoundException ex) {
+				throw new NoSuchElementException("object class " + name + " not found");
+			}
+			
+			if(!GameObject.class.isAssignableFrom(cls))
+			{
+				//the class is not a subclass of GameObject
+				throw new IllegalArgumentException("class " + classPath + " is not derived from GameObject");
+			}
+			
+			return cls;
+		}
 	}
 	
 	

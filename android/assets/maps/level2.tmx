@@ -8,61 +8,61 @@
  </tileset>
  <layer name="floor" width="80" height="40">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3Wx1KCQRBFYQRFMaJiziggwZyz7/9UnvXsZlj8dtU5Vd/qVu+7VjMzMzMzMzMzMzMz+x8tYgnLWMEq1tBGq3BPy7mP1gY20cEWtrGDXawX7mk599HaxwEOcYRjnOAUe4V7Ws59tLo4xwV66GOAS5wV7mk599EaYYwJrnCNG9xiWMEerXs84BFPeMYLXnFXwR6td3zgE1/4xg9+8VbBHq06GpjFHJqYxwJmCve0nPto+f9Nl//fdPn/mZmZmZmZWbT+AFwMaOMAMgAA
+   H4sIAAAAAAAAC+3Wx1KCQRBFYQRFMaJiziggwZyz7/9UnvXsZlj8dtU5Vd/qVu+7VjMzMzMzMzMzMzMz+x8tYgnLWMEq1tBGq3BPy7mP1gY20cEWtrGDXawX7mk599HaxwEOcYRjnOAUe4V7Ws59tLo4xwV66GOAS5wV7mk599EaYYwJrnCNG9xiWMEerXs84BFPeMYLXnFXwR6td3zgE1/4xg9+8VbBHq06GpjFHJqYxwJmCve0nPto+f9Nl//fdPn/mZmZmZmZWbT+AFwMaOMAMgAA
   </data>
  </layer>
  <layer name="walls" width="80" height="40">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3XCwrCMAwA0NzN6Rzzd//TOHCgDofBKFR4D8JIaWlIS2ERAAAAAADQhsMU24cYi/klscdavFrbut2P87WxTC3/QP9q9K/mGLe3J+bv8IW8i/ub1k+xT9aSndeSfzzzlry7f+MH+fL+bZK1ZOe1xPtXo381+ldziud/gKGYnxN79PN4l1gLAAAAS1cMOp/OADIAAA==
+   H4sIAAAAAAAAC+3XCwrCMAwA0NzN6Rzzd//TOHCgDofBKFR4D8JIaWlIS2ERAAAAAADQhsMU24cYi/klscdavFrbut2P87WxTC3/QP9q9K/mGLe3J+bv8IW8i/ub1k+xT9aSndeSfzzzlry7f+MH+fL+bZK1ZOe1xPtXo381+ldziud/gKGYnxN79PN4l1gLAAAAS1cMOp/OADIAAA==
   </data>
  </layer>
  <objectgroup name="environment">
-  <object name="bar1" type="barrier" x="992" y="768" width="32" height="32">
+  <object name="bar1" type="environment.Barrier" x="992" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar2" type="barrier" x="992" y="704" width="32" height="32">
+  <object name="bar2" type="environment.Barrier" x="992" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar3" type="barrier" x="864" y="768" width="32" height="32">
+  <object name="bar3" type="environment.Barrier" x="864" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar4" type="barrier" x="864" y="704" width="32" height="32">
+  <object name="bar4" type="environment.Barrier" x="864" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar5" type="barrier" x="736" y="768" width="32" height="32">
+  <object name="bar5" type="environment.Barrier" x="736" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar6" type="barrier" x="736" y="704" width="32" height="32">
+  <object name="bar6" type="environment.Barrier" x="736" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar7" type="barrier" x="608" y="768" width="32" height="32">
+  <object name="bar7" type="environment.Barrier" x="608" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar8" type="barrier" x="608" y="704" width="32" height="32">
+  <object name="bar8" type="environment.Barrier" x="608" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar9" type="barrier" x="480" y="768" width="32" height="32">
+  <object name="bar9" type="environment.Barrier" x="480" y="768" width="32" height="32">
    <properties>
     <property name="locked" value="false"/>
    </properties>
   </object>
-  <object name="bar10" type="barrier" x="480" y="704" width="32" height="32">
+  <object name="bar10" type="environment.Barrier" x="480" y="704" width="32" height="32">
    <properties>
     <property name="locked" value="true"/>
    </properties>
@@ -77,16 +77,16 @@
   </object>
  </objectgroup>
  <objectgroup name="logic">
-  <object name="sensor1" type="level2_sensor" x="960" y="800" width="96" height="96"/>
-  <object name="sensor2" type="level2_sensor" x="960" y="608" width="96" height="96"/>
-  <object name="sensor3" type="level2_sensor" x="832" y="800" width="96" height="96"/>
-  <object name="sensor4" type="level2_sensor" x="832" y="608" width="96" height="96"/>
-  <object name="sensor5" type="level2_sensor" x="704" y="800" width="96" height="96"/>
-  <object name="sensor6" type="level2_sensor" x="704" y="608" width="96" height="96"/>
-  <object name="sensor7" type="level2_sensor" x="576" y="800" width="96" height="96"/>
-  <object name="sensor8" type="level2_sensor" x="576" y="608" width="96" height="96"/>
-  <object name="sensor9" type="level2_sensor" x="448" y="800" width="96" height="96"/>
-  <object name="sensor10" type="level2_sensor" x="447" y="608" width="96" height="96"/>
+  <object name="sensor1" type="Level2Sensor" x="960" y="800" width="96" height="96"/>
+  <object name="sensor2" type="Level2Sensor" x="960" y="608" width="96" height="96"/>
+  <object name="sensor3" type="Level2Sensor" x="832" y="800" width="96" height="96"/>
+  <object name="sensor4" type="Level2Sensor" x="832" y="608" width="96" height="96"/>
+  <object name="sensor5" type="Level2Sensor" x="704" y="800" width="96" height="96"/>
+  <object name="sensor6" type="Level2Sensor" x="704" y="608" width="96" height="96"/>
+  <object name="sensor7" type="Level2Sensor" x="576" y="800" width="96" height="96"/>
+  <object name="sensor8" type="Level2Sensor" x="576" y="608" width="96" height="96"/>
+  <object name="sensor9" type="Level2Sensor" x="448" y="800" width="96" height="96"/>
+  <object name="sensor10" type="Level2Sensor" x="447" y="608" width="96" height="96"/>
  </objectgroup>
  <objectgroup name="doors">
   <object name="exit" type="door" x="1536" y="736" width="32" height="32">
@@ -106,18 +106,17 @@
   </object>
  </objectgroup>
  <objectgroup name="agents">
-  <object name="gatekeeper" type="level2_gatekeeper" x="1472" y="832" width="32" height="32"/>
-  <object name="spirit1" type="level2_spirit" x="1280" y="640" width="32" height="32"/>
-  <object name="spirit2" type="level2_spirit" x="1472" y="640" width="32" height="32"/>
-  <object name="spirit3" type="level2_spirit" x="1408" y="672" width="32" height="32"/>
-  <object name="spirit4" type="level2_spirit" x="1344" y="672" width="32" height="32"/>
-  <object name="spirit5" type="level2_spirit" x="1344" y="736" width="32" height="32"/>
-  <object name="spirit6" type="level2_spirit" x="1408" y="736" width="32" height="32"/>
-  <object name="spirit7" type="level2_spirit" x="1408" y="800" width="32" height="32"/>
-  <object name="spirit8" type="level2_spirit" x="1344" y="800" width="32" height="32"/>
-  <object name="spirit9" type="level2_spirit" x="1280" y="832" width="32" height="32"/>
-  <object name="spirit10" type="level2_spirit" x="480" y="640" width="32" height="32"/>
-  <object name="gatekeeper" type="level2_gatekeeper" x="1472" y="832" width="32" height="32">
+  <object name="spirit1" type="Level2Spirit" x="1280" y="640" width="32" height="32"/>
+  <object name="spirit2" type="Level2Spirit" x="1472" y="640" width="32" height="32"/>
+  <object name="spirit3" type="Level2Spirit" x="1408" y="672" width="32" height="32"/>
+  <object name="spirit4" type="Level2Spirit" x="1344" y="672" width="32" height="32"/>
+  <object name="spirit5" type="Level2Spirit" x="1344" y="736" width="32" height="32"/>
+  <object name="spirit6" type="Level2Spirit" x="1408" y="736" width="32" height="32"/>
+  <object name="spirit7" type="Level2Spirit" x="1408" y="800" width="32" height="32"/>
+  <object name="spirit8" type="Level2Spirit" x="1344" y="800" width="32" height="32"/>
+  <object name="spirit9" type="Level2Spirit" x="1280" y="832" width="32" height="32"/>
+  <object name="spirit10" type="Level2Spirit" x="480" y="640" width="32" height="32"/>
+  <object name="gatekeeper" type="Gatekeeper" x="1472" y="832" width="32" height="32">
    <properties>
     <property name="facing" value="up"/>
    </properties>
