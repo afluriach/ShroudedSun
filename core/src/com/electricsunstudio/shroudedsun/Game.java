@@ -772,14 +772,19 @@ public class Game implements ApplicationListener
 		else return "green";
 	}
 	
+	void drawTargetArrow(GameObject target, String arrow_type)
+	{
+		Texture arrowTexture = spriteLoader.getTexture(targetColor(target) + "_" + arrow_type);
+		Graphics.drawTexture(arrowTexture, target.getCenterPos().add(0f,0.5f), batch);		
+	}
+	
 	void drawTargetArrows()
 	{
 		batch.begin();
 		if(target != null)
 		{
 			//use the active texture to highlight the selected target
-			Texture arrowTexture = spriteLoader.getTexture(targetColor(target) + "_target_active");
-			Graphics.drawTexture(arrowTexture, target.getCenterPos().add(0f,0.5f), batch);
+			drawTargetArrow(target, "target_active");
 		}
 		
 		//the primary targetable (the one that would be targeted if pressed)
@@ -787,16 +792,14 @@ public class Game implements ApplicationListener
 		GameObject primary = player.getPrimaryTarget();
 		if(target == null && primary != null)
 		{
-			Texture arrowTexture = spriteLoader.getTexture(targetColor(primary) + "_target_highlighted");
-			Graphics.drawTexture(arrowTexture, primary.getCenterPos().add(0f,0.5f), batch);
+			drawTargetArrow(primary, "target_highlighted");
 		}
 		
 		for(GameObject targetableObj : player.getTargetableObjects())
 		{
 			if(targetableObj == target || targetableObj == primary) continue;
-			
-			Texture arrowTexture = spriteLoader.getTexture(targetColor(targetableObj) + "_target");
-			Graphics.drawTexture(arrowTexture, targetableObj.getCenterPos().add(0f,0.5f), batch);
+
+			drawTargetArrow(targetableObj, "target");
 		}
 		batch.end();
 	}
