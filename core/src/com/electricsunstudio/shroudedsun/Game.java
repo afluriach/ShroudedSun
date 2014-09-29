@@ -775,6 +775,14 @@ public class Game implements ApplicationListener
 	}
 
 
+	void renderLayer(RenderLayer layer)
+	{
+		 batch.begin();
+		 gameObjectSystem.render(layer, batch);
+		 batch.end();
+		 gameObjectSystem.render(layer, shapeRenderer);
+	}
+	
 	private void renderArea() {
 		//render
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -794,20 +802,9 @@ public class Game implements ApplicationListener
 		mapRenderer.render();
 		batch.end();
 		
-		batch.begin();
-		gameObjectSystem.render(RenderLayer.floor, batch);
-		batch.end();
-		gameObjectSystem.render(RenderLayer.floor, shapeRenderer);
-		
-		batch.begin();
-		gameObjectSystem.render(RenderLayer.groundLevel, batch);
-		batch.end();
-		gameObjectSystem.render(RenderLayer.groundLevel, shapeRenderer);
-		
-		batch.begin();
-		gameObjectSystem.render(RenderLayer.aboveGround, batch);
-		batch.end();
-		gameObjectSystem.render(RenderLayer.aboveGround, shapeRenderer);
+		renderLayer(RenderLayer.floor);
+		renderLayer(RenderLayer.groundLevel);
+		renderLayer(RenderLayer.aboveGround);
 		
 		//draw targeting arrows
 		batch.begin();
