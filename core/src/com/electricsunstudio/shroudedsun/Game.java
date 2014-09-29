@@ -783,6 +783,26 @@ public class Game implements ApplicationListener
 		 gameObjectSystem.render(layer, shapeRenderer);
 	}
 	
+	void drawTargetArrows()
+	{
+		batch.begin();
+		if(target != null)
+		{
+			//use a dark arrow to indicate a selected target
+			Texture arrowTexture = spriteLoader.getTexture(target instanceof Enemy ? "dark_yellow_arrow" : "dark_blue_arrow");
+			Graphics.drawTexture(arrowTexture, target.getCenterPos().add(0f,0.5f), batch);
+		}
+		
+		for(GameObject targetableObj : player.getTargetableObjects())
+		{
+			if(targetableObj == target) continue;
+			
+			Texture arrowTexture = spriteLoader.getTexture(targetableObj instanceof Enemy ? "yellow_arrow" : "blue_arrow");
+			Graphics.drawTexture(arrowTexture, targetableObj.getCenterPos().add(0f,0.5f), batch);
+		}
+		batch.end();
+	}
+	
 	private void renderArea() {
 		//render
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -806,23 +826,7 @@ public class Game implements ApplicationListener
 		renderLayer(RenderLayer.groundLevel);
 		renderLayer(RenderLayer.aboveGround);
 		
-		//draw targeting arrows
-		batch.begin();
-		if(target != null)
-		{
-			//use a dark arrow to indicate a selected target
-			Texture arrowTexture = spriteLoader.getTexture(target instanceof Enemy ? "dark_yellow_arrow" : "dark_blue_arrow");
-			Graphics.drawTexture(arrowTexture, target.getCenterPos().add(0f,0.5f), batch);
-		}
-		
-		for(GameObject targetableObj : player.getTargetableObjects())
-		{
-			if(targetableObj == target) continue;
-			
-			Texture arrowTexture = spriteLoader.getTexture(targetableObj instanceof Enemy ? "yellow_arrow" : "blue_arrow");
-			Graphics.drawTexture(arrowTexture, targetableObj.getCenterPos().add(0f,0.5f), batch);
-		}
-		batch.end();
+		drawTargetArrows();
 		
 		if(physicsDebugRender)
 			physics.debugRender(camera.combined);
