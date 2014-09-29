@@ -265,5 +265,30 @@ public abstract class Player extends Entity {
 	public List<GameObject> getTargetableObjects()
 	{
 		return targetableSensor.getDetectedObjects(getFacingAngle(), targetingFOV);
-	}	
+	}
+	
+	//get target that is closest to the player's center FOV
+	public GameObject getPrimaryTarget()
+	{
+		float bestDot = 0f;
+		GameObject bestObj = null;
+		for(GameObject go : getTargetableObjects())
+		{
+			Vector2 disp = go.getCenterPos().sub(getCenterPos());
+			float dot = disp.nor().dot(Util.ray(getFacingAngle(), 1f));
+
+			if(bestObj == null)
+			{
+				bestObj = go;
+				bestDot = dot;
+			}
+			else if(dot > bestDot)
+			{
+				bestObj = go;
+				bestDot = dot;
+			}
+		}
+
+		return bestObj;
+	}
 }

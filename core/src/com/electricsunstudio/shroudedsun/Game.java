@@ -41,6 +41,7 @@ import com.electricsunstudio.shroudedsun.menu.MenuHandler;
 import com.electricsunstudio.shroudedsun.objects.GameObject;
 import com.electricsunstudio.shroudedsun.objects.GameObjectSystem;
 import com.electricsunstudio.shroudedsun.objects.RenderLayer;
+import com.electricsunstudio.shroudedsun.objects.entity.NPC;
 import com.electricsunstudio.shroudedsun.objects.entity.characters.EChar;
 import com.electricsunstudio.shroudedsun.objects.entity.characters.PlayableCharacter;
 import com.electricsunstudio.shroudedsun.objects.entity.characters.Player;
@@ -459,26 +460,7 @@ public class Game implements ApplicationListener
 			target = null;
 		else
 		{
-			//find the best target based on highest dot product, 
-			//i.e. closest to the center of the player's view
-			float bestDot = 0f;
-			GameObject bestObj = null; 
-			for(GameObject go : player.getTargetableObjects())
-			{
-				Vector2 disp = go.getCenterPos().sub(player.getCenterPos());
-				float dot = disp.nor().dot(Util.ray(player.getFacingAngle(), 1f));
-				
-				if(bestObj == null)
-				{
-					bestObj = go;
-					bestDot = dot;
-				}
-				else if(dot > bestDot)
-				{
-					bestObj = go;
-					bestDot = dot;
-				}
-			}
+			GameObject bestObj = player.getPrimaryTarget(); 
 			
 			if(bestObj != null) target = bestObj;
 		}
@@ -783,21 +765,37 @@ public class Game implements ApplicationListener
 		 gameObjectSystem.render(layer, shapeRenderer);
 	}
 	
+	String targetColor(GameObject target)
+	{
+		if(target instanceof Enemy) return "red";
+		else if(target instanceof NPC) return "blue";
+		else return "green";
+	}
+	
 	void drawTargetArrows()
 	{
 		batch.begin();
 		if(target != null)
 		{
-			//use a dark arrow to indicate a selected target
-			Texture arrowTexture = spriteLoader.getTexture(target instanceof Enemy ? "dark_yellow_arrow" : "dark_blue_arrow");
+			//use the active texture to highlight the selected target
+			Texture arrowTexture = spriteLoader.getTexture(targetColor(target) + "_target_active");
 			Graphics.drawTexture(arrowTexture, target.getCenterPos().add(0f,0.5f), batch);
+		}
+		
+		//the primary targetable (the one that would be targeted if pressed)
+		//should be highlighted. if a target is selected, this would be the same object
+		GameObject primary = player.getPrimaryTarget();
+		if(target == null && primary != null)
+		{
+			Texture arrowTexture = spriteLoader.getTexture(targetColor(primary) + "_target_highlighted");
+			Graphics.drawTexture(arrowTexture, primary.getCenterPos().add(0f,0.5f), batch);
 		}
 		
 		for(GameObject targetableObj : player.getTargetableObjects())
 		{
-			if(targetableObj == target) continue;
+			if(targetableObj == target || targetableObj == primary) continue;
 			
-			Texture arrowTexture = spriteLoader.getTexture(targetableObj instanceof Enemy ? "yellow_arrow" : "blue_arrow");
+			Texture arrowTexture = spriteLoader.getTexture(targetColor(targetableObj) + "_target");
 			Graphics.drawTexture(arrowTexture, targetableObj.getCenterPos().add(0f,0.5f), batch);
 		}
 		batch.end();
