@@ -289,9 +289,8 @@ public class Game implements ApplicationListener
 			guiBatch.begin();
 				guiBatch.draw(spriteLoader.getTexture("coin32"), screenWidth-98, screenHeight-54);
 			guiBatch.end();
+			Graphics.drawTextCentered(Color.WHITE, String.format("%03d", saveState.gold), guiBatch, font, screenWidth - 35, screenHeight-35);
 		}
-		Graphics.drawTextCentered(Color.WHITE, String.format("%03d", saveState.gold), guiBatch, font, screenWidth - 35, screenHeight-35);
-		
 	}
 	
 	public void drawGuage(int x, int y, int length, float filled, Color color)
@@ -485,7 +484,7 @@ public class Game implements ApplicationListener
 		shapeRenderer = new ShapeRenderer();
 		guiShapeRenderer = new ShapeRenderer();
 		//font = new BitmapFont();
-		font = new BitmapFont(Gdx.files.internal("fonts/sansation.fnt"));
+		font = new BitmapFont(Gdx.files.internal("fonts/arial-32.fnt"));
 		
 		physics = new Physics();
 		spriteLoader = new SpriteLoader();

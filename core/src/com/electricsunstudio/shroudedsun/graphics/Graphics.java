@@ -147,7 +147,7 @@ public class Graphics
 	{
 		float lineWidth = Util.getLineLength(font, msg);
         
-        batch.setColor(color);
+        //batch.setColor(color);
 		batch.begin();
 		font.setScale(1f);
         font.setColor(color);
@@ -172,7 +172,7 @@ public class Graphics
 		
 		//do not scale up font to fill width, only scale down if needed.
 		//check to make sure the line width is not zero before using scale
-        batch.setColor(color);
+        //batch.setColor(color);
         batch.begin();
         font.setColor(color);
         

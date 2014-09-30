@@ -228,7 +228,8 @@ public class Controls
 		
 		batch.end();
 		
-		drawInteractMessage(batch, font);
+		if(showInteractButton)
+			drawInteractMessage(batch, font);
 		
 		if(touchControls)
 		{
