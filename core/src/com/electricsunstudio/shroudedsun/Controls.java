@@ -40,7 +40,7 @@ public class Controls
 	public static final float gamepadDeadzone = 0.3f;
 	
 	static final ButtonColorScheme colors = ButtonColorScheme.scheme;
-	static final Color buttonTextColor = Graphics.hsva(0f, 0f, 0.5f, 1f);
+	static final Color buttonTextColor = Graphics.hsva(0f, 0f, 1f, 1f);
 	
 	public static boolean showItemButtons = false;
 	public static boolean showInteractButton = false;
@@ -152,6 +152,12 @@ public class Controls
 		shapeRenderer.circle(button.x, button.y, button.radius + buttonTrimThickness);
 	}
 	
+	public void drawButton(ShapeRenderer shapeRenderer, boolean pressed, Color light, Color dark, Circle button)
+	{
+		drawButtonOuter(shapeRenderer, light, button);
+		drawButtonInner(shapeRenderer, pressed, light, dark, button);
+	}
+	
 	public void drawDpadSegment(ShapeRenderer shapeRenderer, boolean pressed, Rectangle segment)
 	{
 		shapeRenderer.setColor(pressed ? colors.dpaddark : colors.dpadlight);
@@ -171,24 +177,16 @@ public class Controls
 		shapeRenderer.begin(ShapeType.Filled);
 		
 		if(showInteractButton)
-			drawButtonOuter(shapeRenderer, colors.alight, buttonA);
+		{
+			drawButton(shapeRenderer, a, colors.alight, colors.adark, buttonA);
+		}
 		
 		if(showItemButtons)
 		{
-			drawButtonOuter(shapeRenderer, colors.blight, buttonB);
-			drawButtonOuter(shapeRenderer, colors.xlight, buttonX);
-			drawButtonOuter(shapeRenderer, colors.ylight, buttonY);
+			drawButton(shapeRenderer,b, colors.blight, colors.bdark, buttonB);
+			drawButton(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
+			drawButton(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
 		}
-		
-		if(showInteractButton)
-			drawButtonInner(shapeRenderer,a, colors.alight, colors.adark, buttonA);
-		if(showItemButtons)
-		{
-			drawButtonInner(shapeRenderer,b, colors.blight, colors.bdark, buttonB);
-			drawButtonInner(shapeRenderer,x, colors.xlight, colors.xdark, buttonX);
-			drawButtonInner(shapeRenderer,y, colors.ylight, colors.ydark, buttonY);
-		}
-
 		
 		if(touchControls)
 		{
