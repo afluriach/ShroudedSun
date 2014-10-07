@@ -67,22 +67,22 @@ public abstract class Entity extends GameObject
 		this.animation = Game.inst.spriteLoader.getSpriteAnimation(character, 2);
 		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, bodyType, this, MASS, false, filter);
 		
-		if(to.prop.containsKey("dir"))
+		if(to.prop.containsKey("facing"))
 		{
 			int dir8;
 			try
 			{
-				dir8 = PrimaryDirection.valueOf(to.prop.get("dir", String.class)).getAngle8Dir();
+				dir8 = PrimaryDirection.valueOf(to.prop.get("facing", String.class)).getAngle8Dir();
 			}
 			catch(IllegalArgumentException e)
 			{
 				//the given direction is not a string representing a primary direction.
 				//the direction may also be an 8dir angle
 				
-				dir8 = to.prop.get("dir", Integer.class);
+				dir8 = to.prop.get("facing", Integer.class);
 				
 				if(dir8 < 0 || dir8 >= 8)
-					throw new MapDataException(String.format("invalid direction %s in entity %s", to.prop.get("dir", String.class), to.name));
+					throw new MapDataException(String.format("invalid direction %s in entity %s", to.prop.get("facing", String.class), to.name));
 			}
 			this.animation.setDirection(dir8);
 			crntFacing = desiredFacingAngle = dir8*45f;

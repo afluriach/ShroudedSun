@@ -1,6 +1,7 @@
 package com.electricsunstudio.shroudedsun.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.electricsunstudio.shroudedsun.AI.RandomWalkFSM;
 import com.electricsunstudio.shroudedsun.graphics.EntityAnimation8Dir;
 import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
@@ -26,6 +27,7 @@ public class Level2Spirit extends Enemy implements Grabbable
 		//load the frozen spirit animation so it can be displayed
 		frozen_animation = Game.inst.spriteLoader.getSpriteAnimation("spirit_frozen", 2);
 		fsm = new RandomWalkFSM(this);
+		canDamage = false;
     }
     
     @Override
@@ -40,11 +42,16 @@ public class Level2Spirit extends Enemy implements Grabbable
     {
         freeze_timer = FREEZE_TIME;
         //stop movement
+		fsm.paused = true;
+		//set frozen animation to current direction when freezing
+		frozen_animation.setDirection(getNearestDir());
+		setDesiredVel(Vector2.Zero);
     }
     
     void thaw()
     {
         //resume movement
+		fsm.paused = false;
     }
     
     boolean isFrozen()
@@ -57,11 +64,14 @@ public class Level2Spirit extends Enemy implements Grabbable
     {
 		if(isFrozen())
 		{
+			freeze_timer -= Game.SECONDS_PER_FRAME;
 			applyKineticFriction(KINETIC_FRICTION_COEFF);
+			
+			if(freeze_timer <= 0)
+			{
+				thaw();
+			}
 		}
-
-		freeze_timer -= Game.SECONDS_PER_FRAME;
-
 		super.update();
     }
 

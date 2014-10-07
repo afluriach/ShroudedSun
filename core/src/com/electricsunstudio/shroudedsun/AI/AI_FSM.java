@@ -33,6 +33,7 @@ public abstract class AI_FSM
 	AI_State crntState;
 	AI_State prevState;
 	Entity agent;
+	public boolean paused = false;
 //	ArrayList<StateTransition> crntStateTrans;
 	
 	public Entity getAgent()
@@ -62,7 +63,7 @@ public abstract class AI_FSM
 //			crntStateTrans = transitions.get(crntState.name);
 //		}
 		
-		if(crntState != null)
+		if(crntState != null && !paused)
 			crntState.update();
 		
 //		StateTransition trans = checkTransitions();

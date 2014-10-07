@@ -19,7 +19,7 @@ public abstract class Enemy extends Entity
 	float invulnerableTimeRemaining = 0;
 	int touchDamage = 0;
 	boolean playerTouching;
-	boolean canDamage = true;
+	protected boolean canDamage = true;
 	
 	public Enemy(TilespaceRectMapObject mo, String animation, int hp)
 	{
