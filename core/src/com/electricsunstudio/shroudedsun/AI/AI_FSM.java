@@ -35,6 +35,11 @@ public abstract class AI_FSM
 	Entity agent;
 //	ArrayList<StateTransition> crntStateTrans;
 	
+	public Entity getAgent()
+	{
+		return agent;
+	}
+	
 	public void init()
 	{
 		crntState = getStartState();

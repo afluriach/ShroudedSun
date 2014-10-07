@@ -1,14 +1,10 @@
 package com.electricsunstudio.shroudedsun.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.electricsunstudio.shroudedsun.AI.RandomWalkFSM;
 import com.electricsunstudio.shroudedsun.graphics.EntityAnimation8Dir;
 import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
-import com.electricsunstudio.shroudedsun.objects.Element;
-import com.electricsunstudio.shroudedsun.objects.Elemental;
-import com.electricsunstudio.shroudedsun.objects.GameObject;
 import com.electricsunstudio.shroudedsun.Game;
-import com.electricsunstudio.shroudedsun.objects.entity.RandomWalkNPC;
 import com.electricsunstudio.shroudedsun.objects.interaction.Grabbable;
 import com.electricsunstudio.shroudedsun.objects.entity.enemies.Enemy;
 import com.electricsunstudio.shroudedsun.objects.projectile.EnemyBullet;
@@ -25,13 +21,11 @@ public class Level2Spirit extends Enemy implements Grabbable
     
     public Level2Spirit(TilespaceRectMapObject to)
     {
-       	//for RandomWalkNPC
-        //super(to.rect.getCenter(new Vector2()), to.name, 2, "spirit_red");
-        //public Enemy(TilespaceRectMapObject mo, String animation, int hp)
-        super(to, "spirit_red", 1);
-        
-        //load the frozen spirit animation so it can be displayed
-        frozen_animation = Game.inst.spriteLoader.getSpriteAnimation("spirit_frozen", 2);
+		super(to, "spirit_red", 1);
+
+		//load the frozen spirit animation so it can be displayed
+		frozen_animation = Game.inst.spriteLoader.getSpriteAnimation("spirit_frozen", 2);
+		fsm = new RandomWalkFSM(this);
     }
     
     @Override
@@ -57,20 +51,18 @@ public class Level2Spirit extends Enemy implements Grabbable
     {
         return freeze_timer > 0;
     }
-    
-    @Override
-    public void init() {
-    }
-    
+
     @Override
     public void update()
     {
-        if(isFrozen())
-        {
-            applyKineticFriction(KINETIC_FRICTION_COEFF);
-        }
-        
-        freeze_timer -= Game.SECONDS_PER_FRAME;
+		if(isFrozen())
+		{
+			applyKineticFriction(KINETIC_FRICTION_COEFF);
+		}
+
+		freeze_timer -= Game.SECONDS_PER_FRAME;
+
+		super.update();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.electricsunstudio.shroudedsun;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public class DialogFrame
+public class DialogFrame extends DialogElement
 {
 	boolean leftFocus;
 	boolean rightFocus;
@@ -49,5 +49,5 @@ public class DialogFrame
 
 		return cfObj;
 	}
-	
+
 }

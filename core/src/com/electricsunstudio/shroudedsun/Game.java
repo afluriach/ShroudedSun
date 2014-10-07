@@ -148,7 +148,7 @@ public class Game implements ApplicationListener
 	public Random random = new Random();
 	public TextBox activeTextBox;
 	Dialog crntDialog;
-	int crntConvsersationFrame;
+	int crntConvsersationElement;
 	//time since the dialog or current frame of the conversation appeared
 	float timeInDialog = 0f;
 	boolean paused = false;
@@ -233,7 +233,7 @@ public class Game implements ApplicationListener
 		if(crntDialog != null)
 		{
 			//switched to gui bach
-			crntDialog.render(guiBatch, guiShapeRenderer, crntConvsersationFrame);
+			crntDialog.render(guiBatch, guiShapeRenderer, crntConvsersationElement);
 		}
 		else if(activeTextBox != null)
 		{
@@ -874,10 +874,10 @@ public class Game implements ApplicationListener
 		
 		if(pressed)
 		{
-			++crntConvsersationFrame;
+			++crntConvsersationElement;
 			timeInDialog = 0f;
 
-			if(crntConvsersationFrame >= crntDialog.frames.length)
+			if(crntConvsersationElement >= crntDialog.elements.length)
 			{
 				crntDialog = null;
 				timeInDialog = 0f;
@@ -987,7 +987,7 @@ public class Game implements ApplicationListener
 		crntDialog.leftCharacter = player.getCharacter();
 		
 		timeInDialog = 0f;
-		crntConvsersationFrame = 0;
+		crntConvsersationElement = 0;
 	}
 
 	public void showTextBox(String msg)

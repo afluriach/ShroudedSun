@@ -49,4 +49,10 @@
 		
 	</gatekeeper2>
 	
+	<gatekeeper3>
+		<f focus="right" lp="1" rp="3">
+			Some things can't be tamed with ice.
+		</f>
+	</gatekeeper3>
+	
 </level2>

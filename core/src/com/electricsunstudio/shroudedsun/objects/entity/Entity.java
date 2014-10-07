@@ -44,7 +44,7 @@ public abstract class Entity extends GameObject
 	//entities may flicker after being attacked 
 	boolean isFlickering = false;
 	boolean showingSprite = true;
-	float flickertotalTimeRemaining = 0;
+	float flickerTotalTimeRemaining = 0;
 	float flickerIntervalLength = 0;
 	float flickerIntervalTimeRemaining = 0;
 	
@@ -69,7 +69,7 @@ public abstract class Entity extends GameObject
 		
 		if(to.prop.containsKey("dir"))
 		{
-			int dir8 = 2;
+			int dir8;
 			try
 			{
 				dir8 = PrimaryDirection.valueOf(to.prop.get("dir", String.class)).getAngle8Dir();
@@ -159,6 +159,11 @@ public abstract class Entity extends GameObject
 		desiredFacingAngle = desired*45f;
 	}
 	
+	public void setDesiredDir(PrimaryDirection desired)
+	{
+		setDesiredAngle(desired.getAngle());
+	}
+	
 	public void setDesiredAngle(float angle)
 	{
 		desiredFacingAngle = angle;
@@ -168,10 +173,11 @@ public abstract class Entity extends GameObject
 	{
 		this.isFlickering= true;
 		this.flickerIntervalLength = flickerInterval;
-		this.flickertotalTimeRemaining = flickerTime;
+		this.flickerTotalTimeRemaining = flickerTime;
 		this.flickerIntervalTimeRemaining = flickerInterval;
 	}
 		
+	@Override
 	public void render(SpriteBatch sb)
 	{
 		if(animation != null && showingSprite)
@@ -194,14 +200,14 @@ public abstract class Entity extends GameObject
 				flickerIntervalTimeRemaining = flickerIntervalLength;
 			}
 
-			if(flickertotalTimeRemaining <=0)
+			if(flickerTotalTimeRemaining <=0)
 			{
 				isFlickering = false;
 				showingSprite = true;
 			}
 			
 			flickerIntervalTimeRemaining -= Game.SECONDS_PER_FRAME;
-			flickertotalTimeRemaining -= Game.SECONDS_PER_FRAME;
+			flickerTotalTimeRemaining -= Game.SECONDS_PER_FRAME;
 		}
 		
 		updateDirection();

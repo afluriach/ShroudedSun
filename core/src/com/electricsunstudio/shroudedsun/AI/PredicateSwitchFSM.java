@@ -12,6 +12,7 @@ public class PredicateSwitchFSM extends NPC_FSM
 	Predicate predicate;
 	String inactiveDialog;
 	String activeDialog;
+	
 	public PredicateSwitchFSM(Entity agent, Predicate predicate, String inactiveDialog, String activeDialog)
 	{
 		super(agent);
@@ -19,8 +20,15 @@ public class PredicateSwitchFSM extends NPC_FSM
 		this.inactiveDialog = inactiveDialog;
 		this.activeDialog = activeDialog;
 	}
+	
+	@Override
 	public AI_State getStartState() {
 		return new PredicateInactive(this);
+	}
+	
+	public boolean activated()
+	{
+		return crntState instanceof PredicateActive;
 	}
 	
 	class PredicateInactive extends NPC_State

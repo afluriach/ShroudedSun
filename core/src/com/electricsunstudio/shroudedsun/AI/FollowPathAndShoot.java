@@ -8,10 +8,7 @@ import com.electricsunstudio.shroudedsun.PathSegment;
 import com.electricsunstudio.shroudedsun.Util;
 import com.electricsunstudio.shroudedsun.objects.GameObject;
 import com.electricsunstudio.shroudedsun.objects.RadarSensor;
-import com.electricsunstudio.shroudedsun.objects.entity.Entity;
-import com.electricsunstudio.shroudedsun.objects.entity.characters.Player;
 import com.electricsunstudio.shroudedsun.objects.entity.enemies.Enemy;
-import com.electricsunstudio.shroudedsun.objects.projectile.EnemyBullet;
 import com.electricsunstudio.shroudedsun.objects.projectile.PlayerBullet;
 
 public class FollowPathAndShoot extends FollowPath

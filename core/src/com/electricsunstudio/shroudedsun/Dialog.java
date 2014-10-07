@@ -1,16 +1,11 @@
 package com.electricsunstudio.shroudedsun;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
-import com.electricsunstudio.shroudedsun.graphics.Graphics;
 import com.electricsunstudio.shroudedsun.graphics.Portrait;
 
 public class Dialog
@@ -19,7 +14,7 @@ public class Dialog
 	static final Color focusColor = Color.WHITE;
 	static final Color unfocusColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 	
-	DialogFrame [] frames;
+	DialogElement [] elements;
 	String leftCharacter;
 	String rightCharacter;
 	
@@ -28,7 +23,7 @@ public class Dialog
 		Dialog cons = new Dialog();
 		
 		int count = elem.getChildCount();
-		cons.frames = new DialogFrame[count];
+		cons.elements = new DialogElement[count];
 		
 		//if the element doesn't have any attributes, the attribute map will be null
 		if(elem.getAttributes() != null)
@@ -39,7 +34,7 @@ public class Dialog
 		
 		for(int i=0;i<count; ++i)
 		{
-			cons.frames[i] = DialogFrame.loadFromXml(elem.getChild(i));
+			cons.elements[i] = DialogFrame.loadFromXml(elem.getChild(i));
 		}
 
 		return cons;
@@ -52,11 +47,20 @@ public class Dialog
 		
 	public void render(SpriteBatch batch, ShapeRenderer sr, int framenum)
 	{
+		DialogElement crntElement = elements[framenum];
+		
+		if(crntElement instanceof DialogFrame)
+		{
+			renderDialogFrame(batch,sr,(DialogFrame)crntElement);
+		}
+	}
+
+	void renderDialogFrame(SpriteBatch batch, ShapeRenderer sr, DialogFrame crntFrame)
+	{
 		int width = Game.inst.screenWidth - 2*(portraitSpacing+Game.inst.GUI_EDGE_MARGIN);
 		int portraitDialogWidth = width/3;
 		
 		Portrait leftPortrait=null, rightPortrait=null;
-		DialogFrame crntFrame = frames[framenum];
 		Texture leftPic = null, rightPic = null;
 		
 		if(leftCharacter != null)
@@ -114,8 +118,9 @@ public class Dialog
 											portraitDialogWidth,
 											portraitDialogWidth);
 		
-		TextBox dialog = new TextBox(dialogPos, Game.inst.font, frames[framenum].msg);
+		TextBox dialog = new TextBox(dialogPos, Game.inst.font, crntFrame.msg);
 		dialog.render(batch, sr);
+
 	}
 	
 	public static Rectangle getDialogPos()

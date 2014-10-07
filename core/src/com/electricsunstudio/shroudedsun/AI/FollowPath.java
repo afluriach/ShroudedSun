@@ -2,14 +2,8 @@ package com.electricsunstudio.shroudedsun.AI;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.PathSegment;
-import com.electricsunstudio.shroudedsun.objects.GameObject;
-import com.electricsunstudio.shroudedsun.objects.entity.Entity;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.Enemy;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.TorchWalker;
 
 /**
  * Given a valid path, follow it to the end.

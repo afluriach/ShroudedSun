@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.electricsunstudio.shroudedsun.Game;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -13,9 +14,9 @@ import java.util.TreeMap;
 public class GameObjectSystem
 {
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
-	Map<RenderLayer, ArrayList<GameObject>> renderLayers = new TreeMap<RenderLayer, ArrayList<GameObject>>();
+	Map<RenderLayer, ArrayList<GameObject>> renderLayers = new EnumMap<RenderLayer, ArrayList<GameObject>>(RenderLayer.class);
 	//collection of objects that render shapes instead of the the usual SpriteBatch
-	Map<RenderLayer, ArrayList<ShapeRender>> shapeRenderLayers = new TreeMap<RenderLayer, ArrayList<ShapeRender>>();
+	Map<RenderLayer, ArrayList<ShapeRender>> shapeRenderLayers = new EnumMap<RenderLayer, ArrayList<ShapeRender>>(RenderLayer.class);
 	Map<String, GameObject> nameMap = new TreeMap<String, GameObject>();
 	ArrayList<GameObject> objectsToAdd = new ArrayList<GameObject>();
 	
@@ -147,6 +148,12 @@ public class GameObjectSystem
 			throw new RuntimeException(String.format("object %s not found", name));
 		
 		return nameMap.get(name);
+	}
+	
+	//get object by name but also cast it to the desired type
+	public <T> T getObjectByName(String name, Class<T> cls)
+	{
+		return (T) getObjectByName(name);
 	}
 	
 	public <T> List<T> getObjectsByType(Class<T> cls)
