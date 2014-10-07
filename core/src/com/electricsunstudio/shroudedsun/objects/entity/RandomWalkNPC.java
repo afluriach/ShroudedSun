@@ -3,8 +3,8 @@ package com.electricsunstudio.shroudedsun.objects.entity;
 import java.util.ArrayList;
 import java.util.Queue;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
 import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
@@ -20,7 +20,7 @@ public class RandomWalkNPC extends NPC
 	Vector2 targetPos;
 	
 	public RandomWalkNPC(TilespaceRectMapObject to) {
-		super(to);
+		super(to, BodyType.DynamicBody);
 
 		//speed is a propety of entity and the speed key is already checked.
 		//class specific default in case speed is not specified
@@ -33,7 +33,7 @@ public class RandomWalkNPC extends NPC
 	
 	public RandomWalkNPC(Vector2 pos, String name, int startingDir, String animation)
 	{
-		super(pos, name, startingDir, animation, false);
+		super(pos, name, startingDir, animation, BodyType.DynamicBody);
 		speed = defaultSpeed;
 	}
 	
@@ -149,14 +149,9 @@ public class RandomWalkNPC extends NPC
 
 	@Override
 	public void handleEndContact(GameObject other) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
 	}
-	
 }

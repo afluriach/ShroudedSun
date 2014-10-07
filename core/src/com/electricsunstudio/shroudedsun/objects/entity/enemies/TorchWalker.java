@@ -1,22 +1,13 @@
 package com.electricsunstudio.shroudedsun.objects.entity.enemies;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.badlogic.gdx.Gdx;
-import com.electricsunstudio.shroudedsun.Game;
-import com.electricsunstudio.shroudedsun.PathSegment;
-import com.electricsunstudio.shroudedsun.AI.AI_FSM;
-import com.electricsunstudio.shroudedsun.AI.AI_State;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.AI.TorchWalkerFSM;
 import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
 import com.electricsunstudio.shroudedsun.objects.GameObject;
 import com.electricsunstudio.shroudedsun.objects.entity.Entity;
 import com.electricsunstudio.shroudedsun.objects.entity.characters.Player;
-import com.electricsunstudio.shroudedsun.objects.environment.Torch;
 import com.electricsunstudio.shroudedsun.objects.projectile.PlayerBullet;
-import com.electricsunstudio.shroudedsun.physics.PrimaryDirection;
-
 
 /**
  * a class of enemy that walks around lighting torches.
@@ -39,7 +30,7 @@ public class TorchWalker extends Entity
 	
 	public TorchWalker(TilespaceRectMapObject to) {
 		
-		super(to, "komachi", "enemy", false);
+		super(to, "komachi", "enemy", BodyType.DynamicBody);
 				
 		if(to.prop.containsKey("speed"))
 		{

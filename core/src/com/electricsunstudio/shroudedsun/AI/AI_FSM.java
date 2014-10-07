@@ -120,5 +120,10 @@ public abstract class AI_FSM
 		crntState = newState;
 	}
 	
+	public AI_State getCrntState()
+	{
+		return crntState;
+	}
+	
 	public abstract AI_State getStartState();	
 }

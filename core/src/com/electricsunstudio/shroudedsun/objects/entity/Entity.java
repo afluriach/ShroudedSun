@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.electricsunstudio.shroudedsun.AI.AI_FSM;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.PathSegment;
 import com.electricsunstudio.shroudedsun.Util;
@@ -52,19 +53,19 @@ public abstract class Entity extends GameObject
 	
 	private float crntFacing = defaultFacing;
 		
-	/**
-	 * if set, change the direction on the next cycle
-	 */
+	 //if set, change the direction on the next cycle
 	private float desiredFacingAngle = defaultFacing;
 	private Vector2 desiredVel;	
 	protected float speed;	
-		
-	public Entity(TilespaceRectMapObject to, String character, String filter, boolean stationary)
+
+	protected AI_FSM fsm;
+	
+	public Entity(TilespaceRectMapObject to, String character, String filter, BodyType bodyType)
 	{
 		super(to);
 		this.character = character;
 		this.animation = Game.inst.spriteLoader.getSpriteAnimation(character, 2);
-		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, stationary ? BodyType.StaticBody : BodyType.DynamicBody, this, MASS, false, filter);
+		physicsBody = Game.inst.physics.addCircleBody(to.rect.getCenter(new Vector2()), HIT_CIRCLE_RADIUS, bodyType, this, MASS, false, filter);
 		
 		if(to.prop.containsKey("dir"))
 		{
@@ -102,12 +103,12 @@ public abstract class Entity extends GameObject
 		return character;
 	}
 		
-	public Entity(Vector2 pos, String character, int startingDir, String name, String filter, boolean stationary)
+	public Entity(Vector2 pos, String character, int startingDir, String name, String filter, BodyType bodyType)
 	{
 		super(name);
 		this.animation = Game.inst.spriteLoader.getSpriteAnimation(character, 2);
 		this.character = character;
-		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, stationary ? BodyType.StaticBody : BodyType.DynamicBody, this, MASS, false, filter);
+		physicsBody = Game.inst.physics.addCircleBody(pos, HIT_CIRCLE_RADIUS, bodyType, this, MASS, false, filter);
 	}
 
 	
@@ -179,8 +180,11 @@ public abstract class Entity extends GameObject
 		}
 	}
 	
+	@Override
 	public void update()
 	{
+		if(fsm != null)
+			fsm.update();
 		
 		if(isFlickering)
 		{
@@ -239,5 +243,10 @@ public abstract class Entity extends GameObject
 		return speed;
 	}
 
-	
+	@Override
+	public void init()
+	{
+		if(fsm != null)
+			fsm.init();
+	}
 }

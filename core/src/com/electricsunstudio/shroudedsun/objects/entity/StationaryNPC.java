@@ -1,6 +1,8 @@
 package com.electricsunstudio.shroudedsun.objects.entity;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Dialog;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
@@ -22,7 +24,7 @@ public class StationaryNPC extends NPC implements Switch
 	
 	public StationaryNPC(TilespaceRectMapObject to)
 	{
-		super(to);
+		super(to, BodyType.StaticBody);
 
 		initDialog(to);
 		initSwitch(to);
@@ -32,7 +34,7 @@ public class StationaryNPC extends NPC implements Switch
     public StationaryNPC(TilespaceRectMapObject to, String entity)
     {
         //public NPC(Vector2 pos, String name, int startingDir, String animation, boolean stationary)
-        super(to.rect.getCenter(new Vector2()), to.name, 2, entity, true);
+        super(to.rect.getCenter(new Vector2()), to.name, 2, entity, BodyType.StaticBody);
 		initDialog(to);
 		initSwitch(to);
     }

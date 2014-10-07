@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
 import com.electricsunstudio.shroudedsun.objects.GameObject;
@@ -74,7 +76,7 @@ public abstract class Player extends Entity {
 	}
 
 	public Player(Vector2 pos, PrimaryDirection startingDir, String character) {
-		super(pos, character, startingDir.getAngle8Dir(), "player", "player", false);
+		super(pos, character, startingDir.getAngle8Dir(), "player", "player", BodyType.DynamicBody);
 		
 		LinkedList<Class<?>> targetClasses = new LinkedList<Class<?>>();
 		targetClasses.add(Enemy.class);

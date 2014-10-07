@@ -1,5 +1,7 @@
 package com.electricsunstudio.shroudedsun.objects.entity.enemies;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.AI.AI_FSM;
 import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
@@ -18,13 +20,10 @@ public abstract class Enemy extends Entity
 	int touchDamage = 0;
 	boolean playerTouching;
 	boolean canDamage = true;
-
-	//ai
-	AI_FSM fsm;
 	
 	public Enemy(TilespaceRectMapObject mo, String animation, int hp)
 	{
-		super(mo, animation, "enemy", false);
+		super(mo, animation, "enemy", BodyType.DynamicBody);
 		this.hp = hp;
 	}
 	
@@ -59,18 +58,9 @@ public abstract class Enemy extends Entity
 			invulnerableTimeRemaining = 0;
 		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 
-		if(fsm != null)
-			fsm.update();
 		super.update();
 	}	
 	
-	@Override
-	public void init()
-	{
-		if(fsm != null)
-			fsm.init();
-		
-	}
 	@Override
 	public void handleContact(GameObject other)
 	{
@@ -94,6 +84,4 @@ public abstract class Enemy extends Entity
 	}
 	
 	public abstract EnemyBullet getBullet();
-
-
 }
