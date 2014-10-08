@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.Util;
@@ -30,7 +29,6 @@ import com.electricsunstudio.shroudedsun.objects.interaction.Talk;
 import com.electricsunstudio.shroudedsun.physics.PrimaryDirection;
 import com.electricsunstudio.shroudedsun.objects.Level2Spirit;
 
-
 public abstract class Player extends Entity {
 	public static final float SPEED = 3.0f;
 	private static final float invulerabilityLength = 1.0f;
@@ -40,12 +38,23 @@ public abstract class Player extends Entity {
 	// where to hold am item relative to the player's center.
 	private static final Vector2 itemHoldPos = new Vector2(0f, 0.2f);
 
-	// map gameobject type to the kind of interaction that can be performed with
-	// in.
-	private HashMap<Class<? extends GameObject>, ItemInteraction> interactMap;
+	//map gameobject class to the kind of interaction that can be performed on it
+	private final HashMap<Class<? extends GameObject>, ItemInteraction> interactMap = new HashMap<Class<? extends GameObject>, ItemInteraction>(){{
+		put(Sign.class, new Read());
+		put(NPC.class, new Talk());
+		put(Jar.class, new GrabItem());
+		put(Level2Spirit.class, new GrabItem());
+		put(Door.class, new OpenDoor());
+		put(SavePoint.class, new Save());
+		put(TreasureChest.class, new OpenChest());
+	}};
 
-//	int hp = MAX_HP;
-//	int mp = MAX_MP;
+	//gameobject classes that can be targeted
+	LinkedList<Class<?>> targetClasses = new LinkedList<Class<?>>() {{
+		add(Enemy.class);
+		add(NPC.class);
+	}};
+	
 	float invulnerableTimeRemaining = 0f;
 
 	// interaction logic, including interacting with obejcts in the environment
@@ -54,36 +63,17 @@ public abstract class Player extends Entity {
 	public String interactMessage = "";
 	private GameObject interactibleObject;
 	private ItemInteraction interaction;
-
-	// flag that determines if the player wants to shoot, set based on the
-	// controls.
+	//has the interact button been pressed? i.e. is an interaction pending this frame?
 	boolean interact = false;
 	
 	public RadarSensor targetableSensor;
 	float targetRadius = 12f;
 	float targetingFOV = 90f;
 	
-	private void initInteractMap() {
-		interactMap = new HashMap<Class<? extends GameObject>, ItemInteraction>();
-
-		interactMap.put(Sign.class, new Read());
-		interactMap.put(NPC.class, new Talk());
-		interactMap.put(Jar.class, new GrabItem());
-		interactMap.put(Level2Spirit.class, new GrabItem());
-		interactMap.put(Door.class, new OpenDoor());
-		interactMap.put(SavePoint.class, new Save());
-		interactMap.put(TreasureChest.class, new OpenChest());
-	}
-
 	public Player(Vector2 pos, PrimaryDirection startingDir, String character) {
 		super(pos, character, startingDir.getAngle8Dir(), "player", "player", BodyType.DynamicBody);
 		
-		LinkedList<Class<?>> targetClasses = new LinkedList<Class<?>>();
-		targetClasses.add(Enemy.class);
-		targetClasses.add(NPC.class);
 		targetableSensor = new RadarSensor(getCenterPos(), targetRadius, targetClasses, "targeting_sensor");
-
-		initInteractMap();
 	}
 
 	@Override
@@ -115,14 +105,10 @@ public abstract class Player extends Entity {
 
 	@Override
 	public void handleContact(GameObject other) {
-		// if(Util.arrayContains(grabable, other.getClass()))
-		// grabableTouching.add(other);
 	}
 
 	@Override
 	public void onExpire() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void hit(int damage) {
@@ -139,7 +125,7 @@ public abstract class Player extends Entity {
 	}
 
 	/**
-	 * ignore invulerability effect
+	 * ignore invulnerability effect
 	 * 
 	 * @param hp
 	 */
@@ -150,7 +136,6 @@ public abstract class Player extends Entity {
 
 	@Override
 	public void handleEndContact(GameObject other) {
-		// grabableTouching.remove(other);
 	}
 
 	void checkItemClass(GameObject obj)
@@ -187,7 +172,7 @@ public abstract class Player extends Entity {
 	}
 	
 	/**
-	 * checks for a smart object (interactible) and set the interact message.
+	 * checks for an object that can be interacted with and sets the interact message.
 	 * save the object and interaction if applicable.
 	 */
 	public void checkInteract()

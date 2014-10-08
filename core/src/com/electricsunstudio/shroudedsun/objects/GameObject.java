@@ -1,13 +1,10 @@
 package com.electricsunstudio.shroudedsun.objects;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -16,89 +13,51 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.electricsunstudio.shroudedsun.Game;
 import com.electricsunstudio.shroudedsun.map.TilespaceRectMapObject;
-import com.electricsunstudio.shroudedsun.objects.entity.RandomWalkNPC;
-import com.electricsunstudio.shroudedsun.objects.entity.StationaryNPC;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.BlueEnemy;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.Facer;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.Follower;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.GreenEnemy;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.Guard;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.DarkCirno;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.RedEnemy;
-import com.electricsunstudio.shroudedsun.objects.entity.enemies.TorchWalker;
-import com.electricsunstudio.shroudedsun.objects.environment.Barrier;
-import com.electricsunstudio.shroudedsun.objects.environment.Block;
-import com.electricsunstudio.shroudedsun.objects.environment.Door;
-import com.electricsunstudio.shroudedsun.objects.environment.FloorSwitch;
-import com.electricsunstudio.shroudedsun.objects.environment.InvisibleFloorSwitch;
-import com.electricsunstudio.shroudedsun.objects.environment.Jar;
-import com.electricsunstudio.shroudedsun.objects.environment.SavePoint;
-import com.electricsunstudio.shroudedsun.objects.environment.Sign;
-import com.electricsunstudio.shroudedsun.objects.environment.Statue;
-import com.electricsunstudio.shroudedsun.objects.environment.Torch;
-import com.electricsunstudio.shroudedsun.objects.environment.TreasureChest;
-import com.electricsunstudio.shroudedsun.objects.environment.Wall;
-import com.electricsunstudio.shroudedsun.objects.interaction.Grabbable;
+import com.electricsunstudio.shroudedsun.objects.entity.*;
+import com.electricsunstudio.shroudedsun.objects.entity.enemies.*;
+import com.electricsunstudio.shroudedsun.objects.environment.*;
 import com.electricsunstudio.shroudedsun.physics.Physics;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
-import com.electricsunstudio.shroudedsun.objects.Gatekeeper;
-import com.electricsunstudio.shroudedsun.objects.Level2Sensor;
-import com.electricsunstudio.shroudedsun.objects.Level2Spirit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class GameObject 
 {
-	private static Map<String, Class<? extends GameObject>> gameObjectTypes = new HashMap<String, Class<? extends GameObject>>();
-	private static boolean objectTypesInitialized = false;
-	//for any class name loaded from a map, prepend this package
-	public static final String basePackage = "com.electricsunstudio.shroudedsun.objects";
-	
-	public static void addClass(String str, Class<? extends GameObject> cls)
-	{
-		gameObjectTypes.put(str,  cls);
-	}
-	
-	public static void addTypes()
-	{	
-		addClass("wall", Wall.class);
-		addClass("door", Door.class);
-		addClass("barrier", Barrier.class);
-		addClass("block", Block.class);
-		addClass("floor_switch", FloorSwitch.class);
-		addClass("invisible_floor_switch", InvisibleFloorSwitch.class);
-		addClass("red_enemy", RedEnemy.class);
-		addClass("blue_enemy", BlueEnemy.class);
-		addClass("green_enemy", GreenEnemy.class);
-		addClass("jar", Jar.class);
-		addClass("sign", Sign.class);
-		addClass("facer", Facer.class);
-		addClass("follower", Follower.class);
-		addClass("torch", Torch.class);
-		addClass("torch_walker", TorchWalker.class);
-		addClass("guard", Guard.class);
-		addClass("stationary_npc", StationaryNPC.class);
-		addClass("random_walk_npc", RandomWalkNPC.class);
-		addClass("gold_statue", Statue.class);
-		addClass("dark_cirno", DarkCirno.class);
-		addClass("save_point", SavePoint.class);
-		addClass("chest", TreasureChest.class);
+	private static final Map<String, Class<? extends GameObject>> gameObjectTypes = new HashMap<String, Class<? extends GameObject>>(){{
+		put("wall", Wall.class);
+		put("door", Door.class);
+		put("barrier", Barrier.class);
+		put("block", Block.class);
+		put("floor_switch", FloorSwitch.class);
+		put("invisible_floor_switch", InvisibleFloorSwitch.class);
+		put("red_enemy", RedEnemy.class);
+		put("blue_enemy", BlueEnemy.class);
+		put("green_enemy", GreenEnemy.class);
+		put("jar", Jar.class);
+		put("sign", Sign.class);
+		put("facer", Facer.class);
+		put("follower", Follower.class);
+		put("torch", Torch.class);
+		put("torch_walker", TorchWalker.class);
+		put("guard", Guard.class);
+		put("stationary_npc", StationaryNPC.class);
+		put("random_walk_npc", RandomWalkNPC.class);
+		put("gold_statue", Statue.class);
+		put("dark_cirno", DarkCirno.class);
+		put("save_point", SavePoint.class);
+		put("chest", TreasureChest.class);
         
-		addClass("map_link", Door.class);
-	}
+		put("map_link", Door.class);
+	}};
 	
+	//for an object type loaded from a Tiled map, prepend this package prefix
+	//to get the full path name. i.e. all objects that can be loaded by name
+	//will be in this package (including subpackages)
+	public static final String basePackage = "com.electricsunstudio.shroudedsun.objects";
+
 	public static Class<?> getObjectClass(String name)
 	{
 		if(name == null) throw new NullPointerException("null name given");
 		if(name.equals("")) throw new IllegalArgumentException("blank name given");
-		
-		if(!objectTypesInitialized)
-		{
-			addTypes();
-			objectTypesInitialized = true;
-		}
-		
+
 		//name found in class mapping
 		if(gameObjectTypes.containsKey(name))
 		{
@@ -149,7 +108,6 @@ public abstract class GameObject
 	
 	public GameObject(String name)
 	{
-//		physicsBody = Physics.inst().addRectBody(pos, height, width, this);
 		this.name = name;
 	}
 	
@@ -215,6 +173,7 @@ public abstract class GameObject
 		physicsBody.applyLinearImpulse(impulse, getCenterPos(), true);
 	}
 	
+	@Override
 	public String toString()
 	{
 		return String.format("gameobject class: %s, name: %s", this.getClass().getSimpleName(), name);
@@ -223,17 +182,7 @@ public abstract class GameObject
 	public void onExpire()
 	{
 	}
-	
-	/**
-	 * 
-	 * @return Is this object any category of object that the player can interact with.
-	 */
-	public boolean canPlayerInteract()
-	{
-		return this instanceof Grabbable && ((Grabbable)this).canGrab() ||
-		       this instanceof Sign;
-	}
-	
+
 	boolean isObstacle()
 	{
 		Class<?> c = getClass();
@@ -335,7 +284,6 @@ public abstract class GameObject
 		//translate AABB based on the center of the GO		
 		box.setCenter(getCenterPos());
 		return box;
-		
 	}	
 	
 	public String getName()

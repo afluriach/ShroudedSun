@@ -7,6 +7,7 @@ import com.electricsunstudio.shroudedsun.Game;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,16 +15,17 @@ import java.util.TreeMap;
 public class GameObjectSystem
 {
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
-	Map<RenderLayer, ArrayList<GameObject>> renderLayers = new EnumMap<RenderLayer, ArrayList<GameObject>>(RenderLayer.class);
-	//collection of objects that render shapes instead of the the usual SpriteBatch
-	Map<RenderLayer, ArrayList<ShapeRender>> shapeRenderLayers = new EnumMap<RenderLayer, ArrayList<ShapeRender>>(RenderLayer.class);
+	//Objects that render using SpriteBatch (the standard render interface for GameObjects
+	Map<RenderLayer, HashSet<GameObject>> spriteRenderLayers = new EnumMap<RenderLayer, HashSet<GameObject>>(RenderLayer.class);
+	//Objects that render using ShapeRenderer. These are all GameObjects, but they implement the interface ShapeRender.
+	Map<RenderLayer, HashSet<ShapeRender>> shapeRenderLayers = new EnumMap<RenderLayer, HashSet<ShapeRender>>(RenderLayer.class);
 	Map<String, GameObject> nameMap = new TreeMap<String, GameObject>();
 	ArrayList<GameObject> objectsToAdd = new ArrayList<GameObject>();
 	
 	public void clear()
 	{
 		gameObjects.clear();
-		for(ArrayList<GameObject> renderLayer : renderLayers.values())
+		for(HashSet<GameObject> renderLayer : spriteRenderLayers.values())
 		{
 			renderLayer.clear();
 		}
@@ -33,13 +35,13 @@ public class GameObjectSystem
 	
 	public GameObjectSystem()
 	{
-		renderLayers.put(RenderLayer.floor, new ArrayList<GameObject>());
-		renderLayers.put(RenderLayer.groundLevel, new ArrayList<GameObject>());
-		renderLayers.put(RenderLayer.aboveGround, new ArrayList<GameObject>());
+		spriteRenderLayers.put(RenderLayer.floor, new HashSet<GameObject>());
+		spriteRenderLayers.put(RenderLayer.groundLevel, new HashSet<GameObject>());
+		spriteRenderLayers.put(RenderLayer.aboveGround, new HashSet<GameObject>());
 		
-		shapeRenderLayers.put(RenderLayer.floor, new ArrayList<ShapeRender>());
-		shapeRenderLayers.put(RenderLayer.groundLevel, new ArrayList<ShapeRender>());
-		shapeRenderLayers.put(RenderLayer.aboveGround, new ArrayList<ShapeRender>());
+		shapeRenderLayers.put(RenderLayer.floor, new HashSet<ShapeRender>());
+		shapeRenderLayers.put(RenderLayer.groundLevel, new HashSet<ShapeRender>());
+		shapeRenderLayers.put(RenderLayer.aboveGround, new HashSet<ShapeRender>());
 	}
 		
 	/**
@@ -62,7 +64,7 @@ public class GameObjectSystem
 		for(GameObject go : objectsToAdd)
 		{
 			gameObjects.add(go);
-			renderLayers.get(go.renderLayer).add(go);
+			spriteRenderLayers.get(go.renderLayer).add(go);
 			if(go instanceof ShapeRender)
 				shapeRenderLayers.get(go.renderLayer).add((ShapeRender) go);
 			if(go.name != null) nameMap.put(go.name, go);
@@ -73,7 +75,7 @@ public class GameObjectSystem
 	private void remove(GameObject go)
 	{
 		gameObjects.remove(go);
-		renderLayers.get(go.renderLayer).remove(go);
+		spriteRenderLayers.get(go.renderLayer).remove(go);
 		nameMap.remove(go.name);
 		
 		Game.inst.physics.removeBody(go.physicsBody);
@@ -118,7 +120,7 @@ public class GameObjectSystem
 		
 	public void render(RenderLayer layer, SpriteBatch sb)
 	{
-		for(GameObject go : renderLayers.get(layer))
+		for(GameObject go : spriteRenderLayers.get(layer))
 		{
 			go.render(sb);
 		}
@@ -195,9 +197,9 @@ public class GameObjectSystem
 	
 	public void updateRenderLayer(GameObject go, RenderLayer newLayer)
 	{
-		renderLayers.get(go.renderLayer).remove(go);
+		spriteRenderLayers.get(go.renderLayer).remove(go);
 		go.renderLayer = newLayer;
-		renderLayers.get(newLayer).add(go);
+		spriteRenderLayers.get(newLayer).add(go);
 	}
 	
 	public boolean allExpired(String[] names)
