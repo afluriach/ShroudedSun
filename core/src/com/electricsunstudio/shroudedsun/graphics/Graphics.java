@@ -56,10 +56,6 @@ public class Graphics
 		batch.draw(region, x, y, centerPixX, centerPixY, region.getRegionWidth(), region.getRegionHeight(), 1f, 1f, rotation);
 	}
 
-	
-	/**
-	 * requires ShapeRenderer batch.
-	 */
 	public static void drawCircle(ShapeRenderer renderer, Circle circle)
 	{
 		renderer.circle(circle.x, circle.y, circle.radius);
@@ -69,8 +65,8 @@ public class Graphics
 	 * 
 	 * @param h [0.0 to 360.0)
 	 * @param s [0.0 to 1.0]
-	 * @param v [float 0.0 to 1.0]
-	 * @param a [float 0.0 to 1.0]
+	 * @param v [0.0 to 1.0]
+	 * @param a [0.0 to 1.0]
 	 * @return
 	 */
 	public static Color hsva(float h, float s, float v, float a)
@@ -142,16 +138,24 @@ public class Graphics
 		return frames;
 		
 	}
+
+	public static void drawText(Color color, String msg, SpriteBatch batch, BitmapFont font, float x, float y)
+	{
+		batch.begin();
+		font.setScale(1f);
+		font.setColor(color);
+		font.draw(batch, msg, x, y);
+		batch.end();
+	}
 	
 	public static void drawTextCentered(Color color, String msg, SpriteBatch batch, BitmapFont font, float x, float y)
 	{
 		float lineWidth = Util.getLineLength(font, msg);
         
-        //batch.setColor(color);
 		batch.begin();
 		font.setScale(1f);
         font.setColor(color);
-		font.draw(batch, msg, x-lineWidth/2, y+font.getCapHeight()/2);		
+		font.draw(batch, msg, x-lineWidth/2, y+font.getCapHeight()/2);
 		batch.end();
 	}
 

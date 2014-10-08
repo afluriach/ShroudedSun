@@ -7,7 +7,7 @@ public class MainMenu extends TextListMenu
 	
 	public MainMenu()
 	{
-		super("Gensokyou Adventure", entries);
+		super("Shrouded Sun", entries);
 	}
 
 	@Override

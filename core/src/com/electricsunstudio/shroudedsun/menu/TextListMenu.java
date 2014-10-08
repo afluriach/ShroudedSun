@@ -102,22 +102,21 @@ public abstract class TextListMenu
 			sr.rectLine(pos.x, pos.y+pos.height, pos.x, pos.y, trimThickness);		
 		sr.end();
 		
+		sb.end();
+		
 		//draw text. 
-		font.setColor(Color.WHITE);
 		if(heading != null)
 		{
-			font.draw(sb, heading, center.x - longestLineWidth/2, firstLineY);
+			Graphics.drawText(Color.WHITE, heading, sb, font, center.x - longestLineWidth/2, firstLineY);
 		}
 		
 		for(int i=0;i<menuEntries.length; ++i)
 		{
 			if(menuEntries[i] == null) continue;
 			
-			font.setColor(i==selectedMenuItem ? Graphics.hsva(0f, 0f, 1f, 1f) : Graphics.hsva(0f, 0f, 0.7f, 1f));
-
-			font.draw(sb, menuEntries[i], center.x - longestLineWidth/2, firstLineY - lineSeparation*(i+2));
-		}		
-		sb.end();
+			Color color = i==selectedMenuItem ? Graphics.hsva(0f, 0f, 1f, 1f) : Graphics.hsva(0f, 0f, 0.7f, 1f);
+			Graphics.drawText(color, menuEntries[i], sb, font, center.x - longestLineWidth/2, firstLineY - lineSeparation*(i+2));
+		}
 	}
 	
 	public void update()

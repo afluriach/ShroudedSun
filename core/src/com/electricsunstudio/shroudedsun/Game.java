@@ -8,7 +8,6 @@ import java.util.Random;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -182,15 +181,7 @@ public class Game implements ApplicationListener
 	public boolean touchControls;
 	public int screenHeight;
 	public int screenWidth;
-	
-	enum state
-	{
-		play,
-		dialog,
-		pause,
-		mainMenu,
-	}
-	
+
 	public Game(boolean touch)
 	{
 		touchControls = touch;
@@ -485,7 +476,6 @@ public class Game implements ApplicationListener
 		guiBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		guiShapeRenderer = new ShapeRenderer();
-		//font = new BitmapFont();
 		font = new BitmapFont(Gdx.files.internal("fonts/arial-32.fnt"));
 		
 		physics = new Physics();
@@ -503,14 +493,8 @@ public class Game implements ApplicationListener
 		bEquipped = new Shield();
 		xEquipped = new IceBullet();
 		
-		//this is where the area gets loaded. when the main menu is displayed, no area should be loaded. 
-		//initialize game world
-//		loadArea(startingLevel, mapEntranceLink);
-		
+		menuHandler.setTopLevelMenu(new MainMenu());
 		initCamera();
-        
-        loadGameStart();
-        //loadLevelSelect();
 	}
 	
 	public void loadLevelSelect()
