@@ -1,4 +1,4 @@
-package com.electricsunstudio.shroudedsun;
+package com.electricsunstudio.shroudedsun.dialog;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 

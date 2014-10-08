@@ -1,5 +1,7 @@
 package com.electricsunstudio.shroudedsun;
 
+import com.electricsunstudio.shroudedsun.dialog.DialogLoader;
+import com.electricsunstudio.shroudedsun.dialog.Dialog;
 import java.util.List;
 import java.util.Random;
 
@@ -877,7 +879,7 @@ public class Game implements ApplicationListener
 			++crntConvsersationElement;
 			timeInDialog = 0f;
 
-			if(crntConvsersationElement >= crntDialog.elements.length)
+			if(crntConvsersationElement >= crntDialog.getLength())
 			{
 				crntDialog = null;
 				timeInDialog = 0f;
@@ -979,12 +981,7 @@ public class Game implements ApplicationListener
 		{
 			crntDialog = dialogLoader.getDialog(areaName, name);
 		}
-		
-		if(rightCharacter != null)
-		{
-			crntDialog.rightCharacter = rightCharacter;
-		}
-		crntDialog.leftCharacter = player.getCharacter();
+		crntDialog.setCharacters(player.getCharacter(), rightCharacter);
 		
 		timeInDialog = 0f;
 		crntConvsersationElement = 0;

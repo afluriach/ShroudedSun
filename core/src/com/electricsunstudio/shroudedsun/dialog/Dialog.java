@@ -1,4 +1,4 @@
-package com.electricsunstudio.shroudedsun;
+package com.electricsunstudio.shroudedsun.dialog;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import com.electricsunstudio.shroudedsun.Game;
+import com.electricsunstudio.shroudedsun.TextBox;
 import com.electricsunstudio.shroudedsun.graphics.Portrait;
 
 public class Dialog
@@ -44,7 +46,19 @@ public class Dialog
 	{
 		
 	}
-		
+	
+	public int getLength()
+	{
+		return elements.length;
+	}
+	
+	//set the characters for the dialog if they are not specified
+	public void setCharacters(String leftCharacter, String rightCharacter)
+	{
+		if(this.leftCharacter == null) this.leftCharacter = leftCharacter;
+		if(this.rightCharacter == null) this.rightCharacter = rightCharacter;
+	}
+	
 	public void render(SpriteBatch batch, ShapeRenderer sr, int framenum)
 	{
 		DialogElement crntElement = elements[framenum];

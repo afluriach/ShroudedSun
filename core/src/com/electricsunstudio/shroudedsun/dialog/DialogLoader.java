@@ -1,4 +1,4 @@
-package com.electricsunstudio.shroudedsun;
+package com.electricsunstudio.shroudedsun.dialog;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,6 +10,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SerializationException;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import com.electricsunstudio.shroudedsun.Game;
+import com.electricsunstudio.shroudedsun.Util;
 
 public class DialogLoader
 {
